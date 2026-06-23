@@ -1,0 +1,269 @@
+{
+  "id": "chess-attack-and-checkmate",
+  "title": "Chess: Attack and Checkmate",
+  "description": "Build deep intuition for checkmating — from board vision to forcing moves, piece coordination, and mating nets.",
+  "subject": "chess",
+  "chapters": [
+    {
+      "id": "ch-fundamentals",
+      "title": "The Fundamentals",
+      "description": "What is the goal of chess, and how do you recognize when a king is in danger?",
+      "lessons": [
+        {
+          "id": "l-goal-of-chess",
+          "title": "What Is the Goal of Chess?",
+          "description": "Checkmate — and how to recognize it.",
+          "estimatedMinutes": 5,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-goal-concept",
+              "title": "The goal is checkmate",
+              "body": "Chess has one objective: **checkmate** the enemy king.\n\nCheckmate means the king is in **check** (under attack) and has **no legal move** to escape. The moment checkmate happens, the game is over — the mated player loses immediately.\n\nNotice the position on the right. The white queen on h5 is attacking the black king on e8. The king cannot move: d7, e7, and f7 are all covered. This is checkmate.",
+              "fen": "r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4",
+              "annotations": {
+                "arrows": [
+                  { "from": "f7", "to": "e8", "color": "#f6a623" }
+                ],
+                "highlightSquares": {
+                  "e8": "rgba(255, 0, 0, 0.4)",
+                  "f7": "rgba(255, 165, 0, 0.4)"
+                }
+              }
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-goal-mc1",
+              "question": "What is checkmate?",
+              "options": [
+                { "text": "The king is in check and cannot escape", "explanation": "Exactly right. Check + no legal escape = checkmate. The game ends immediately." },
+                { "text": "The king is captured", "explanation": "The king is never actually captured in chess. The game ends the moment the king cannot escape check — before capture." },
+                { "text": "A player has no pieces left", "explanation": "You can have many pieces and still be checkmated. It's purely about the king's position." },
+                { "text": "A player runs out of moves", "explanation": "Having no moves is only checkmate if you're also in check. If you have no moves but aren't in check, that's stalemate — a draw." }
+              ],
+              "correctIndex": 0
+            },
+            {
+              "type": "identify",
+              "id": "s-goal-identify1",
+              "question": "The position below is checkmate. Click the square of the piece delivering check to the black king.",
+              "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 b - - 0 1",
+              "correctSquare": "e1",
+              "explanation": "The white rook on e1 delivers check along the e-file. The black king on g8 can't escape — f8, h8, f7, g7, and h7 are all blocked or covered. Checkmate.",
+              "annotations": {
+                "arrows": [{ "from": "e1", "to": "e8", "color": "#f6a623" }]
+              }
+            }
+          ]
+        },
+        {
+          "id": "l-board-vision",
+          "title": "Board Vision",
+          "description": "See the whole board — find threats before they happen.",
+          "estimatedMinutes": 7,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-bv-concept",
+              "title": "Board vision: seeing threats before they land",
+              "body": "Strong players don't just look at the piece they're moving — they scan the **entire board**.\n\nEvery move changes the position. You need to ask: after I move, what can my opponent do? What squares are newly attacked? What pieces are now undefended?\n\nThe three things to scan every move:\n1. **Checks** — is the king attacked?\n2. **Captures** — can any piece be taken for free?\n3. **Threats** — what is my opponent threatening to do next?\n\nThese are also called **candidate moves** — the forcing moves you must consider first.",
+              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+              "analogy": "Think of board vision like peripheral vision in a sport. A great basketball player doesn't stare at the ball — they see the whole court. A great chess player doesn't stare at one piece — they see every threat on the board."
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-bv-mc1",
+              "question": "What should you always check FIRST when considering a move?",
+              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+              "options": [
+                { "text": "Checks, captures, and threats — in that order", "explanation": "Correct. Forcing moves (checks first, then captures, then threats) narrow your candidate list and ensure you don't miss a tactic." },
+                { "text": "The move that develops the most pieces", "explanation": "Development matters, but only after you've verified your king is safe and there's no immediate tactic to play or defend." },
+                { "text": "The move your opponent least expects", "explanation": "Surprise has value, but not at the cost of missing a forced sequence. Candidate moves — checks, captures, threats — come first." },
+                { "text": "The move that controls the center", "explanation": "Center control is important in the long run, but a forcing tactic beats positional goals every time." }
+              ],
+              "correctIndex": 0
+            },
+            {
+              "type": "puzzle",
+              "id": "s-bv-puzzle1",
+              "subType": "best-move",
+              "question": "White to move. Find the only move that wins material immediately.",
+              "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Ng5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Nxe5": "Nxe5 loses the knight to Qd4+, forking the knight and king.",
+                    "d3": "A quiet developing move misses the immediate tactical shot."
+                  }
+                }
+              },
+              "explanation": "Ng5 attacks f7 — the weakest point in Black's position, defended only by the king. This creates an unstoppable double threat: Nxf7 winning the rook, or Bxf7+ leading to checkmate. The candidate move check reveals it immediately.",
+              "successMessage": "Nice eye! Ng5 exploits the weakest square in Black's position."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-checkmate-patterns",
+      "title": "Checkmating Patterns",
+      "description": "The essential mating patterns every chess player must know.",
+      "lessons": [
+        {
+          "id": "l-back-rank-mate",
+          "title": "The Back Rank Mate",
+          "description": "One of the most common checkmates — a rook or queen delivers mate on the first or eighth rank.",
+          "estimatedMinutes": 8,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-brm-concept",
+              "title": "The back rank mate",
+              "body": "The **back rank mate** happens when a rook or queen delivers checkmate on the first or eighth rank, and the enemy king is trapped behind its own pawns.\n\nThe pawns on g7, h7, and f7 form a **pawn shelter** — normally protective, but here they become a **prison**. The king has nowhere to go.\n\nLook at the position below. White plays Re8#. The black king on g8 is mated: g7, h7, and f7 are all blocked by Black's own pawns. The king cannot move, and cannot capture the rook (it's protected).",
+              "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+              "annotations": {
+                "arrows": [{ "from": "e1", "to": "e8", "color": "#f6a623" }],
+                "highlightSquares": {
+                  "g8": "rgba(255, 0, 0, 0.3)",
+                  "f7": "rgba(200, 200, 200, 0.4)",
+                  "g7": "rgba(200, 200, 200, 0.4)",
+                  "h7": "rgba(200, 200, 200, 0.4)"
+                }
+              }
+            },
+            {
+              "type": "continuation",
+              "id": "s-brm-continuation",
+              "title": "Watch the back rank mate unfold",
+              "description": "Step through this sequence to see how a rook invades the back rank and delivers checkmate.",
+              "fen": "2r3k1/5ppp/8/8/8/3R4/5PPP/3R2K1 w - - 0 1",
+              "orientation": "white",
+              "moves": ["Rd8+", "Rxd8", "Rxd8#"],
+              "moveAnnotations": {
+                "0": "Rd8+ — White sacrifices the first rook! d8 is empty, so this is a check along rank 8, not a capture. The black king is already trapped — it can't escape to f8 or h8 (both covered by the rook), and f7/g7/h7 are blocked by its own pawns. Black must take.",
+                "1": "Rxd8 — Black has no choice. The rook captures the white rook to escape check. But now the d-file is open all the way to d3.",
+                "2": "Rxd8# — The second rook sweeps up the d-file to d8, capturing the black rook and delivering checkmate. The king still cannot escape — rank 8 is now controlled by this rook, and all 7th rank squares remain blocked."
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-brm-puzzle1",
+              "subType": "checkmate-in-n",
+              "question": "White to move. Deliver checkmate in 1.",
+              "fen": "5rk1/5ppp/8/8/8/8/5PPP/3RR1K1 w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Re8#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Rd8": "Rd8 is check, but after Rxd8, White has not delivered checkmate.",
+                    "Rd7": "Rd7 doesn't deliver check at all — the king is not under attack."
+                  }
+                }
+              },
+              "explanation": "Re8# — the rook lands on e8, giving check. The black king on g8 is trapped: f7, g7, and h7 are blocked by its own pawns. No escape, no block. Checkmate.",
+              "successMessage": "Clean back rank mate! The pawns that shelter the king become its prison."
+            },
+            {
+              "type": "puzzle",
+              "id": "s-brm-puzzle2",
+              "subType": "checkmate-in-n",
+              "question": "White to move. Find checkmate in 2.",
+              "fen": "2r3k1/5ppp/8/8/8/3R4/5PPP/3R2K1 w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Rd8+", "Rxd8", "Rxd8+#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Rc1": "Rc1 blunders mate in 1 after Rxc1+"
+                  }
+                }
+              },
+              "explanation": "Rd8+ sacrifices the first rook — the black king cannot escape (f8 and h8 are covered by the rook on rank 8, and f7/g7/h7 are blocked by Black's own pawns), so Rxd8 is forced. Then Rxd8# — the second rook sweeps up the d-file to deliver checkmate. Both White rooks must be on the d-file for this to work.",
+              "successMessage": "The rook sacrifice pattern! Remove the defender, then the second rook mates."
+            },
+            {
+              "type": "puzzle",
+              "id": "s-brm-refutation1",
+              "subType": "find-refutation",
+              "question": "Black just played Qe1?? — moving the queen off f8. White is to move. Find the immediate checkmate.",
+              "fen": "6k1/6pp/6K1/8/8/8/6PP/4qR2 w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Rf8#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Rxe1": "Rxe1 wins the queen, but there is an immediate checkmate available! The queen blundered off f8 — look for the back rank blow.",
+                    "Kh6": "Kh6 moves the king but misses the checkmate. The winning move uses the rook, not the king."
+                  }
+                }
+              },
+              "explanation": "Rf8# — the rook delivers checkmate on the back rank. The black queen had been guarding f8; once it moved to e1, the f-file was open. After Rf8+: h8 is covered by the rook along rank 8, g7 and h7 are blocked by Black's own pawns, and f7 is covered by the white king on g6. The king has nowhere to go.",
+              "successMessage": "Exactly — the queen abandoned the critical f8 square and paid the price."
+            }
+          ]
+        },
+        {
+          "id": "l-queen-king-mate",
+          "title": "Queen and King Checkmate",
+          "description": "The most important endgame technique — how to force checkmate with a queen and king against a lone king.",
+          "estimatedMinutes": 10,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-qk-concept",
+              "title": "Box the king in",
+              "body": "When you have a queen and king vs a lone king, checkmate is always possible — but you must be systematic.\n\nThe strategy has two parts:\n1. **Box the king in** — use the queen to shrink the enemy king's available squares, pushing it toward a corner or edge.\n2. **Bring your king** — the queen alone cannot force checkmate. Your king must approach to deliver the final blow.\n\nThe key insight: **the king must be on the edge or in a corner to be mated.** You cannot checkmate a king in the center of the board.",
+              "fen": "8/8/8/3k4/8/3K4/8/3Q4 w - - 0 1",
+              "analogy": "Think of the queen as a sheepdog and the enemy king as a sheep. You're herding it to the fence (the edge of the board) before the final roundup."
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-qk-mc1",
+              "question": "Queen and king vs lone king — which is true about delivering checkmate?",
+              "options": [
+                { "text": "The enemy king must be on the edge or in a corner", "explanation": "Correct. A king in the center has too many escape squares. Push it to the edge, then the corner, then mate." },
+                { "text": "The queen can force checkmate without the king's help", "explanation": "The queen alone cannot deliver checkmate — it needs the king to cut off escape squares near the final position." },
+                { "text": "Checkmate can happen anywhere on the board", "explanation": "Not quite. The enemy king must be restricted to the edge or corner. A king in the center has too many flight squares." },
+                { "text": "You only need 5 moves maximum", "explanation": "The queen + king vs lone king can take up to 10 moves. The key is being systematic, not fast." }
+              ],
+              "correctIndex": 0
+            },
+            {
+              "type": "puzzle",
+              "id": "s-qk-puzzle1",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is already on the edge. Find checkmate in 2.",
+              "fen": "8/8/8/8/8/6K1/8/6kQ w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Qh2+", "Kg1", "Qg2#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qg2+": "Qg2+ is stalemate if the king has no other moves — always check for stalemate before delivering check near a corner!",
+                    "Kf3": "Kf3 approaches but doesn't force immediate mate. The position requires precise queen moves."
+                  }
+                }
+              },
+              "explanation": "Qh2+ forces the king to g1 (the only legal move). Then Qg2# — the king is trapped in the corner by its own piece (the king's own squares are covered by White's king on g3 and queen on g2). Watch out for Qg2+ as move 1 — that would be stalemate!",
+              "successMessage": "Perfect — and you avoided the stalemate trap!"
+            },
+            {
+              "type": "play-vs-bot",
+              "id": "s-qk-playvbot1",
+              "question": "Apply what you've learned. Box in the black king and deliver checkmate. You have a queen and king — use them together.",
+              "fen": "8/8/8/3k4/8/3K4/8/3Q4 w - - 0 1",
+              "orientation": "white",
+              "objective": "Deliver checkmate to the black king",
+              "maxMoves": 20,
+              "successCondition": "checkmate",
+              "explanation": "The key steps: (1) use the queen to push the king toward the edge, (2) bring your king in, (3) force the king to a corner, then (4) deliver checkmate — carefully avoiding stalemate on the last move."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

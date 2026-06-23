@@ -1,0 +1,170 @@
+"use client"
+import { useState } from "react"
+import { Chess } from "chess.js"
+import type { PlayVsBotStep as PlayVsBotStepType } from "@/lib/types"
+import { Chessboard } from "react-chessboard"
+import type { PieceDropHandlerArgs, SquareHandlerArgs } from "react-chessboard"
+import { Button } from "@/components/ui/button"
+import { FeedbackPanel } from "./FeedbackPanel"
+import { LessonLayout } from "./LessonLayout"
+import { clsx } from "clsx"
+
+interface Props {
+  step: PlayVsBotStepType
+  onComplete: (isCorrect: boolean) => void
+  isLastStep?: boolean
+}
+
+export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
+  const [game, setGame] = useState(() => new Chess(step.fen))
+  const [moveCount, setMoveCount] = useState(0)
+  const [outcome, setOutcome] = useState<"won" | "lost" | "draw" | null>(null)
+  const [botThinking, setBotThinking] = useState(false)
+  const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
+  const [legalMoveSquares, setLegalMoveSquares] = useState<Record<string, React.CSSProperties>>({})
+  const [moveHistory, setMoveHistory] = useState<string[]>([])
+
+  const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
+
+  function checkOutcome(g: Chess, history: string[]): boolean {
+    if (g.isCheckmate()) {
+      const winner = g.turn() === "w" ? "b" : "w"
+      setOutcome(winner === learnerColor ? "won" : "lost")
+      return true
+    }
+    if (g.isDraw() || g.isStalemate()) { setOutcome("draw"); return true }
+    const learnerMoves = history.filter((_, i) => i % 2 === 0).length
+    if (step.maxMoves && learnerMoves >= step.maxMoves) { setOutcome("lost"); return true }
+    return false
+  }
+
+  function makeBotMove(g: Chess, history: string[]) {
+    setBotThinking(true)
+    setTimeout(() => {
+      const moves = g.moves()
+      if (!moves.length) { setBotThinking(false); return }
+      const move = moves[Math.floor(Math.random() * moves.length)]
+      g.move(move)
+      const newHistory = [...history, move]
+      setMoveHistory(newHistory)
+      setGame(new Chess(g.fen()))
+      setBotThinking(false)
+      checkOutcome(g, newHistory)
+    }, 500)
+  }
+
+  function attemptMove(from: string, to: string): boolean {
+    if (from === to || game.turn() !== learnerColor || outcome || botThinking) return false
+    const g = new Chess(game.fen())
+    let result
+    try {
+      result = g.move({ from: from as any, to: to as any, promotion: "q" })
+    } catch { return false }
+    if (!result) return false
+
+    const newHistory = [...moveHistory, result.san]
+    setMoveHistory(newHistory)
+    setGame(new Chess(g.fen()))
+    setMoveCount(c => c + 1)
+    setSelectedSquare(null)
+    setLegalMoveSquares({})
+
+    if (!checkOutcome(g, newHistory)) makeBotMove(g, newHistory)
+    return true
+  }
+
+  function selectSquare(square: string) {
+    const piece = game.get(square as any)
+    if (!piece || piece.color !== learnerColor) { setSelectedSquare(null); setLegalMoveSquares({}); return }
+    setSelectedSquare(square)
+    const moves = game.moves({ square: square as any, verbose: true })
+    const hl: Record<string, React.CSSProperties> = { [square]: { backgroundColor: "rgba(99,102,241,0.4)" } }
+    moves.forEach(m => { hl[m.to] = { backgroundColor: "rgba(99,102,241,0.2)", borderRadius: "50%" } })
+    setLegalMoveSquares(hl)
+  }
+
+  function handleDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
+    if (!targetSquare) return false
+    return attemptMove(sourceSquare, targetSquare)
+  }
+
+  function handleSquareClick({ square }: SquareHandlerArgs) {
+    if (outcome || botThinking || game.turn() !== learnerColor) return
+    if (selectedSquare) { if (!attemptMove(selectedSquare, square)) selectSquare(square); return }
+    selectSquare(square)
+  }
+
+  function reset() {
+    setGame(new Chess(step.fen))
+    setMoveCount(0)
+    setOutcome(null)
+    setBotThinking(false)
+    setSelectedSquare(null)
+    setLegalMoveSquares({})
+    setMoveHistory([])
+  }
+
+  const isWon = outcome === "won"
+
+  const board = (
+    <Chessboard
+      options={{
+        position: game.fen(),
+        boardOrientation: step.orientation ?? "white",
+        allowDragging: !outcome && !botThinking,
+        squareStyles: legalMoveSquares,
+        darkSquareStyle: { backgroundColor: "#769656" },
+        lightSquareStyle: { backgroundColor: "#eeeed2" },
+        onPieceDrop: (!outcome && !botThinking) ? handleDrop : undefined,
+        onSquareClick: (!outcome && !botThinking) ? handleSquareClick : undefined,
+      }}
+    />
+  )
+
+  return (
+    <LessonLayout board={board}>
+      <div>
+        <p className="text-lg font-semibold text-gray-900 leading-snug">{step.question}</p>
+        <div className="mt-2 flex items-center gap-3 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">
+            🎯 {step.objective}
+          </span>
+          {step.maxMoves && (
+            <span className="text-xs text-gray-500">Move {moveCount} / {step.maxMoves}</span>
+          )}
+        </div>
+      </div>
+
+      {botThinking && <p className="text-sm text-gray-400 italic">Bot is thinking…</p>}
+
+      {game.inCheck() && !outcome && (
+        <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-red-800 text-sm font-semibold">⚠️ Check!</div>
+      )}
+
+      {/* Move list */}
+      {moveHistory.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
+          {moveHistory.map((m, i) => (
+            <span key={i} className={clsx("text-xs rounded px-1.5 py-0.5 font-mono", i % 2 === 0 ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-700")}>
+              {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {!outcome && moveHistory.length === 0 && (
+        <p className="text-sm text-gray-400">Make your move on the board.</p>
+      )}
+
+      {outcome && (
+        <FeedbackPanel
+          isCorrect={isWon}
+          explanation={isWon ? step.explanation : "The king escaped this time. Reset and try again — use the queen to box the king in before your king approaches."}
+          onNext={() => isWon ? onComplete(true) : reset()}
+          isLastStep={isLastStep}
+          nextLabel={isWon ? undefined : "Try again"}
+        />
+      )}
+    </LessonLayout>
+  )
+}

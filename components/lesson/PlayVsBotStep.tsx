@@ -126,26 +126,29 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
       <div>
         <p className="text-lg font-semibold text-gray-900 leading-snug">{step.question}</p>
         <div className="mt-2 flex items-center gap-3 flex-wrap">
-          <span className="inline-flex items-center gap-1.5 bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">
+          <span className="inline-flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full">
             🎯 {step.objective}
           </span>
-          {step.maxMoves && (
-            <span className="text-xs text-gray-500">Move {moveCount} / {step.maxMoves}</span>
+          {/* Live move counter — always visible during play */}
+          {!outcome && (
+            <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">
+              Move {moveCount}
+            </span>
           )}
         </div>
       </div>
 
-      {botThinking && <p className="text-sm text-gray-400 italic">Bot is thinking…</p>}
+      {botThinking && <p className="text-sm text-gray-400 dark:text-slate-500 italic">Bot is thinking…</p>}
 
       {game.inCheck() && !outcome && (
-        <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-red-800 text-sm font-semibold">⚠️ Check!</div>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-4 py-2 text-red-800 dark:text-red-400 text-sm font-semibold">⚠️ Check!</div>
       )}
 
       {/* Move list */}
-      {moveHistory.length > 0 && (
+      {moveHistory.length > 0 && !outcome && (
         <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
           {moveHistory.map((m, i) => (
-            <span key={i} className={clsx("text-xs rounded px-1.5 py-0.5 font-mono", i % 2 === 0 ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-700")}>
+            <span key={i} className={clsx("text-xs rounded px-1.5 py-0.5 font-mono", i % 2 === 0 ? "bg-gray-800 text-white" : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300")}>
               {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m}
             </span>
           ))}
@@ -153,18 +156,54 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
       )}
 
       {!outcome && moveHistory.length === 0 && (
-        <p className="text-sm text-gray-400">Make your move on the board.</p>
+        <p className="text-sm text-gray-400 dark:text-slate-500">Make your move on the board.</p>
       )}
 
-      {outcome && (
+      {/* Win screen — prominent move counter */}
+      {outcome === "won" && (
+        <div className="flex flex-col gap-4">
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl px-5 py-4 flex flex-col gap-1">
+            <p className="text-2xl font-extrabold text-green-700 dark:text-green-400">
+              ♟ Checkmate in {moveCount} {moveCount === 1 ? "move" : "moves"}!
+            </p>
+            <p className="text-sm text-green-600 dark:text-green-500">
+              {moveRating(moveCount)}
+            </p>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">{step.explanation}</p>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={reset}
+              className="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+            >
+              ↺ Play again
+            </button>
+            <button
+              onClick={() => onComplete(true)}
+              className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-500 transition"
+            >
+              {isLastStep ? "Finish lesson →" : "Continue →"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Loss / draw screen */}
+      {outcome && outcome !== "won" && (
         <FeedbackPanel
-          isCorrect={isWon}
-          explanation={isWon ? step.explanation : "The king escaped this time. Reset and try again — use the queen to box the king in before your king approaches."}
-          onNext={() => isWon ? onComplete(true) : reset()}
-          isLastStep={isLastStep}
-          nextLabel={isWon ? undefined : "Try again"}
+          isCorrect={false}
+          explanation="The king escaped — or the game ended in a draw (stalemate). Reset and try again. Remember: always check for stalemate before delivering the final check."
+          onNext={reset}
+          nextLabel="Try again"
         />
       )}
     </LessonLayout>
   )
+}
+
+function moveRating(moves: number): string {
+  if (moves <= 10) return "⭐⭐⭐ Brilliant — that's grandmaster efficiency!"
+  if (moves <= 15) return "⭐⭐ Great technique! Can you do it in fewer?"
+  if (moves <= 20) return "⭐ Solid — try to finish in under 15 next time."
+  return "Keep at it — aim for under 20 moves as your next goal."
 }

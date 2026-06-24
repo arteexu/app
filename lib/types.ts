@@ -53,6 +53,16 @@ export interface PuzzleLine {
   refutationLines?: Record<number, Record<string, string[]>>  // step → wrong move → refutation moves
 }
 
+// The position and move BEFORE the puzzle starts — lets the learner step back
+// to see what the opponent just played and why it was a blunder.
+export interface PuzzlePreMove {
+  fen: string                          // position before the opponent's move
+  san: string                          // e.g. "Rxb1" — displayed on the toggle button
+  annotation?: string                  // optional explanation of why it was a blunder
+  arrows?: BoardArrow[]                // arrows showing the opponent's move
+  highlightSquares?: Record<string, string>  // squares to highlight in that view
+}
+
 export interface PuzzleStep {
   type: "puzzle"
   id: string
@@ -64,6 +74,7 @@ export interface PuzzleStep {
   annotations?: BoardAnnotations   // shown before the learner starts
   successMessage?: string          // shown on completion
   explanation: string              // shown after solving (or after all retries)
+  preMovePosition?: PuzzlePreMove  // optional: opponent's previous move, for context
 }
 
 // ─── Continuation Step ────────────────────────────────────────────────────────

@@ -1,26 +1,36 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Enable class-based dark mode — applies dark: variants when .dark is on any ancestor */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─── Design tokens ──────────────────────────────────────────────────────────
+   Baloo 2 (rounded, friendly) powers display headings via the `font-display`
+   utility; Inter stays the body font. Both are injected as CSS variables by
+   next/font in app/layout.tsx. */
+@theme {
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-baloo), var(--font-inter), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Explicit rule so .font-display always picks up Baloo 2 at runtime.
+   The @theme token above tells Tailwind what to generate, but the
+   CSS variable reference only resolves correctly with this real rule. */
+.font-display {
+  font-family: var(--font-baloo), var(--font-inter), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ─── Light mode: soft warm → violet quest gradient ──────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 80% at 50% -10%, #fff7e6 0%, #fdf3ef 34%, #f3eeff 100%) fixed;
+  color: #111827;
+  font-family: var(--font-sans);
+}
+
+/* ─── Dark mode: deep slate ─────────────────────────────────────────────────── */
+.dark body {
+  background:
+    radial-gradient(120% 80% at 50% -10%, #1e1b3a 0%, #131329 34%, #0f172a 100%) fixed;
+  color: #f1f5f9;
 }

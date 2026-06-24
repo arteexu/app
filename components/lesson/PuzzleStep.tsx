@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Chess } from "chess.js"
 import type { PuzzleStep as PuzzleStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
@@ -27,6 +27,38 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   const [refutationIndex, setRefutationIndex] = useState(-1)
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
   const [legalMoveSquares, setLegalMoveSquares] = useState<Record<string, React.CSSProperties>>({})
+  // showingPrev: true means the board is showing the pre-blunder position.
+  // Starts as true when preMovePosition exists so the auto-play can animate forward.
+  const [showingPrev, setShowingPrev] = useState(!!step.preMovePosition)
+  // blunderPlayed: false while the auto-animation is still in progress.
+  // Board stays non-interactive until this becomes true.
+  const [blunderPlayed, setBlunderPlayed] = useState(!step.preMovePosition)
+
+  // Auto-play the opponent's blunder: pause on the pre-move position,
+  // then transition to the puzzle position so the board animates the move.
+  useEffect(() => {
+    if (!step.preMovePosition) return
+    const pauseTimer = setTimeout(() => {
+      setShowingPrev(false)          // triggers position change → animation
+    }, 1400)
+    const readyTimer = setTimeout(() => {
+      setBlunderPlayed(true)         // allow interaction after animation finishes
+    }, 2100)
+    return () => { clearTimeout(pauseTimer); clearTimeout(readyTimer) }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Arrow-key navigation for the pre-move position (only when preMovePosition exists)
+  useEffect(() => {
+    if (!step.preMovePosition) return
+    function onKey(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (e.key === "ArrowLeft"  && blunderPlayed && !showingPrev) { e.preventDefault(); setShowingPrev(true)  }
+      if (e.key === "ArrowRight" && showingPrev)                   { e.preventDefault(); setShowingPrev(false) }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [blunderPlayed, showingPrev, step.preMovePosition])
 
   const { squareStyles: annotationSquares, arrows: annotationArrows } = annotationsToProps(step.annotations)
   const learnerMoveIndex = moveHistory.length
@@ -119,6 +151,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   }
 
   const displayFen = (() => {
+    if (showingPrev && step.preMovePosition) return step.preMovePosition.fen
     if (state === "refuting" && refutationLine.length > 0) {
       const g = new Chess(game.fen())
       for (let i = 0; i <= refutationIndex; i++) {
@@ -129,28 +162,84 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     return game.fen()
   })()
 
-  const activeSquareStyles = state === "idle" ? { ...annotationSquares, ...legalMoveSquares } : {}
-  const activeArrows: Arrow[] = (state === "idle" && moveHistory.length === 0) ? annotationArrows : []
+  const activeSquareStyles: Record<string, React.CSSProperties> = (() => {
+    if (showingPrev && step.preMovePosition?.highlightSquares) {
+      const sq: Record<string, React.CSSProperties> = {}
+      for (const [s, color] of Object.entries(step.preMovePosition.highlightSquares)) {
+        sq[s] = { backgroundColor: color }
+      }
+      return sq
+    }
+    return state === "idle" ? { ...annotationSquares, ...legalMoveSquares } : {}
+  })()
+
+  const activeArrows: Arrow[] = (() => {
+    if (showingPrev && step.preMovePosition?.arrows) {
+      return step.preMovePosition.arrows.map(a => ({
+        startSquare: a.from as any, endSquare: a.to as any, color: a.color ?? "#ef4444",
+      }))
+    }
+    return (state === "idle" && moveHistory.length === 0) ? annotationArrows : []
+  })()
+
+  const interactive = state === "idle" && !showingPrev && blunderPlayed
 
   const board = (
     <Chessboard
       options={{
         position: displayFen,
         boardOrientation: step.orientation ?? "white",
-        allowDragging: state === "idle",
+        allowDragging: interactive,
         squareStyles: activeSquareStyles,
         arrows: activeArrows,
         darkSquareStyle: { backgroundColor: "#769656" },
         lightSquareStyle: { backgroundColor: "#eeeed2" },
-        onPieceDrop: state === "idle" ? handleDrop : undefined,
-        onSquareClick: state === "idle" ? handleSquareClick : undefined,
+        // Longer animation during the auto-play so the blunder move is clearly visible
+        animationDurationInMs: !blunderPlayed ? 650 : 200,
+        onPieceDrop: interactive ? handleDrop : undefined,
+        onSquareClick: interactive ? handleSquareClick : undefined,
       }}
     />
   )
 
   return (
     <LessonLayout board={board}>
-      <p className="text-lg font-semibold text-gray-900 leading-snug">{step.question}</p>
+
+      {/* Opponent's previous move — auto-plays on load, then becomes a toggle */}
+      {step.preMovePosition && (
+        <div className="flex flex-col gap-2">
+          {!blunderPlayed ? (
+            /* Auto-play phase: show a "watching" indicator */
+            <div className="flex items-center gap-2 self-start text-sm font-medium px-3.5 py-2 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+              Black plays {step.preMovePosition.san}…
+            </div>
+          ) : (
+            /* After animation: manual toggle button */
+            <button
+              onClick={() => setShowingPrev(p => !p)}
+              className={clsx(
+                "flex items-center gap-2 self-start text-sm font-medium px-3.5 py-2 rounded-xl border transition-all",
+                showingPrev
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300"
+                  : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-400 hover:border-indigo-300 dark:hover:border-indigo-700 hover:text-indigo-600 dark:hover:text-indigo-400"
+              )}
+            >
+              {showingPrev ? "→ Return to puzzle" : `← Black played ${step.preMovePosition.san}`}
+              <span className="text-xs opacity-50 font-normal ml-1">
+                {showingPrev ? "(→)" : "(←)"}
+              </span>
+            </button>
+          )}
+          {showingPrev && step.preMovePosition.annotation && (
+            <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed px-1">
+              {step.preMovePosition.annotation}
+            </p>
+          )}
+        </div>
+      )}
+
+      <p className="text-lg font-semibold text-gray-900 dark:text-slate-100 leading-snug">{step.question}</p>
 
       {/* Move history */}
       {moveHistory.length > 0 && (
@@ -166,8 +255,8 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
         </div>
       )}
 
-      {state === "idle" && moveHistory.length === 0 && (
-        <p className="text-sm text-gray-400">Make your move on the board.</p>
+      {state === "idle" && moveHistory.length === 0 && blunderPlayed && !showingPrev && (
+        <p className="text-sm text-gray-400 dark:text-slate-500">Make your move on the board.</p>
       )}
 
       {/* Wrong move feedback */}

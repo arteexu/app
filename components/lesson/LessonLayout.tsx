@@ -27,7 +27,7 @@ export function LessonLayout({ board, children }: Props) {
       </div>
 
       {/* Right: Dialogue panel */}
-      <div className="w-full lg:w-[400px] xl:w-[440px] flex flex-col gap-5 p-6 overflow-y-auto bg-white border-t lg:border-t-0 lg:border-l border-gray-100 shrink-0">
+      <div className="w-full lg:w-[400px] xl:w-[440px] flex flex-col gap-5 p-6 overflow-y-auto bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-100 dark:border-slate-700 shrink-0">
         {children}
       </div>
     </div>

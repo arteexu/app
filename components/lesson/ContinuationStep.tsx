@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Chess } from "chess.js"
 import type { ContinuationStep as ContinuationStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
@@ -15,6 +15,23 @@ interface Props {
 
 export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
   const [moveIndex, setMoveIndex] = useState(-1)
+
+  // Keyboard navigation: ← go back, → go forward
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+    if (e.key === "ArrowLeft") {
+      e.preventDefault()
+      setMoveIndex(i => Math.max(-1, i - 1))
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault()
+      setMoveIndex(i => Math.min(step.moves.length - 1, i + 1))
+    }
+  }, [step.moves.length])
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [handleKeyDown])
 
   const currentFen = (() => {
     const game = new Chess(step.fen)
@@ -73,24 +90,29 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <Button
-          onClick={() => setMoveIndex(i => Math.max(-1, i - 1))}
-          variant="secondary" size="sm"
-          disabled={moveIndex === -1}
-        >
-          ← Prev
-        </Button>
-        <Button
-          onClick={() => setMoveIndex(i => Math.min(step.moves.length - 1, i + 1))}
-          variant="secondary" size="sm"
-          disabled={isAtEnd}
-        >
-          Next →
-        </Button>
-        <Button onClick={() => setMoveIndex(-1)} variant="ghost" size="sm">
-          Reset
-        </Button>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => setMoveIndex(i => Math.max(-1, i - 1))}
+            variant="secondary" size="sm"
+            disabled={moveIndex === -1}
+          >
+            ◀ Prev
+          </Button>
+          <Button
+            onClick={() => setMoveIndex(i => Math.min(step.moves.length - 1, i + 1))}
+            variant="secondary" size="sm"
+            disabled={isAtEnd}
+          >
+            Next ▶
+          </Button>
+          <Button onClick={() => setMoveIndex(-1)} variant="ghost" size="sm">
+            ↺ Reset
+          </Button>
+        </div>
+        <p className="text-xs text-gray-400 dark:text-slate-500">
+          Tip: use ← → arrow keys to navigate
+        </p>
       </div>
 
       {isAtEnd && (

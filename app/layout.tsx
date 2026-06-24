@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Baloo_2 } from "next/font/google"
 import "./globals.css"
+import { ThemeProvider } from "@/components/ThemeProvider"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const baloo = Baloo_2({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-baloo" })
 
 export const metadata: Metadata = {
   title: "ChessMind — Learn Chess by Doing",
@@ -11,9 +13,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className={`${inter.className} min-h-full bg-gray-50 text-gray-900`}>
-        {children}
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      {/* Runs before React hydrates — prevents flash of wrong theme */}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            const t = localStorage.getItem('chessmind-theme');
+            if (t === 'dark') document.documentElement.classList.add('dark');
+          } catch(e) {}
+        `}} />
+      </head>
+      <body className={`${inter.variable} ${baloo.variable} font-sans min-h-full`}>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )

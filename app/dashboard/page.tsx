@@ -1,131 +1,117 @@
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
-import { ProgressBar } from "@/components/ui/progress-bar"
 import { getCourseProgress, getNextLesson, findLesson } from "@/lib/progress"
+import { getXp, getLevel, getWeekActivity, getTrophies } from "@/lib/gamification"
+import { QuestNav } from "@/components/ui/QuestNav"
+import { QuestHero } from "@/components/ui/QuestHero"
+import { StreakWeek } from "@/components/ui/StreakWeek"
+import { WeeklyBarChart } from "@/components/ui/WeeklyBarChart"
+import { TrophyStrip } from "@/components/ui/TrophyStrip"
+import { QuestPath } from "@/components/ui/QuestPath"
 import course from "@/content/courses/chess-attack-and-checkmate.json"
 import type { Course } from "@/lib/types"
+
+const WEEKLY_GOAL_HRS = 5
 
 export default async function Dashboard() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/signin")
 
-  const [{ data: profile }, { data: progressRows }, { data: streak }] = await Promise.all([
+  const [
+    { data: profile },
+    { data: progressRows },
+    { data: streak },
+    { data: attempts },
+  ] = await Promise.all([
     supabase.from("profiles").select("display_name").eq("id", user.id).single(),
     supabase.from("user_progress").select("lesson_id, completed_step_ids, is_lesson_complete").eq("user_id", user.id),
     supabase.from("user_streaks").select("*").eq("user_id", user.id).single(),
+    supabase.from("lesson_attempts").select("attempted_at, is_correct").eq("user_id", user.id),
   ])
 
   const allProgress = progressRows ?? []
-  const completedIds = allProgress
-    .filter((r: any) => r.is_lesson_complete)
-    .map((r: any) => r.lesson_id as string)
+  const completedIds = allProgress.filter((r: any) => r.is_lesson_complete).map((r: any) => r.lesson_id as string)
+  const totalCompletedSteps = allProgress.reduce((n: number, r: any) => n + (r.completed_step_ids?.length ?? 0), 0)
 
-  // First in-progress lesson (started but not complete)
-  const inProgressRow = allProgress.find(
-    (r: any) => !r.is_lesson_complete && r.completed_step_ids?.length > 0
-  ) as { lesson_id: string; completed_step_ids: string[] } | undefined
+  const inProgressMap = new Map<string, string[]>(
+    allProgress
+      .filter((r: any) => !r.is_lesson_complete && r.completed_step_ids?.length > 0)
+      .map((r: any) => [r.lesson_id as string, r.completed_step_ids as string[]])
+  )
+  const inProgressId = [...inProgressMap.keys()][0]
 
   const typedCourse = course as unknown as Course
   const progress = getCourseProgress(typedCourse, completedIds)
   const nextLesson = getNextLesson(typedCourse, completedIds)
-  const inProgressLesson = inProgressRow ? findLesson(typedCourse, inProgressRow.lesson_id) : null
+  const inProgressLesson = inProgressId ? findLesson(typedCourse, inProgressId) : null
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
   const currentStreak = streak?.current_streak ?? 0
+  const longestStreak = streak?.longest_streak ?? 0
 
-  const stepsDone = inProgressRow?.completed_step_ids?.length ?? 0
-  const totalSteps = inProgressLesson?.steps.length ?? 0
+  // ── Gamification (derived, no schema change) ──
+  const xp = getXp(totalCompletedSteps, completedIds.length)
+  const level = getLevel(xp)
+  const { days, totalHours } = getWeekActivity((attempts ?? []).map((a: any) => a.attempted_at as string))
+  const totalAttempts = attempts?.length ?? 0
+  const correct = attempts?.filter((a: any) => a.is_correct).length ?? 0
+  const masteryRate = totalAttempts > 0 ? Math.round((correct / totalAttempts) * 100) : null
+  const trophies = getTrophies({
+    course: typedCourse, completedLessonIds: completedIds,
+    currentStreak, longestStreak, masteryRate, weeklyHours: totalHours, weeklyGoal: WEEKLY_GOAL_HRS,
+  })
+
+  // ── Primary CTA ──
+  let ctaHref: string | null
+  let ctaLabel: string
+  const courseComplete = !nextLesson && !inProgressLesson
+  if (inProgressLesson) {
+    ctaHref = `/lessons/${inProgressLesson.id}`; ctaLabel = `Continue: ${inProgressLesson.title}`
+  } else if (nextLesson) {
+    ctaHref = `/lessons/${nextLesson.id}`; ctaLabel = progress === 0 ? "Start course" : `Next: ${nextLesson.title}`
+  } else {
+    ctaHref = `/courses/${typedCourse.id}`; ctaLabel = "Review course"
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <span className="text-xl font-bold text-indigo-600">ChessMind</span>
-        <Link href="/profile" className="text-sm text-gray-500 hover:text-gray-900">
-          {name}
-        </Link>
-      </nav>
+    <div className="min-h-screen flex flex-col">
+      <QuestNav active="dashboard" avatarInitial={name[0]?.toUpperCase() ?? "?"} />
 
-      <div className="max-w-2xl mx-auto px-4 py-10 flex flex-col gap-8">
-        {/* Greeting */}
+      <main className="flex-1 w-full max-w-6xl mx-auto px-5 sm:px-8 py-7 flex flex-col gap-7">
+
+        {/* Hero + stats */}
+        <div className="grid lg:grid-cols-[1.5fr_1fr] gap-5">
+          <QuestHero name={name} info={level} ctaHref={ctaHref} ctaLabel={ctaLabel} courseComplete={courseComplete} />
+          <div className="grid grid-cols-2 lg:grid-cols-1 gap-5">
+            <StreakWeek streak={currentStreak} days={days} />
+            <WeeklyBarChart days={days} totalHours={totalHours} goal={WEEKLY_GOAL_HRS} />
+          </div>
+        </div>
+
+        {/* Trophies */}
+        <TrophyStrip trophies={trophies} />
+
+        {/* Course header + quest path */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Hey, {name}! 👋</h1>
-          <p className="text-gray-500 mt-1">
-            {currentStreak > 0 ? `${currentStreak}-day streak — keep it going!` : "Start your streak today."}
-          </p>
-        </div>
-
-        {/* In-progress lesson — shown only when a lesson is partially complete */}
-        {inProgressLesson && (
-          <div className="bg-white rounded-2xl border border-amber-300 p-6 flex flex-col gap-4 shadow-sm">
-            <div className="flex items-center gap-2">
-              <span className="text-amber-500 text-lg">▶</span>
-              <span className="text-sm font-semibold text-amber-700 uppercase tracking-wide">In progress</span>
-            </div>
-
+          <div className="flex items-center justify-between mb-2">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">{inProgressLesson.title}</h2>
-              <p className="text-sm text-gray-500 mt-0.5">{inProgressLesson.description}</p>
+              <h2 className="font-display text-lg font-extrabold text-gray-900 dark:text-slate-100">{typedCourse.title}</h2>
+              <p className="text-sm text-gray-500 dark:text-slate-400">{progress}% complete · {completedIds.length}/{typedCourse.chapters.flatMap(c => c.lessons).length} lessons</p>
             </div>
-
-            <div className="flex flex-col gap-1">
-              <div className="flex justify-between text-xs text-gray-400">
-                <span>{stepsDone} of {totalSteps} steps done</span>
-                <span>{Math.round((stepsDone / totalSteps) * 100)}%</span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-amber-400 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.round((stepsDone / totalSteps) * 100)}%` }}
-                />
-              </div>
-            </div>
-
-            <Link
-              href={`/lessons/${inProgressLesson.id}`}
-              className="inline-flex items-center justify-center bg-amber-500 text-white rounded-xl px-6 py-3 font-semibold hover:bg-amber-400 transition self-start"
-            >
-              Continue lesson →
-            </Link>
+            <Link href={`/courses/${typedCourse.id}`} className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline">All lessons →</Link>
           </div>
-        )}
 
-        {/* Streak */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 flex items-center gap-5 shadow-sm">
-          <div className="text-4xl">🔥</div>
-          <div>
-            <p className="text-3xl font-bold text-gray-900">{currentStreak}</p>
-            <p className="text-sm text-gray-500">day streak</p>
+          <div className="bg-white/50 dark:bg-slate-800/40 rounded-3xl border border-gray-100 dark:border-slate-800 px-4 py-8 mt-3">
+            <QuestPath
+              course={typedCourse}
+              completedLessonIds={completedIds}
+              inProgressMap={inProgressMap}
+              activeLessonId={inProgressLesson?.id}
+            />
           </div>
         </div>
-
-        {/* Course card */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col gap-5 shadow-sm">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">{typedCourse.title}</h2>
-            <p className="text-sm text-gray-500 mt-0.5">{typedCourse.description}</p>
-          </div>
-
-          <ProgressBar value={progress} showLabel />
-
-          {nextLesson && !inProgressLesson && (
-            <Link
-              href={`/lessons/${nextLesson.id}`}
-              className="inline-flex items-center justify-center bg-indigo-600 text-white rounded-xl px-6 py-3 font-semibold hover:bg-indigo-500 transition self-start"
-            >
-              {progress === 0 ? "Start course →" : `Next: ${nextLesson.title} →`}
-            </Link>
-          )}
-
-          {!nextLesson && (
-            <p className="text-green-600 font-semibold">🎉 Course complete!</p>
-          )}
-
-          <Link href={`/courses/${typedCourse.id}`} className="text-sm text-indigo-500 hover:underline">
-            View all lessons
-          </Link>
-        </div>
-      </div>
+      </main>
     </div>
   )
 }

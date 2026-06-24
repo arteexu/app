@@ -18,18 +18,82 @@
             {
               "type": "concept",
               "id": "s-goal-concept",
-              "title": "The goal is checkmate",
-              "body": "Chess has one objective: **checkmate** the enemy king.\n\nCheckmate means the king is in **check** (under attack) and has **no legal move** to escape. The moment checkmate happens, the game is over — the mated player loses immediately.\n\nNotice the position on the right. The white queen on h5 is attacking the black king on e8. The king cannot move: d7, e7, and f7 are all covered. This is checkmate.",
-              "fen": "r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4",
+              "title": "The only objective: checkmate",
+              "body": "Chess has one objective: **checkmate** the enemy king.\n\nCheckmate means three things are true at the same time:\n1. The king is in **check** — it is under attack by an enemy piece\n2. The king **cannot move** to any safe square\n3. The check **cannot be blocked** or the attacking piece **cannot be captured**\n\nWhen all three hold, the game ends immediately. Let's look at the three most fundamental checkmates so you can see exactly what this feels like."
+            },
+            {
+              "type": "concept",
+              "id": "s-goal-queen-mate",
+              "title": "The simplest checkmate: King and Queen",
+              "body": "Look at the board. The white queen on e7 attacks the black king on e8 — that's check.\n\nNow look at every square the king might flee to:\n- **d8** — covered by the queen (diagonal)\n- **d7** — covered by the queen and the white king\n- **f8** — covered by the queen (diagonal)\n- **f7** — covered by the queen and the white king\n- **e7** — occupied by the queen, which is protected by the king\n\nEvery escape is cut off. The squares are highlighted in orange. **Checkmate.**",
+              "fen": "4k3/4Q3/4K3/8/8/8/8/8 w - - 0 1",
               "annotations": {
-                "arrows": [
-                  { "from": "f7", "to": "e8", "color": "#f6a623" }
-                ],
                 "highlightSquares": {
-                  "e8": "rgba(255, 0, 0, 0.4)",
-                  "f7": "rgba(255, 165, 0, 0.4)"
+                  "e8": "rgba(200, 0, 0, 0.5)",
+                  "d8": "rgba(200, 50, 0, 0.5)",
+                  "d7": "rgba(200, 50, 0, 0.5)",
+                  "f8": "rgba(200, 50, 0, 0.5)",
+                  "f7": "rgba(200, 50, 0, 0.5)"
+                },
+                "arrows": [
+                  { "from": "e7", "to": "e8", "color": "#ef4444" }
+                ]
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-goal-backrank-puzzle",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is trapped behind its own pawns. Find checkmate in 1.",
+              "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Re8#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Re7": "Re7 does not give check — the king can still move. The rook needs to reach the 8th rank to attack the king directly.",
+                    "Re6": "Re6 moves toward the center, but the king can still escape. Find the square that delivers check along rank 8.",
+                    "Re2": "A quiet move — no check, no checkmate. Look for a move that attacks the king immediately."
+                  }
+                }
+              },
+              "explanation": "Re8# — the rook swings to the 8th rank and delivers check to the king on g8. The king cannot escape: f8 and h8 are covered by the rook along rank 8, and f7, g7, h7 are all blocked by Black's own pawns. This is called the **back rank mate** — the king's pawn shelter becomes its prison.",
+              "successMessage": "The back rank mate — the king's own pawns become its prison!"
+            },
+            {
+              "type": "concept",
+              "id": "s-goal-smothered-concept",
+              "title": "The smothered mate: trapped by your own pieces",
+              "body": "A **smothered mate** is delivered by a **knight** to a king that is completely surrounded by its own pieces.\n\nKnights are unique — they jump over other pieces and deliver checks that **cannot be blocked**. If the king has no escape squares because its own army fills them, it is hopelessly trapped.\n\nLook at the board. The black king on h8 is hemmed in on all sides:\n- **g8** — blocked by the black rook\n- **g7** — blocked by a black pawn\n- **h7** — blocked by a black pawn\n\nThe white knight on g5 is one move from delivering an unstoppable check. Can you see where it should go?",
+              "fen": "6rk/6pp/8/6N1/8/8/5PPP/6K1 w - - 0 1",
+              "annotations": {
+                "highlightSquares": {
+                  "h8": "rgba(200, 0, 0, 0.5)",
+                  "g8": "rgba(80, 100, 230, 0.5)",
+                  "g7": "rgba(80, 100, 230, 0.5)",
+                  "h7": "rgba(80, 100, 230, 0.5)"
                 }
               }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-goal-smothered-puzzle",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is smothered by its own pieces. Find the knight checkmate in 1.",
+              "fen": "6rk/6pp/8/6N1/8/8/5PPP/6K1 w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Nf7#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Nh7": "Nh7 gives check, but the king can move to g8 — the rook doesn't block it in this line. Find the square where the knight covers h8 AND blocks all other exits.",
+                    "Ne6": "Ne6 doesn't give check at all. The knight needs to jump to a square that attacks h8 directly.",
+                    "Nh3": "Nh3 retreats — no check, no progress. Look for the attacking move."
+                  }
+                }
+              },
+              "explanation": "Nf7# — the knight jumps to f7, attacking the king on h8. Knight checks can never be blocked, only the king can respond. But every escape square is filled by Black's own pieces: g8 has the rook, g7 and h7 have pawns. The king is smothered. Checkmate!",
+              "successMessage": "The smothered mate — the knight seals the king in its own fortress!"
             },
             {
               "type": "multiple-choice",
@@ -42,17 +106,6 @@
                 { "text": "A player runs out of moves", "explanation": "Having no moves is only checkmate if you're also in check. If you have no moves but aren't in check, that's stalemate — a draw." }
               ],
               "correctIndex": 0
-            },
-            {
-              "type": "identify",
-              "id": "s-goal-identify1",
-              "question": "The position below is checkmate. Click the square of the piece delivering check to the black king.",
-              "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 b - - 0 1",
-              "correctSquare": "e1",
-              "explanation": "The white rook on e1 delivers check along the e-file. The black king on g8 can't escape — f8, h8, f7, g7, and h7 are all blocked or covered. Checkmate.",
-              "annotations": {
-                "arrows": [{ "from": "e1", "to": "e8", "color": "#f6a623" }]
-              }
             }
           ]
         },
@@ -152,14 +205,13 @@
               "id": "s-brm-puzzle1",
               "subType": "checkmate-in-n",
               "question": "White to move. Deliver checkmate in 1.",
-              "fen": "5rk1/5ppp/8/8/8/8/5PPP/3RR1K1 w - - 0 1",
+              "fen": "6k1/6p1/6P1/8/8/8/8/R6K w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Re8#"],
+                "moves": ["Ra8#"],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Rd8": "Rd8 is check, but after Rxd8, White has not delivered checkmate.",
-                    "Rd7": "Rd7 doesn't deliver check at all — the king is not under attack."
+                    "Ra7": "This is not a check!"
                   }
                 }
               },
@@ -186,22 +238,129 @@
             },
             {
               "type": "puzzle",
-              "id": "s-brm-refutation1",
-              "subType": "find-refutation",
-              "question": "Black just played Qe1?? — moving the queen off f8. White is to move. Find the immediate checkmate.",
-              "fen": "6k1/6pp/6K1/8/8/8/6PP/4qR2 w - - 0 1",
+              "id": "s-brm-puzzle3",
+              "subType": "checkmate-in-n",
+              "question": "Black just captured your queen with Rxb1 — a catastrophic blunder. White to move. Find checkmate in 1.",
+              "fen": "6k1/6p1/6K1/8/8/8/8/1r1R4 w - - 0 2",
               "orientation": "white",
+              "preMovePosition": {
+                "fen": "1r4k1/6p1/6K1/8/8/8/8/1Q1R4 b - - 0 1",
+                "san": "Rxb1",
+                "annotation": "Black captured the queen on b1 — but the queen was bait. Now the d1 rook has a clear path to the back rank, and the white king on g6 covers every escape square on the 7th rank.",
+                "arrows": [
+                  { "from": "b8", "to": "b1", "color": "#ef4444" }
+                ],
+                "highlightSquares": {
+                  "b8": "rgba(239,68,68,0.25)",
+                  "b1": "rgba(239,68,68,0.4)"
+                }
+              },
               "solution": {
-                "moves": ["Rf8#"],
+                "moves": ["Rd8#"],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Rxe1": "Rxe1 wins the queen, but there is an immediate checkmate available! The queen blundered off f8 — look for the back rank blow.",
-                    "Kh6": "Kh6 moves the king but misses the checkmate. The winning move uses the rook, not the king."
+                    "Rd7": "Rd7 doesn't give check — the king on g8 can still move. The rook needs to land on rank 8.",
+                    "Rd2": "Rd2 retreats the rook and throws away the immediate checkmate. The back rank is wide open right now!",
+                    "Re1": "Re1 captures nothing useful and misses the checkmate. Look for the rook move to the 8th rank."
                   }
                 }
               },
-              "explanation": "Rf8# — the rook delivers checkmate on the back rank. The black queen had been guarding f8; once it moved to e1, the f-file was open. After Rf8+: h8 is covered by the rook along rank 8, g7 and h7 are blocked by Black's own pawns, and f7 is covered by the white king on g6. The king has nowhere to go.",
-              "successMessage": "Exactly — the queen abandoned the critical f8 square and paid the price."
+              "explanation": "Rd8# — the rook swings to the back rank for immediate checkmate. The black king on g8 is trapped: f8 and h8 are covered by the rook along rank 8, g7 is blocked by Black's own pawn, and f7 and h7 are both covered by the white king on g6. Rxb1 was a classic back rank oversight — Black won a queen but walked into a forced mate.",
+              "successMessage": "Back rank mate! The queen was a decoy — the rook on d1 was the real threat all along."
+            }
+          ]
+        },
+        {
+          "id": "l-mating-patterns",
+          "title": "Common Mating Patterns",
+          "description": "Four essential checkmating patterns every chess player must recognise — from the lawnmower to the epaulette.",
+          "estimatedMinutes": 14,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-mp-concept",
+              "title": "Recognising checkmate patterns",
+              "body": "The strongest chess players don't calculate every move from scratch — they **recognise patterns**.\n\nA mating pattern is a recurring configuration of pieces that reliably delivers checkmate. Once you know the pattern, you can spot it in seconds and execute it with confidence.\n\nIn this lesson you will learn four essential patterns:\n1. **The Rook Ladder** — two rooks working together to herd a lone king off the board\n2. **The Arabian Mate** — a knight and rook trap a king in the corner\n3. **Morphy's Mate** — a bishop and rook collaborate on the back rank\n4. **The Epaulette Mate** — a queen delivers mate while the enemy king is flanked by its own pieces"
+            },
+            {
+              "type": "continuation",
+              "id": "s-mp-rook-ladder",
+              "title": "The Rook Ladder",
+              "description": "Two rooks cut off rank after rank, driving the lone king toward the edge. Step through each move to see the technique.",
+              "fen": "7K/7R/6R1/k7/8/8/8/8 w - - 0 1",
+              "orientation": "white",
+              "moves": ["Rh5+", "Kb4", "Rg4+", "Kc3", "Rh3+", "Kd2", "Rg2+", "Ke1", "Rh1#"],
+              "moveAnnotations": {
+                "0": "Rh5+ — the first rook cuts off rank 5. The king must retreat upward, but rank 5 is now permanently sealed. The second rook is waiting.",
+                "1": "Kb4 — the king flees down the board. It has no choice: every square on rank 5 is covered by the rook.",
+                "2": "Rg4+ — the second rook cuts off rank 4. The key idea: one rook holds the previous rank while the other advances. The king cannot cross back.",
+                "3": "Kc3 — forced to retreat again. The king loses another rank.",
+                "4": "Rh3+ — the first rook leapfrogs forward, cutting off rank 3. The alternating pattern is called the 'lawnmower' — the rooks mow down rank after rank.",
+                "5": "Kd2 — the king is nearly out of room now. Rank 1 is the last refuge.",
+                "6": "Rg2+ — rank 2 is sealed. One more rank and the king is cornered.",
+                "7": "Ke1 — the king steps onto rank 1 — there is nowhere left to go.",
+                "8": "Rh1# — the second rook delivers the final blow on rank 1. The king is trapped: rank 2 is controlled by the other rook, and rank 1 is now sealed. Checkmate!"
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-mp-arabian",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is in the corner. Use the knight and rook to deliver the Arabian Mate in 1.",
+              "fen": "7k/R7/5N2/5K2/8/8/8/8 w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Rh7#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Ra8": "Ra8 gives check along rank 8, but the king can escape to g7. You need the rook on a square that also seals rank 7.",
+                    "Rg7": "Rg7 controls rank 7 but doesn't give check — the king isn't attacked. The rook needs to be on the h-file to check along it.",
+                    "Nh7": "Nh7 attacks the king on h8, but after Kxh7 the king escapes. The knight alone cannot deliver checkmate here."
+                  }
+                }
+              },
+              "explanation": "Rh7# — the rook slides to h7, checking the king along the h-file. The king has no escape: g8 is covered by the knight on f6, g7 is covered by the rook along rank 7, and capturing the rook is impossible because the knight on f6 protects h7. This is the Arabian Mate — a knight and rook trap the king in the corner.",
+              "successMessage": "The Arabian Mate — knight guards the escape, rook delivers the final check!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-mp-morphy",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is sheltered by its own pawns — but those pawns are now a prison. Find Morphy's Mate in 1.",
+              "fen": "6k1/5p1p/7B/8/8/8/8/3R3K w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Rd8#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Rd7": "Rd7 doesn't give check — the king can still move. The rook needs to land on rank 8 to attack the king directly.",
+                    "Bf8": "Bf8 attacks nothing critical and doesn't give check. The bishop is already perfectly placed on h6 covering g7.",
+                    "Rd6": "Rd6 is a quiet move with no immediate threat. Look for the move that delivers check along the back rank."
+                  }
+                }
+              },
+              "explanation": "Rd8# — the rook lands on the 8th rank and checks the king on g8. Every escape is sealed: f8 and h8 are covered by the rook along rank 8, the pawn on f7 blocks f7, the pawn on h7 blocks h7, and — crucially — g7 is covered by the bishop on h6. Without the bishop, the king could flee to g7. This is Morphy's Mate: rook on the back rank, bishop guarding the key escape diagonal.",
+              "successMessage": "Morphy's Mate — the bishop seals the diagonal, the rook finishes the job!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-mp-epaulette",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is flanked by its own rooks — the 'epaulettes'. Find the queen checkmate in 1.",
+              "fen": "3rkr2/8/8/8/8/8/8/4Q2K w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Qe7#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qe5": "Qe5 gives check along the e-file, but the king can escape to d7 or f7. The queen needs to be on e7 to seal rank 7 as well.",
+                    "Qa5": "Qa5 doesn't give check at all. Look for a square where the queen checks along the e-file AND covers both d7 and f7.",
+                    "Qe6": "Qe6 gives check, but after Kd7 or Kf7 the king escapes. The queen must be on e7 — one square from the king — to control rank 7 at the same time."
+                  }
+                }
+              },
+              "explanation": "Qe7# — the queen steps to e7, one square from the king, giving check along the e-file. The king's own rooks on d8 and f8 are the 'epaulettes' — like shoulder decorations — that seal those squares. The queen on e7 simultaneously covers d7 and f7 along rank 7. Every escape is blocked. This is the Epaulette Mate: the king imprisoned by its own pieces, the queen delivering the final blow.",
+              "successMessage": "The Epaulette Mate — the king's own rooks become its jailers!"
             }
           ]
         },
@@ -232,34 +391,65 @@
               "correctIndex": 0
             },
             {
-              "type": "puzzle",
-              "id": "s-qk-puzzle1",
-              "subType": "checkmate-in-n",
-              "question": "White to move. The black king is already on the edge. Find checkmate in 2.",
-              "fen": "8/8/8/8/8/6K1/8/6kQ w - - 0 1",
-              "orientation": "white",
-              "solution": {
-                "moves": ["Qh2+", "Kg1", "Qg2#"],
-                "wrongMoveExplanations": {
-                  "0": {
-                    "Qg2+": "Qg2+ is stalemate if the king has no other moves — always check for stalemate before delivering check near a corner!",
-                    "Kf3": "Kf3 approaches but doesn't force immediate mate. The position requires precise queen moves."
-                  }
-                }
-              },
-              "explanation": "Qh2+ forces the king to g1 (the only legal move). Then Qg2# — the king is trapped in the corner by its own piece (the king's own squares are covered by White's king on g3 and queen on g2). Watch out for Qg2+ as move 1 — that would be stalemate!",
-              "successMessage": "Perfect — and you avoided the stalemate trap!"
-            },
-            {
               "type": "play-vs-bot",
               "id": "s-qk-playvbot1",
-              "question": "Apply what you've learned. Box in the black king and deliver checkmate. You have a queen and king — use them together.",
+              "question": "Now put it into practice. Deliver checkmate against the bot — it plays random legal moves. How few moves can you do it in?",
               "fen": "8/8/8/3k4/8/3K4/8/3Q4 w - - 0 1",
               "orientation": "white",
-              "objective": "Deliver checkmate to the black king",
-              "maxMoves": 20,
+              "objective": "Checkmate the bot — your move count is shown when you win",
               "successCondition": "checkmate",
-              "explanation": "The key steps: (1) use the queen to push the king toward the edge, (2) bring your king in, (3) force the king to a corner, then (4) deliver checkmate — carefully avoiding stalemate on the last move."
+              "explanation": "Box the king toward a corner: (1) use the queen to shrink the king's space rank by rank, (2) bring your king in close, (3) force the king to the edge or corner, (4) deliver checkmate — carefully avoiding stalemate. A clean result is under 15 moves."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-checkmates-in-games",
+      "title": "Checkmates in Games",
+      "description": "See how checkmate patterns appear in real games — sometimes in just a few moves.",
+      "lessons": [
+        {
+          "id": "l-scholars-mate",
+          "title": "The Scholar's Mate",
+          "description": "One of the fastest checkmates in chess — delivered in just 4 moves.",
+          "estimatedMinutes": 6,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-sm-intro",
+              "title": "Checkmates can happen fast",
+              "body": "In a real game, checkmate can arrive in just a handful of moves — if your opponent isn't paying attention.\n\nThe **Scholar's Mate** (sometimes called the Fool's Mate) is one of the most well-known quick checkmates. White uses the queen and bishop together to attack f7, the weakest square in Black's starting position — defended only by the king.\n\nStep through the game below to see the trap close. Pay attention to how the queen and bishop coordinate: neither piece alone could deliver mate, but together they make it inevitable."
+            },
+            {
+              "type": "continuation",
+              "id": "s-sm-game",
+              "title": "The Scholar's Mate",
+              "description": "White delivers checkmate in 4 moves. Step through each move to see the trap — and the critical mistake.",
+              "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+              "orientation": "white",
+              "moves": ["e4", "e5", "Qh5", "Nc6", "Bc4", "Nf6", "Qxf7#"],
+              "moveAnnotations": {
+                "0": "1. e4 — White opens with the King's Pawn, claiming the center and clearing paths for the queen and bishop.",
+                "1": "1...e5 — Black mirrors, also staking a claim in the center. The position looks perfectly equal.",
+                "2": "2. Qh5 — White brings the queen out early to h5. Unusual — but it immediately eyes f7, defended only by Black's king. A threat is brewing.",
+                "3": "2...Nc6 — Black develops the knight, defending e5. Sensible, but the threat on f7 is still unaddressed. 2...g6 (pushing the queen back) was the correct response.",
+                "4": "3. Bc4 — The bishop aims at f7. Now the queen on h5 and bishop on c4 both target f7. The trap is fully set.",
+                "5": "3...Nf6?? — A natural-looking developing move, but a fatal blunder. Black tries to attack the queen without realising White has checkmate in one. The only defence was 3...g6.",
+                "6": "4. Qxf7# — Checkmate! The queen lands on f7, protected by the bishop on c4. The king cannot escape: d7 and e7 are controlled by the queen along rank 7, f8 is on the f-file, and d8 is blocked by Black's own queen. The bishop prevents capturing the queen."
+              }
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-sm-mc1",
+              "question": "Why is 3...Nf6 a blunder in the Scholar's Mate?",
+              "options": [
+                { "text": "It allows Qxf7# — checkmate that cannot be stopped", "explanation": "Exactly. After Nf6, White has an immediate forced checkmate with Qxf7#. The queen is protected by the bishop, and the king has no escape. Black should have played 3...g6 to push the queen back." },
+                { "text": "It loses the knight to a bishop fork", "explanation": "No fork is involved here. The issue is that Nf6 ignores the checkmate threat on f7. The queen and bishop already had checkmate set up." },
+                { "text": "It weakens the pawn structure", "explanation": "Pawn structure is irrelevant here — the game ends on the very next move with Qxf7#. The problem is the immediate checkmate threat that Nf6 fails to address." },
+                { "text": "It blocks the bishop on f8", "explanation": "While Nf6 does block the f8 bishop, that's not the critical problem. The real issue is that it does nothing to stop Qxf7#, which is checkmate." }
+              ],
+              "correctIndex": 0
             }
           ]
         }

@@ -34,3 +34,20 @@ body {
     radial-gradient(120% 80% at 50% -10%, #1e1b3a 0%, #131329 34%, #0f172a 100%) fixed;
   color: #f1f5f9;
 }
+
+/* ── Quest HUD solving redesign — keyframes ────────────────────────────────── */
+@keyframes confFall {
+  0%   { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--dy) * -1 + 360px)) rotate(var(--rot)); opacity: 0; }
+}
+@keyframes starPop {
+  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes rise {
+  0%   { transform: translateY(14px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="confFall"], [style*="starPop"], [style*="rise"] { animation: none !important; }
+}

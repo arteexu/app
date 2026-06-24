@@ -1,4 +1,6 @@
 "use client"
+// components/lesson/ConceptCard.tsx — restyled board-explanation (Quest look).
+// Logic unchanged. <Chessboard> usage is IDENTICAL to the app (untouched).
 import type { ConceptStep } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Chessboard } from "react-chessboard"
@@ -29,15 +31,16 @@ export function ConceptCard({ step, onContinue }: Props) {
 
   return (
     <LessonLayout board={board}>
-      <h2 className="text-2xl font-bold text-gray-900">{step.title}</h2>
+      <div className="text-[11px] font-extrabold tracking-[0.1em] uppercase text-indigo-600 dark:text-indigo-400">Concept</div>
+      <h2 className="font-display text-[26px] font-extrabold leading-tight text-gray-900 dark:text-slate-100">{step.title}</h2>
 
-      <div className="text-gray-700 text-base leading-relaxed">
+      <div className="text-gray-700 dark:text-slate-300 text-[15px] leading-relaxed">
         {renderBody(step.body)}
       </div>
 
       {step.analogy && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-amber-900 text-sm">
-          <span className="font-semibold">Another way to think about it: </span>
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl px-4 py-3 text-amber-900 dark:text-amber-300 text-sm">
+          <span className="font-bold">Another way to think about it: </span>
           {step.analogy}
         </div>
       )}
@@ -59,7 +62,7 @@ function renderBody(body: string) {
           <p key={pi}>
             {parts.map((part, i) =>
               part.startsWith("**") && part.endsWith("**")
-                ? <strong key={i}>{part.slice(2, -2)}</strong>
+                ? <strong key={i} className="text-gray-900 dark:text-slate-100">{part.slice(2, -2)}</strong>
                 : <span key={i}>{part}</span>
             )}
           </p>

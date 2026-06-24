@@ -1,4 +1,7 @@
 "use client"
+// components/lesson/LessonLayout.tsx
+// Unchanged from the app EXCEPT the right dialogue panel is now `relative` so the
+// SolveReward overlay can cover it. Board side untouched (react-chessboard).
 
 interface Props {
   board?: React.ReactNode
@@ -26,8 +29,8 @@ export function LessonLayout({ board, children }: Props) {
         </div>
       </div>
 
-      {/* Right: Dialogue panel */}
-      <div className="w-full lg:w-[400px] xl:w-[440px] flex flex-col gap-5 p-6 overflow-y-auto bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-100 dark:border-slate-700 shrink-0">
+      {/* Right: Dialogue panel (relative → hosts the SolveReward overlay) */}
+      <div className="relative w-full lg:w-[400px] xl:w-[440px] flex flex-col gap-5 p-6 overflow-y-auto bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-100 dark:border-slate-700 shrink-0">
         {children}
       </div>
     </div>

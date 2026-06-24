@@ -24,19 +24,22 @@
             {
               "type": "concept",
               "id": "s-goal-queen-mate",
-              "title": "The simplest checkmate: King and Queen",
-              "body": "Look at the board. The white queen on e7 attacks the black king on e8 — that's check.\n\nNow look at every square the king might flee to:\n- **d8** — covered by the queen (diagonal)\n- **d7** — covered by the queen and the white king\n- **f8** — covered by the queen (diagonal)\n- **f7** — covered by the queen and the white king\n- **e7** — occupied by the queen, which is protected by the king\n\nEvery escape is cut off. The squares are highlighted in orange. **Checkmate.**",
-              "fen": "4k3/4Q3/4K3/8/8/8/8/8 w - - 0 1",
+              "title": "A king with nowhere to run",
+              "body": "Look at the board. The black king on a8 is in **check** from the white bishop on c6 (the diagonal c6-b7-a8).\n\nNow watch it try to escape — and fail:\n- **b8** — the white **knight** on a6 controls b8 (highlighted green). Blocked.\n- **a7** — the white **king** on b6 controls a7 (highlighted blue). Blocked.\n- **b7** — the white **bishop** AND **king** both cover b7 (highlighted orange). Blocked.\n\nEvery square is watched. The king has no legal move. That is **checkmate** — the game ends here.",
+              "fen": "k7/8/NKB5/8/8/8/8/8 b - - 0 1",
               "annotations": {
                 "highlightSquares": {
-                  "e8": "rgba(200, 0, 0, 0.5)",
-                  "d8": "rgba(200, 50, 0, 0.5)",
-                  "d7": "rgba(200, 50, 0, 0.5)",
-                  "f8": "rgba(200, 50, 0, 0.5)",
-                  "f7": "rgba(200, 50, 0, 0.5)"
+                  "a8": "rgba(239, 68, 68, 0.5)",
+                  "b8": "rgba(34, 197, 94, 0.35)",
+                  "a7": "rgba(59, 130, 246, 0.35)",
+                  "b7": "rgba(251, 146, 60, 0.4)"
                 },
                 "arrows": [
-                  { "from": "e7", "to": "e8", "color": "#ef4444" }
+                  { "from": "c6", "to": "a8", "color": "#ef4444" },
+                  { "from": "a6", "to": "b8", "color": "#22c55e" },
+                  { "from": "b6", "to": "a7", "color": "#3b82f6" },
+                  { "from": "c6", "to": "b7", "color": "#f97316" },
+                  { "from": "b6", "to": "b7", "color": "#f97316" }
                 ]
               }
             },
@@ -106,54 +109,6 @@
                 { "text": "A player runs out of moves", "explanation": "Having no moves is only checkmate if you're also in check. If you have no moves but aren't in check, that's stalemate — a draw." }
               ],
               "correctIndex": 0
-            }
-          ]
-        },
-        {
-          "id": "l-board-vision",
-          "title": "Board Vision",
-          "description": "See the whole board — find threats before they happen.",
-          "estimatedMinutes": 7,
-          "steps": [
-            {
-              "type": "concept",
-              "id": "s-bv-concept",
-              "title": "Board vision: seeing threats before they land",
-              "body": "Strong players don't just look at the piece they're moving — they scan the **entire board**.\n\nEvery move changes the position. You need to ask: after I move, what can my opponent do? What squares are newly attacked? What pieces are now undefended?\n\nThe three things to scan every move:\n1. **Checks** — is the king attacked?\n2. **Captures** — can any piece be taken for free?\n3. **Threats** — what is my opponent threatening to do next?\n\nThese are also called **candidate moves** — the forcing moves you must consider first.",
-              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
-              "analogy": "Think of board vision like peripheral vision in a sport. A great basketball player doesn't stare at the ball — they see the whole court. A great chess player doesn't stare at one piece — they see every threat on the board."
-            },
-            {
-              "type": "multiple-choice",
-              "id": "s-bv-mc1",
-              "question": "What should you always check FIRST when considering a move?",
-              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
-              "options": [
-                { "text": "Checks, captures, and threats — in that order", "explanation": "Correct. Forcing moves (checks first, then captures, then threats) narrow your candidate list and ensure you don't miss a tactic." },
-                { "text": "The move that develops the most pieces", "explanation": "Development matters, but only after you've verified your king is safe and there's no immediate tactic to play or defend." },
-                { "text": "The move your opponent least expects", "explanation": "Surprise has value, but not at the cost of missing a forced sequence. Candidate moves — checks, captures, threats — come first." },
-                { "text": "The move that controls the center", "explanation": "Center control is important in the long run, but a forcing tactic beats positional goals every time." }
-              ],
-              "correctIndex": 0
-            },
-            {
-              "type": "puzzle",
-              "id": "s-bv-puzzle1",
-              "subType": "best-move",
-              "question": "White to move. Find the only move that wins material immediately.",
-              "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
-              "orientation": "white",
-              "solution": {
-                "moves": ["Ng5"],
-                "wrongMoveExplanations": {
-                  "0": {
-                    "Nxe5": "Nxe5 loses the knight to Qd4+, forking the knight and king.",
-                    "d3": "A quiet developing move misses the immediate tactical shot."
-                  }
-                }
-              },
-              "explanation": "Ng5 attacks f7 — the weakest point in Black's position, defended only by the king. This creates an unstoppable double threat: Nxf7 winning the rook, or Bxf7+ leading to checkmate. The candidate move check reveals it immediately.",
-              "successMessage": "Nice eye! Ng5 exploits the weakest square in Black's position."
             }
           ]
         }
@@ -278,9 +233,27 @@
           "steps": [
             {
               "type": "concept",
+              "id": "s-mp-why-checkmates",
+              "title": "Why study checkmates first?",
+              "body": "Here is a counterintuitive truth about chess improvement: **study the ending before the beginning.**\n\nIt doesn't matter if you outplay your opponent and win every piece off the board — if you can't deliver checkmate, the game is a draw. Many beginners win material and then flounder when it's time to finish.\n\nThe solution: **study chess backwards.** Learn how to beat your opponent in simplified endgame positions first. Once you know how to deliver checkmate with common material combinations, you develop a concrete goal to aim for throughout the whole game.\n\nThen, and only then, move on to the more complex strategies and dynamics that play out in the middlegame and the opening. The path to chess mastery starts at the end — with checkmate."
+            },
+            {
+              "type": "concept",
               "id": "s-mp-concept",
-              "title": "Recognising checkmate patterns",
-              "body": "The strongest chess players don't calculate every move from scratch — they **recognise patterns**.\n\nA mating pattern is a recurring configuration of pieces that reliably delivers checkmate. Once you know the pattern, you can spot it in seconds and execute it with confidence.\n\nIn this lesson you will learn four essential patterns:\n1. **The Rook Ladder** — two rooks working together to herd a lone king off the board\n2. **The Arabian Mate** — a knight and rook trap a king in the corner\n3. **Morphy's Mate** — a bishop and rook collaborate on the back rank\n4. **The Epaulette Mate** — a queen delivers mate while the enemy king is flanked by its own pieces"
+              "title": "What are mating patterns — and why learn them?",
+              "body": "A **mating pattern** is a recurring arrangement of pieces that reliably forces checkmate. Thousands of different games end in a handful of identical-looking configurations.\n\nLearning these patterns gives you three advantages:\n1. **Speed** — you spot checkmate opportunities in seconds instead of calculating from scratch.\n2. **Confidence** — you know what the winning position looks like, so you steer toward it.\n3. **Economy** — you stop wasting moves and finish games efficiently.\n\nIn this lesson you will learn four essential patterns:\n1. **The Rook Ladder** — two rooks herd a lone king to the edge, rank by rank\n2. **The Arabian Mate** — a knight and rook trap a king in the corner\n3. **Morphy's Mate** — a bishop and rook combine on the back rank\n4. **The Swiss Cheese Mate** — a queen exploits gaps in the pawn structure"
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-mp-why-mc",
+              "question": "Why is studying mating patterns one of the most effective ways to improve at chess?",
+              "options": [
+                { "text": "They teach you to recognise winning configurations instantly, so you can steer toward them all game", "explanation": "Exactly. Patterns shortcut calculation — once you know what checkmate looks like, you play toward it from the very first move. That's why strong players make mating attacks look inevitable rather than accidental." },
+                { "text": "Memorising patterns is the only way to win — all chess games are just pattern recall", "explanation": "Not quite. Patterns are a powerful tool, but chess also requires calculation, positional judgment, and creativity. Patterns give you a template; you still need to read the position." },
+                { "text": "They help you avoid draws by stalemate", "explanation": "Stalemate awareness is a separate skill. Mating patterns are about recognising checkmate configurations quickly so you can create and execute them in your own games." },
+                { "text": "Opening theory is more important, so patterns are mainly for beginners", "explanation": "Actually the opposite is true. Understanding how to finish a game is foundational — once you know the endgame, your opening and middlegame choices become purposeful. Strong players of all levels keep sharpening their pattern recognition." }
+              ],
+              "correctIndex": 0
             },
             {
               "type": "continuation",
@@ -344,30 +317,37 @@
             },
             {
               "type": "puzzle",
-              "id": "s-mp-epaulette",
+              "id": "s-mp-swiss-cheese",
               "subType": "checkmate-in-n",
-              "question": "White to move. The black king is flanked by its own rooks — the 'epaulettes'. Find the queen checkmate in 1.",
-              "fen": "3rkr2/8/8/8/8/8/8/4Q2K w - - 0 1",
+              "question": "White to move. Black's pawn structure has holes like Swiss cheese — dark squares g6, g7, and h8 are all weak. Find the queen checkmate in 1.",
+              "fen": "q5k1/5p1p/5QpP/8/8/8/5PPP/6K1 w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Qe7#"],
+                "moves": ["Qg7#"],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Qe5": "Qe5 gives check along the e-file, but the king can escape to d7 or f7. The queen needs to be on e7 to seal rank 7 as well.",
-                    "Qa5": "Qa5 doesn't give check at all. Look for a square where the queen checks along the e-file AND covers both d7 and f7.",
-                    "Qe6": "Qe6 gives check, but after Kd7 or Kf7 the king escapes. The queen must be on e7 — one square from the king — to control rank 7 at the same time."
+                    "Qh8": "Qh8 gives check, but the king can move to f7 or h7 — not checkmate.",
+                    "Qf8": "Qf8 gives check, but the king escapes to h7. The queen needs to cover both g8 and the king's escape squares simultaneously.",
+                    "Qg6": "Qg6 attacks the pawn but gives no check. Look for the square where the queen delivers check AND seals every escape."
                   }
                 }
               },
-              "explanation": "Qe7# — the queen steps to e7, one square from the king, giving check along the e-file. The king's own rooks on d8 and f8 are the 'epaulettes' — like shoulder decorations — that seal those squares. The queen on e7 simultaneously covers d7 and f7 along rank 7. Every escape is blocked. This is the Epaulette Mate: the king imprisoned by its own pieces, the queen delivering the final blow.",
-              "successMessage": "The Epaulette Mate — the king's own rooks become its jailers!"
+              "explanation": "Qg7# — the queen steps onto the weak g7 square and delivers checkmate. The black king on g8 has nowhere to go: f8 and h8 are covered by the queen along rank 8 and diagonals, f7 and h7 are blocked by Black's own pawns, and g7 is occupied by the queen itself. The black pawn structure on g6, g7, h7 looked like shelter — but it became a prison. The 'Swiss cheese' name comes from the holes punched through Black's dark squares.",
+              "successMessage": "The Swiss Cheese Mate — Black's own pawns sealed the escape!"
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "ch-checkmating-drills",
+      "title": "Checkmating Drills",
+      "description": "Practice delivering checkmate from random positions — track your move count and beat your record.",
+      "lessons": [
         {
           "id": "l-queen-king-mate",
-          "title": "Queen and King Checkmate",
-          "description": "The most important endgame technique — how to force checkmate with a queen and king against a lone king.",
+          "title": "Checkmate with Queen and King",
+          "description": "Herd the lone king to the edge and deliver checkmate. How few moves can you do it in?",
           "estimatedMinutes": 10,
           "steps": [
             {
@@ -391,6 +371,25 @@
               "correctIndex": 0
             },
             {
+              "type": "puzzle",
+              "id": "s-qk-puzzle1",
+              "subType": "checkmate-in-n",
+              "question": "White to move. The black king is already on the edge. Find checkmate in 2.",
+              "fen": "8/8/8/8/8/6K1/8/6kQ w - - 0 1",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Qh2+", "Kg1", "Qg2#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qg2+": "Qg2+ is stalemate if the king has no other moves — always check for stalemate before delivering check near a corner!",
+                    "Kf3": "Kf3 approaches but doesn't force immediate mate. The position requires precise queen moves."
+                  }
+                }
+              },
+              "explanation": "Qh2+ forces the king to g1 (the only legal move). Then Qg2# — the king is trapped in the corner by its own piece (the king's own squares are covered by White's king on g3 and queen on g2). Watch out for Qg2+ as move 1 — that would be stalemate!",
+              "successMessage": "Perfect — and you avoided the stalemate trap!"
+            },
+            {
               "type": "play-vs-bot",
               "id": "s-qk-playvbot1",
               "question": "Now put it into practice. Deliver checkmate against the bot — it plays random legal moves. How few moves can you do it in?",
@@ -401,13 +400,130 @@
               "explanation": "Box the king toward a corner: (1) use the queen to shrink the king's space rank by rank, (2) bring your king in close, (3) force the king to the edge or corner, (4) deliver checkmate — carefully avoiding stalemate. A clean result is under 15 moves."
             }
           ]
+        },
+        {
+          "id": "l-rook-king-mate",
+          "title": "Checkmate with Rook and King",
+          "description": "Harder than the queen — the rook alone cannot force mate. You need precise king coordination.",
+          "estimatedMinutes": 12,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-rk-concept",
+              "title": "The rook needs its king",
+              "body": "Checkmating with a rook and king is one of the most important endgame techniques in chess. Unlike the queen, the rook alone **cannot force the enemy king to the edge** — your king must do the confining work.\n\nThe two-step process:\n1. **Cut off the king** — use the rook to restrict the enemy king to a shrinking box of ranks or files.\n2. **Drive it to the edge** — bring your king in to tighten the box, then deliver the final check on the back rank.\n\nKey rule: **avoid stalemate**. A lone king has very few moves near the edge, so always check you're not accidentally leaving it with no legal move before you deliver check.",
+              "fen": "8/8/8/3k4/8/8/3K4/7R w - - 0 1",
+              "analogy": "The rook is the fence, your king is the sheepdog. The fence cuts off files and ranks; the dog chases the sheep into the corner."
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-rk-mc1",
+              "question": "Why is checkmate with a rook harder than with a queen?",
+              "options": [
+                { "text": "The rook cannot confine the king alone — you need your king to help tighten the box", "explanation": "Exactly. The queen can cut off both ranks and files simultaneously; the rook can only cut off one at a time, so your king must close off the other dimension." },
+                { "text": "The rook is weaker than the queen, so it can't give check", "explanation": "Rooks give check just fine. The difficulty is that one rook can't confine the king as efficiently as a queen — your king's help is essential." },
+                { "text": "You need two rooks to checkmate a lone king", "explanation": "One rook and a king is enough — but it takes more moves and technique than a queen. Two rooks is even easier (the lawnmower method)." },
+                { "text": "Stalemate is impossible with a rook, so it's actually easier", "explanation": "Stalemate is very much possible with a rook — more so than with a queen, in fact, because the king near the edge has very few moves. Always check before giving check." }
+              ],
+              "correctIndex": 0
+            },
+            {
+              "type": "play-vs-bot",
+              "id": "s-rk-playvbot1",
+              "question": "Checkmate the bot using your rook and king. The bot plays random legal moves. How few moves can you do it in?",
+              "fen": "8/8/8/3k4/8/8/3K4/7R w - - 0 1",
+              "orientation": "white",
+              "objective": "Checkmate the bot — your move count is shown when you win",
+              "successCondition": "checkmate",
+              "explanation": "The method: (1) use the rook to cut off ranks, shrinking the black king's space, (2) bring your king toward the black king to restrict its movement further, (3) once the king is on the edge, manoeuvre for the final check — watching carefully for stalemate. A strong result is under 20 moves."
+            }
+          ]
         }
       ]
     },
     {
-      "id": "ch-checkmates-in-games",
-      "title": "Checkmates in Games",
-      "description": "See how checkmate patterns appear in real games — sometimes in just a few moves.",
+      "id": "ch-board-vision",
+      "title": "Board Vision",
+      "description": "Train your eye to see every threat — find checks, captures, and all available checkmates.",
+      "lessons": [
+        {
+          "id": "l-board-vision",
+          "title": "Board Vision",
+          "description": "See the whole board — find threats before they happen.",
+          "estimatedMinutes": 7,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-bv-concept",
+              "title": "Board vision: seeing threats before they land",
+              "body": "Strong players don't just look at the piece they're moving — they scan the **entire board**.\n\nEvery move changes the position. You need to ask: after I move, what can my opponent do? What squares are newly attacked? What pieces are now undefended?\n\nThe three things to scan every move:\n1. **Checks** — is the king attacked?\n2. **Captures** — can any piece be taken for free?\n3. **Threats** — what is my opponent threatening to do next?\n\nThese are also called **candidate moves** — the forcing moves you must consider first.",
+              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+              "analogy": "Think of board vision like peripheral vision in a sport. A great basketball player doesn't stare at the ball — they see the whole court. A great chess player doesn't stare at one piece — they see every threat on the board."
+            },
+            {
+              "type": "multiple-choice",
+              "id": "s-bv-mc1",
+              "question": "What should you always check FIRST when considering a move?",
+              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+              "options": [
+                { "text": "Checks, captures, and threats — in that order", "explanation": "Correct. Forcing moves (checks first, then captures, then threats) narrow your candidate list and ensure you don't miss a tactic." },
+                { "text": "The move that develops the most pieces", "explanation": "Development matters, but only after you've verified your king is safe and there's no immediate tactic to play or defend." },
+                { "text": "The move your opponent least expects", "explanation": "Surprise has value, but not at the cost of missing a forced sequence. Candidate moves — checks, captures, threats — come first." },
+                { "text": "The move that controls the center", "explanation": "Center control is important in the long run, but a forcing tactic beats positional goals every time." }
+              ],
+              "correctIndex": 0
+            },
+            {
+              "type": "puzzle",
+              "id": "s-bv-puzzle1",
+              "subType": "best-move",
+              "question": "White to move. Find the only move that wins material immediately.",
+              "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Ng5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Nxe5": "Nxe5 loses the knight to Qd4+, forking the knight and king.",
+                    "d3": "A quiet developing move misses the immediate tactical shot."
+                  }
+                }
+              },
+              "explanation": "Ng5 attacks f7 — the weakest point in Black's position, defended only by the king. This creates an unstoppable double threat: Nxf7 winning the rook, or Bxf7+ leading to checkmate. The candidate move check reveals it immediately.",
+              "successMessage": "Nice eye! Ng5 exploits the weakest square in Black's position."
+            }
+          ]
+        },
+        {
+          "id": "l-find-checkmates",
+          "title": "Find All the Checkmates",
+          "description": "Train your board vision: find every square where the queen can deliver checkmate.",
+          "estimatedMinutes": 8,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-fc-concept",
+              "title": "Board vision: how many checkmates can you see?",
+              "body": "Strong players don't just find *a* winning move — they see *all* of them.\n\nThis is called **board vision**: the ability to scan the entire board and spot every tactical opportunity at once.\n\nIn the position below, the white queen can deliver checkmate in **six different ways** — all in one move. The knight and king hold every escape square for the black king while the queen can strike from multiple directions.\n\nYour task: find all six. Each time you find one, the board resets to the starting position so you can find the next. See how many you spot before needing to guess!"
+            },
+            {
+              "type": "find-all-checkmates",
+              "id": "s-fc-puzzle1",
+              "question": "White to move. Find ALL 6 checkmates in this position — each one is a different queen move. The board resets after each find.",
+              "fen": "k7/6Q1/1KN5/8/8/8/8/8 w - - 0 1",
+              "orientation": "white",
+              "checkmates": ["Qf8#", "Qg8#", "Qh8#", "Qa1#", "Qb7#", "Qa7#"],
+              "explanation": "All 6 queen moves deliver checkmate because the knight on c6 permanently controls b8, and the king on b6 permanently controls a7 and b7. That traps the black king in the corner regardless of where the queen goes. The queen can strike along rank 8 (Qf8, Qg8, Qh8), the a-file (Qa1), or rank 7 (Qb7, Qa7) — all 6 are forced checkmates!",
+              "successMessage": "Excellent board vision! You found all 6 checkmates."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-attacking",
+      "title": "Attacking",
+      "description": "Learn how checkmates appear in real games — from opening traps to devastating attacks.",
       "lessons": [
         {
           "id": "l-scholars-mate",
@@ -450,6 +566,61 @@
                 { "text": "It blocks the bishop on f8", "explanation": "While Nf6 does block the f8 bishop, that's not the critical problem. The real issue is that it does nothing to stop Qxf7#, which is checkmate." }
               ],
               "correctIndex": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-advanced",
+      "title": "Advanced",
+      "description": "Complex positions requiring deep calculation and positional understanding — for developing players.",
+      "lessons": [
+        {
+          "id": "l-advanced-tactics",
+          "title": "Choosing the Right Move",
+          "description": "Four candidate moves, one winner — understand the difference between good and great.",
+          "estimatedMinutes": 10,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-adv-concept",
+              "title": "Why candidate moves matter",
+              "body": "At the advanced level, it's rarely the case that only one move exists. Often there are **four or five plausible moves**, all of which seem reasonable at first glance.\n\nThis is where chess gets interesting. An engine can tell you the best move — but it cannot explain *why* that move is better than the others. That understanding comes from experience with patterns, piece coordination, and a feel for what the position demands.\n\nIn the next puzzle, you'll be given four candidate moves. Try each one on the board, think about why it might or might not work, and find the move that gives White the most decisive advantage."
+            },
+            {
+              "type": "move-multiple-choice",
+              "id": "s-adv-mmc1",
+              "question": "White to move. Which is the best among these four candidate moves? Click each one to see it played on the board, then select the strongest.",
+              "fen": "7R/1Q3r2/1b2rkp1/5p2/3q1P2/8/6R1/7K w - - 0 1",
+              "orientation": "white",
+              "candidates": [
+                {
+                  "san": "Rxg6+",
+                  "isCorrect": true,
+                  "shortFeedback": "✓ Correct! This is the decisive move.",
+                  "continuation": ["Ke7"]
+                },
+                {
+                  "san": "Rf8",
+                  "isCorrect": false,
+                  "shortFeedback": "This move is not forcing enough.",
+                  "explanation": "Rf8 looks active, but it gives Black time to seize the initiative. Black can respond with Qd1+, then follow up with Qh5+, giving a perpetual check — at minimum a draw. Alternatively, Black simply plays Rxf8 and White has no good continuation. A decisive attacking idea must be more forcing."
+                },
+                {
+                  "san": "Qe7+",
+                  "isCorrect": false,
+                  "shortFeedback": "A check is very forcing — but this one doesn't work.",
+                  "explanation": "Well spotted that a check is the most forcing type of move! However, Qe7+ doesn't lead anywhere decisive. After Kxe7, White's queen is exchanged and the position simplifies in Black's favour. After Rxe7, White again has no follow-up — the rooks and queen are not coordinated for a mating attack. Forcing moves must force *something concrete*."
+                },
+                {
+                  "san": "Qxf7+",
+                  "isCorrect": false,
+                  "shortFeedback": "Very forcing — but Black can hold.",
+                  "explanation": "Qxf7+ is a natural try: it's a queen check and captures material. However, after Black recaptures (Rxf7 or Kxf7), the queens come off and White doesn't have enough pieces left to mount a decisive attack on the Black king. Tactics need to lead to a clearly won endgame or mate — winning material isn't enough if the opponent can defend."
+                }
+              ],
+              "successMessage": "Rxg6+! The rook removes the key defensive pawn on g6 with check, displacing the Black king and opening lines for White's queen and rook to co-ordinate for a decisive attack."
             }
           ]
         }

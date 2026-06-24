@@ -6,6 +6,8 @@ import { ContinuationStep } from "./ContinuationStep"
 import { PlayVsBotStep } from "./PlayVsBotStep"
 import { MultipleChoiceStep } from "./MultipleChoiceStep"
 import { IdentifyStep } from "./IdentifyStep"
+import { FindAllCheckmates } from "./FindAllCheckmates"
+import { MoveMultipleChoice } from "./MoveMultipleChoice"
 
 interface Props {
   step: Step
@@ -27,6 +29,10 @@ export function StepRenderer({ step, onStepComplete, isLastStep }: Props) {
       return <MultipleChoiceStep step={step} onComplete={onStepComplete} isLastStep={isLastStep} />
     case "identify":
       return <IdentifyStep step={step} onComplete={onStepComplete} isLastStep={isLastStep} />
+    case "find-all-checkmates":
+      return <FindAllCheckmates step={step} onComplete={onStepComplete} isLastStep={isLastStep} />
+    case "move-multiple-choice":
+      return <MoveMultipleChoice step={step} onComplete={onStepComplete} isLastStep={isLastStep} />
     default:
       return <div className="text-gray-400 text-center py-10">Step type not yet implemented.</div>
   }

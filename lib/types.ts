@@ -140,6 +140,44 @@ export interface IdentifyStep {
   hint?: string
 }
 
+// ─── Move Multiple Choice Step ────────────────────────────────────────────────
+// Shows 4 candidate moves as buttons. Clicking one plays it on the board with
+// a highlight, then shows per-move feedback. Correct move only: play it and
+// show "Correct". Incorrect moves: show feedback + optional "Reveal explanation".
+
+export interface MoveCandidate {
+  san: string
+  isCorrect: boolean
+  shortFeedback: string   // shown immediately (e.g. "Very forcing, but black holds.")
+  explanation?: string    // shown after "Reveal explanation" is clicked
+  continuation?: string[] // bot moves to auto-play after correct (e.g. black's response)
+}
+
+export interface MoveMultipleChoice {
+  type: "move-multiple-choice"
+  id: string
+  question: string
+  fen: string
+  orientation?: "white" | "black"
+  candidates: MoveCandidate[]
+  successMessage?: string
+}
+
+// ─── Find All Checkmates Step ─────────────────────────────────────────────────
+// Board-vision exercise: find every mating move from the given position.
+// The board resets after each found checkmate until all are discovered.
+
+export interface FindAllCheckmates {
+  type: "find-all-checkmates"
+  id: string
+  question: string
+  fen: string
+  orientation?: "white" | "black"
+  checkmates: string[]      // all target mating moves in SAN (e.g. ["Qf8#", "Qg8#"])
+  explanation: string       // shown when all are found
+  successMessage?: string
+}
+
 export type Step =
   | ConceptStep
   | PuzzleStep
@@ -147,6 +185,8 @@ export type Step =
   | PlayVsBotStep
   | MultipleChoiceStep
   | IdentifyStep
+  | FindAllCheckmates
+  | MoveMultipleChoice
 
 // ─── Course Structure ─────────────────────────────────────────────────────────
 

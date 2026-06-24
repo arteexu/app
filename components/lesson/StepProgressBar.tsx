@@ -3,21 +3,25 @@ import type { Step } from "@/lib/types"
 import { clsx } from "clsx"
 
 const stepIcon: Record<string, string> = {
-  concept:           "📖",
-  puzzle:            "♟",
-  continuation:      "▶",
-  "multiple-choice": "≡",
-  identify:          "◎",
-  "play-vs-bot":     "⚡",
+  concept:                "📖",
+  puzzle:                 "♟",
+  continuation:           "▶",
+  "multiple-choice":      "≡",
+  identify:               "◎",
+  "play-vs-bot":          "⚡",
+  "find-all-checkmates":  "🔍",
+  "move-multiple-choice": "⚖",
 }
 
 const stepLabel: Record<string, string> = {
-  concept:           "Concept",
-  puzzle:            "Puzzle",
-  continuation:      "Explore",
-  "multiple-choice": "Question",
-  identify:          "Identify",
-  "play-vs-bot":     "Play",
+  concept:                "Concept",
+  puzzle:                 "Puzzle",
+  continuation:           "Explore",
+  "multiple-choice":      "Question",
+  identify:               "Identify",
+  "play-vs-bot":          "Play",
+  "find-all-checkmates":  "Find Mates",
+  "move-multiple-choice": "Best Move",
 }
 
 interface Props {

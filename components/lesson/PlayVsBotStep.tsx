@@ -90,7 +90,11 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
 
   function handleSquareClick({ square }: SquareHandlerArgs) {
     if (outcome || botThinking || game.turn() !== learnerColor) return
-    if (selectedSquare) { if (!attemptMove(selectedSquare, square)) selectSquare(square); return }
+    if (selectedSquare) {
+      // Clicking the same piece again deselects it
+      if (square === selectedSquare) { setSelectedSquare(null); setLegalMoveSquares({}); return }
+      if (!attemptMove(selectedSquare, square)) selectSquare(square); return
+    }
     selectSquare(square)
   }
 

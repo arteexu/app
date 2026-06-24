@@ -39,14 +39,14 @@ export function MultipleChoiceStep({ step, onComplete, isLastStep }: Props) {
     <LessonLayout board={board}>
       <p className="text-xl font-semibold text-gray-900 leading-snug">{step.question}</p>
 
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-3.5">
         {step.options.map((opt, i) => (
           <button
             key={i}
             onClick={() => { if (!submitted) setSelected(i) }}
             disabled={submitted}
             className={clsx(
-              "text-left px-4 py-3 rounded-xl border text-sm transition-all",
+              "text-left px-4 py-3.5 rounded-xl border text-sm transition-all",
               submitted && i === step.correctIndex
                 ? "border-green-400 bg-green-50 text-green-900 font-medium"
                 : submitted && i === selected && !isCorrect
@@ -72,7 +72,7 @@ export function MultipleChoiceStep({ step, onComplete, isLastStep }: Props) {
         <button
           onClick={() => setSubmitted(true)}
           disabled={selected === null}
-          className="self-start px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="self-start mt-3 px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_4px_0_#312e81] hover:shadow-[0_2px_0_#312e81] hover:translate-y-[2px] active:shadow-none active:translate-y-[4px]"
         >
           Check answer
         </button>

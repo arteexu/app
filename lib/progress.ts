@@ -11,25 +11,25 @@ export function getNextLesson(course: Course, completedLessonIds: string[]): Les
 }
 
 // Returns true if the given lesson is unlocked for this user.
-// Rule: a lesson is unlocked if all lessons before it (in chapter order) are complete.
+// All lessons are always accessible — learners can work at their own pace and skip around.
+// Completion status is still tracked (for display and XP), but nothing is gated.
 export function isLessonUnlocked(
-  course: Course,
-  lessonId: string,
-  completedLessonIds: string[]
+  _course: Course,
+  _lessonId: string,
+  _completedLessonIds: string[]
 ): boolean {
-  for (const chapter of course.chapters) {
+  return true
+  // Legacy sequential logic kept below for reference:
+  for (const chapter of _course.chapters) {
     for (let i = 0; i < chapter.lessons.length; i++) {
       const lesson = chapter.lessons[i]
-      if (lesson.id === lessonId) {
-        // First lesson in the course is always unlocked
-        if (i === 0 && chapter === course.chapters[0]) return true
-        // Otherwise, the previous lesson must be complete
-        if (i > 0) return completedLessonIds.includes(chapter.lessons[i - 1].id)
-        // First lesson of a later chapter: previous chapter's last lesson must be complete
-        const chapterIndex = course.chapters.indexOf(chapter)
-        const prevChapter = course.chapters[chapterIndex - 1]
+      if (lesson.id === _lessonId) {
+        if (i === 0 && chapter === _course.chapters[0]) return true
+        if (i > 0) return _completedLessonIds.includes(chapter.lessons[i - 1].id)
+        const chapterIndex = _course.chapters.indexOf(chapter)
+        const prevChapter = _course.chapters[chapterIndex - 1]
         const lastLessonOfPrevChapter = prevChapter.lessons[prevChapter.lessons.length - 1]
-        return completedLessonIds.includes(lastLessonOfPrevChapter.id)
+        return _completedLessonIds.includes(lastLessonOfPrevChapter.id)
       }
     }
   }
@@ -46,21 +46,31 @@ export function getCourseProgress(course: Course, completedLessonIds: string[]):
   return Math.round((done / total) * 100)
 }
 
-// Returns today's date as a YYYY-MM-DD string (local time).
+// Returns a YYYY-MM-DD string in the user's LOCAL timezone.
+// Never use toISOString() here — that returns UTC, which can be a different
+// calendar date for users in timezones behind UTC (all of the Americas).
+function localDate(d: Date = new Date()): string {
+  const y   = d.getFullYear()
+  const m   = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+
+// Returns today's date as a YYYY-MM-DD string in LOCAL time.
 export function todayString(): string {
-  return new Date().toISOString().split("T")[0]
+  return localDate()
 }
 
 // Given the stored last_activity_date and current_streak, returns the new streak.
 export function calculateStreak(lastActivityDate: string | null, currentStreak: number): number {
   if (!lastActivityDate) return 1
-  const today = todayString()
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().split("T")[0]
-  if (lastActivityDate === today) return currentStreak           // already logged today
-  if (lastActivityDate === yesterdayStr) return currentStreak + 1 // continuing streak
-  return 1                                                         // streak broken
+  const today     = localDate()
+  const yest      = new Date()
+  yest.setDate(yest.getDate() - 1)
+  const yesterday = localDate(yest)
+  if (lastActivityDate === today)     return currentStreak           // already logged today
+  if (lastActivityDate === yesterday) return currentStreak + 1       // continuing streak
+  return 1                                                            // streak broken
 }
 
 // Finds a lesson by ID across all chapters of a course.

@@ -7,11 +7,14 @@ import { clsx } from "clsx"
 // Chess-themed icon per lesson — keys match lesson IDs in the JSON
 const LESSON_ICON: Record<string, string> = {
   "l-goal-of-chess":   "♚",
-  "l-board-vision":    "♞",
-  "l-mating-patterns": "⚔",
-  "l-scholars-mate":   "♛",
   "l-back-rank-mate":  "♜",
+  "l-mating-patterns": "⚔",
   "l-queen-king-mate": "♛",
+  "l-rook-king-mate":  "♜",
+  "l-board-vision":    "♞",
+  "l-find-checkmates": "🔍",
+  "l-advanced-tactics": "⚔",
+  "l-scholars-mate":   "♛",
 }
 
 interface Props {

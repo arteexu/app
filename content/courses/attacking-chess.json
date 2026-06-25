@@ -1,7 +1,7 @@
 {
   "id": "attacking-chess",
   "title": "Attacking Chess",
-  "description": "Learn to attack the king through a classic Italian Game — calculate lines, sacrifice material, and finish with unstoppable threats.",
+  "description": "Learn to attack the king through annotated master games — calculate lines, sacrifice material, and finish with unstoppable kingside attacks.",
   "subject": "chess",
   "chapters": [
     {
@@ -217,6 +217,310 @@
               "moveAnnotations": {
                 "0": "Black captures the knight — but it is far too late.",
                 "1": "Qf7# — Checkmate! White's queen lands on f7 with the bishop on g6 controlling escape squares. Black's material advantage meant nothing against White's attack. This is attacking chess."
+              }
+            }
+          ]
+        },
+        {
+          "id": "l-attacking-caro-kann",
+          "title": "Caro-Kann Kingside Attack",
+          "description": "FM ChessWhiz57 vs WGM Silvermist15 — rip open the black kingside with pawn storms and piece infiltration in a Caro-Kann.",
+          "estimatedMinutes": 22,
+          "keyConceptIds": [
+            "kc-open-kingside-pawns",
+            "kc-consider-opponent-plans",
+            "kc-no-backwards-moves",
+            "kc-bring-pieces-attack"
+          ],
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-ck-intro",
+              "title": "Attacking the Caro-Kann king",
+              "body": "White builds a classic **Exchange Caro-Kann** setup, then launches a kingside attack. \n\nAt each **STOP**, find White's best continuation on the board — then read the commentary. Strong attackers calculate **lines**, not isolated moves."
+            },
+            {
+              "type": "continuation",
+              "id": "s-ck-opening",
+              "title": "The Exchange Caro-Kann setup",
+              "description": "White develops quickly, occupies the center, and reaches a familiar Caro-Kann position.",
+              "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+              "orientation": "white",
+              "moves": [
+                "e4", "c6", "d4", "d5", "exd5", "cxd5", "Nf3", "Nf6", "Ne5", "Nbd7",
+                "Bd3", "e6", "O-O", "Bd6", "Re1", "O-O", "Nd2", "Qc7", "Ndf3", "b6",
+                "c3", "a5"
+              ],
+              "moveAnnotations": {
+                "4": "The Exchange Variation — White gives up the e-pawn for quick development and central pressure.",
+                "8": "Ne5 attacks the f7 pawn and forces Black to block with …Nbd7.",
+                "14": "White completes development and connects the rooks. A common Caro-Kann setup has been reached.",
+                "21": "We have arrived at a common Caro-Kann opening setup."
+              }
+            },
+            {
+              "type": "continuation",
+              "id": "s-ck-qe2-g6",
+              "title": "Preparing Ba6 and clogging the diagonal",
+              "description": "White plays Qe2 to keep the d3 bishop alive. Black responds with …g6 to block the light-squared bishop.",
+              "fen": "r1b2rk1/2qn1ppp/1p1bpn2/p2pN3/3P4/2PB1N2/PP3PPP/R1BQR1K1 w - - 0 12",
+              "orientation": "white",
+              "moves": ["Qe2", "g6"],
+              "moveAnnotations": {
+                "0": "This move is played to Ba6 and keep the D3 bishop alive. An important move that will come into play later on.",
+                "1": "Black clogs up the diagonal to try and prevent an attack on the kingside. Find a continuation for White."
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop1",
+              "subType": "best-move",
+              "question": "Black just played …g6. Find the best continuation for White.",
+              "fen": "r1b2rk1/2qn1p1p/1p1bpnp1/p2pN3/3P4/2PB1N2/PP2QPPP/R1B1R1K1 w - - 0 13",
+              "orientation": "white",
+              "solution": {
+                "moves": ["h4", "Nh5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "g4": "g4 is part of the plan later — but h4 first hooks the g-pawn and prepares to open the b1–h7 diagonal.",
+                    "Bf4": "Too slow. Push the h-pawn to start the kingside storm.",
+                    "Qe3": "The queen belongs in the attack, but h4 is the forcing pawn break that starts everything."
+                  }
+                }
+              },
+              "explanation": "h4! A great move. White pushes the h-pawn to **hook** the g-pawn and rip open the b1–h7 diagonal for the light-squared bishop.",
+              "successMessage": "h4 — start the kingside pawn storm!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop2",
+              "subType": "best-move",
+              "question": "Black played …Nh5. Find the best continuation for White.",
+              "fen": "r1b2rk1/2qn1p1p/1p1bp1p1/p2pN2n/3P3P/2PB1N2/PP2QPP1/R1B1R1K1 w - - 1 14",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Bh6", "Re8"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "g4": "g4 comes next — first plant the bishop on h6 to dominate the dark squares around the king.",
+                    "Qe3": "Too slow. Bh6 is the direct way to prepare ripping open the kingside.",
+                    "Nf3": "Retreating the knight gives Black time to consolidate. Keep attacking with Bh6."
+                  }
+                }
+              },
+              "explanation": "Bh6! White's bishop lands on h6, eyeing the g7 pawn. Black must respond — now find a way to rip open the kingside.",
+              "successMessage": "Bh6 — dominate the dark squares!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop3",
+              "subType": "best-move",
+              "question": "Black played …Re8. Find a way to rip open the black kingside.",
+              "fen": "r1b1r1k1/2qn1p1p/1p1bp1pB/p2pN2n/3P3P/2PB1N2/PP2QPP1/R3R1K1 w - - 3 15",
+              "orientation": "white",
+              "solution": {
+                "moves": ["g4", "Ng7"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "h5": "h5 is coming — but g4 first drives the knight from h5 and opens lines for the attack.",
+                    "Qe3": "The queen will join later. g4 is the forcing pawn break.",
+                    "Nf3": "Too passive. Push g4 to rip open the kingside."
+                  }
+                }
+              },
+              "explanation": "g4! Good move. White drives the knight away and prepares to open the h-file. Now show that you understand it by following up.",
+              "successMessage": "g4 — drive the knight and open lines!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop4",
+              "subType": "best-move",
+              "question": "Black retreated …Ng7. Find White's best continuation.",
+              "fen": "r1b1r1k1/2qn1pnp/1p1bp1pB/p2pN3/3P2PP/2PB1N2/PP2QP2/R3R1K1 w - - 1 16",
+              "orientation": "white",
+              "solution": {
+                "moves": ["h5", "Bxe5", "dxe5", "Nc5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "g5": "g5 is premature — h5 first breaks open the kingside pawn cover.",
+                    "Qe3": "Bring the queen in later. h5 rips open the black kingside now.",
+                    "Bf4": "Too slow. Push h5 to open the king."
+                  }
+                }
+              },
+              "keyConceptId": "kc-open-kingside-pawns",
+              "explanation": "h5! Excellent. White rips open the black kingside with his pawns. This is a **KEY CONCEPT** in chess: open up your opponent's kingside with your pawns to make way for your pieces.",
+              "successMessage": "h5 — rip open the kingside!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop5",
+              "subType": "best-move",
+              "question": "After …Bxe5 dxe5 Nc5 — what does Black want to do here? With that in mind, find the best continuation.",
+              "fen": "r1b1r1k1/2q2pnp/1p2p1pB/p1npP2P/6P1/2PB1N2/PP2QP2/R3R1K1 w - - 1 18",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Bc2", "Bb7"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Nd4": "Nd4 is strong next — but first retreat the bishop to c2 to preserve it and keep the attack going.",
+                    "Qe3": "The queen will join the attack, but Bc2 saves the bishop from …Ba6.",
+                    "b4": "Too slow. Black threatens …Ba6 — save the bishop with Bc2."
+                  }
+                }
+              },
+              "keyConceptId": "kc-consider-opponent-plans",
+              "explanation": "Bc2! Indeed, this is the computer recommended move. White retreats the bishop to preserve it and keep the attack going. Remember: we cannot just consider our own ideas — we must also consider what our opponent intends to do.",
+              "successMessage": "Bc2 — save the bishop and keep attacking!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop6",
+              "subType": "best-move",
+              "question": "Black played …Bb7. Find a way to advance the pieces forward and attack the black kingside.",
+              "fen": "r3r1k1/1bq2pnp/1p2p1pB/p1npP2P/6P1/2P2N2/PPB1QP2/R3R1K1 w - - 3 19",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Nd4", "Ne4"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Nb5": "Nb5 is the idea — but Nd4 first blocks Black's potential …d4 break and prepares the infiltration.",
+                    "Qe3": "The queen belongs in the attack, but Nd4 is the precise knight jump.",
+                    "f3": "Too early — Nd4 improves the knight and blocks Black's plans first."
+                  }
+                }
+              },
+              "explanation": "Nd4! Excellent choice. White blocks Black's potential d4 idea to open up the black bishop and prepares the Nb5–Nd6 maneuver to infiltrate the black side.",
+              "successMessage": "Nd4 — block d4 and infiltrate!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop7",
+              "subType": "best-move",
+              "question": "Black played …Ne4. What is Black threatening? How do we stop it?",
+              "fen": "r3r1k1/1bq2pnp/1p2p1pB/p2pP2P/3Nn1P1/2P5/PPB1QP2/R3R1K1 w - - 5 20",
+              "orientation": "white",
+              "solution": {
+                "moves": ["f3", "Ba6", "Qe3", "Nc5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qe3": "Qe3 ignores the knight on e4 — f3 drives it back first.",
+                    "Nxe4": "Nxe4 allows …Bxe4 with complications. f3 is cleaner.",
+                    "Re3": "Too slow. f3 stops the knight and opens lines."
+                  }
+                },
+                "alternatives": {
+                  "0": {
+                    "Bf4": "Bf4 defends the pawn on e5 but is too slow. As an attacker, we rarely make backwards moves. KEY CONCEPT: Don't make backwards moves. Find the forward move f3."
+                  }
+                }
+              },
+              "keyConceptId": "kc-no-backwards-moves",
+              "explanation": "f3! White drives the knight back and keeps the attack rolling. Bf4 was playable but too slow — as an attacker, avoid backwards moves when a forward thrust is available.",
+              "successMessage": "f3 — forward, not backwards!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop8",
+              "subType": "best-move",
+              "question": "After …Ba6 Qe3 Nc5 — find a way to bring more pieces into the attack.",
+              "fen": "r3r1k1/2q2pnp/bp2p1pB/p1npP2P/3N2P1/2P1QP2/PPB5/R3R1K1 w - - 3 22",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Kg2", "Qe7"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Rh1": "Rh1 is the follow-up — but Kg2 first prepares it safely and connects the king.",
+                    "Qh3": "Too direct. Kg2 prepares Rh1 with king safety.",
+                    "Re3": "Re3 is passive. Kg2 prepares the h-file assault."
+                  }
+                }
+              },
+              "keyConceptId": "kc-bring-pieces-attack",
+              "explanation": "Kg2! An excellent choice, and indeed the computer's top move. White prepares Rh1 to open up the h-file and crash in on the kingside. KEY CONCEPT: bring more pieces into the attack.",
+              "successMessage": "Kg2 — prepare Rh1 and bring in the heavy pieces!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop9",
+              "subType": "best-move",
+              "question": "Black played …Qe7. What should White play?",
+              "fen": "r3r1k1/4qpnp/bp2p1pB/p1npP2P/3N2P1/2P1QP2/PPB3K1/R3R3 w - - 5 23",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Rh1", "f5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qh3": "Qh3 is strong but Rh1 first opens the h-file with maximum force.",
+                    "Nf5": "Nf5 is interesting but Rh1 is the direct way to crash through on the h-file.",
+                    "Re3": "Too slow. Rh1 brings the rook into the attack immediately."
+                  }
+                }
+              },
+              "explanation": "Rh1! White doubles on the h-file and prepares the final breakthrough. Black tries …f5 to block — but White has a combination ready.",
+              "successMessage": "Rh1 — the h-file is yours!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop10",
+              "subType": "best-move",
+              "question": "DIFFICULT: Black played …f5. Find a combination that wins material for White.",
+              "fen": "r3r1k1/4q1np/bp2p1pB/p1npPp1P/3N2P1/2P1QP2/PPB3K1/R6R w - f6 0 24",
+              "orientation": "white",
+              "solution": {
+                "moves": ["exf6", "Qxf6", "hxg6", "hxg6", "Bxg7", "Qxg7"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "gxf5": "gxf5 opens the g-file but exf6 is the forcing combination that wins material.",
+                    "Nxf5": "Nxf5 is not as strong as the pawn sacrifice exf6.",
+                    "Qh3": "Qh3 misses the tactical shot. Calculate the exf6 sacrifice."
+                  },
+                  "2": {
+                    "Qh3": "hxg6 is forcing — open the h-file before bringing the queen in.",
+                    "Nf5": "Keep calculating — hxg6 rips open the kingside."
+                  },
+                  "4": {
+                    "Qh3": "Bxg7 wins the exchange with tempo — the bishop sacrifice is the point.",
+                    "Rh6": "Not yet — Bxg7 first wins material."
+                  }
+                }
+              },
+              "explanation": "exf6! A brilliant combination. White sacrifices the e-pawn to open lines, then hxg6 and Bxg7 win material while keeping the attack alive. The whole sequence: exf6 Qxf6 hxg6 hxg6 Bxg7 Qxg7.",
+              "successMessage": "Stunning combination — material is yours!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ck-stop11",
+              "subType": "best-move",
+              "question": "Black captured …Qxg7. Find the best continuation.",
+              "fen": "r3r1k1/6q1/bp2p1p1/p1np4/3N2P1/2P1QP2/PPB3K1/R6R w - - 0 27",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Rh6", "e5", "Rxg6", "exd4", "Rxg7+"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qh3": "Qh3 is strong but Rh6 crashes through immediately — Black has no way to stop Rxg6.",
+                    "Bxg7": "The bishop is already gone. Rh6 brings the rook into the attack.",
+                    "Nf5": "Too slow. Rh6 wins by force."
+                  }
+                }
+              },
+              "explanation": "Rh6! White brings the rook in and crashes in. Black has no way to stop Rxg6 and now loses. The attack finishes in style.",
+              "successMessage": "Rh6 — crash through on the kingside!"
+            },
+            {
+              "type": "continuation",
+              "id": "s-ck-finish",
+              "title": "The attack finishes",
+              "description": "White's pieces swarm the exposed king — a model kingside attack in the Caro-Kann.",
+              "fen": "r3r1k1/6R1/bp6/p1np4/3p2P1/2P1QP2/PPB3K1/R7 b - - 0 29",
+              "orientation": "white",
+              "moves": ["Kxg7", "Qg5+", "Kf8", "Qf6+", "Kg8", "Bh7+"],
+              "moveAnnotations": {
+                "0": "Black recaptures on g7 — but White's attack is unstoppable.",
+                "1": "Qg5+ — the queen joins with check, driving the king forward.",
+                "3": "Qf6+ keeps the king on the run.",
+                "5": "Bh7#! White delivers checkmate. A crushing kingside attack — the Caro-Kann king never found safety."
               }
             }
           ]

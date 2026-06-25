@@ -3,7 +3,7 @@ import Link from "next/link"
 import { clsx } from "clsx"
 
 interface Props {
-  active?: "dashboard" | "solitaire" | "profile"
+  active?: "dashboard" | "solitaire" | "profile" | "key-concepts"
   avatarInitial?: string
   /** optional left "back" link, e.g. on settings pages */
   back?: { href: string; label: string }
@@ -26,6 +26,7 @@ export function QuestNav({ active, avatarInitial = "?", back }: Props) {
       <div className="ml-auto flex items-center gap-1.5 sm:gap-4">
         <NavLink href="/dashboard" label="Quest" active={active === "dashboard"} />
         <NavLink href="/solitaire" label="Solitaire Chess" active={active === "solitaire"} />
+        <NavLink href="/key-concepts" label="Key concepts" active={active === "key-concepts"} />
         <NavLink href="/settings/profile" label="Profile" active={active === "profile"} />
         <Link href="/settings/profile" className="w-9 h-9 rounded-full bg-slate-900 dark:bg-slate-700 text-white grid place-items-center font-bold text-sm select-none">
           {avatarInitial}

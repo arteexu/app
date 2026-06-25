@@ -88,6 +88,7 @@ export interface PuzzleStep {
   successMessage?: string          // shown on completion
   explanation: string              // shown after solving (or after all retries)
   preMovePosition?: PuzzlePreMove  // optional: opponent's previous move, for context
+  keyConceptId?: string            // unlocks a key concept when this step is solved
 }
 
 // ─── Continuation Step ────────────────────────────────────────────────────────
@@ -209,6 +210,7 @@ export interface Lesson {
   description: string
   estimatedMinutes: number
   steps: Step[]
+  keyConceptIds?: string[]
 }
 
 export interface Chapter {

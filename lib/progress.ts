@@ -36,14 +36,18 @@ export function isLessonUnlocked(
   return false
 }
 
+// Counts completed lessons that belong to this course.
+export function getCompletedLessonCount(course: Course, completedLessonIds: string[]): number {
+  return completedLessonIds.filter(id =>
+    course.chapters.some(ch => ch.lessons.some(l => l.id === id))
+  ).length
+}
+
 // Calculates course completion percentage (0–100).
 export function getCourseProgress(course: Course, completedLessonIds: string[]): number {
   const total = course.chapters.reduce((sum, ch) => sum + ch.lessons.length, 0)
   if (total === 0) return 0
-  const done = completedLessonIds.filter(id =>
-    course.chapters.some(ch => ch.lessons.some(l => l.id === id))
-  ).length
-  return Math.round((done / total) * 100)
+  return Math.round((getCompletedLessonCount(course, completedLessonIds) / total) * 100)
 }
 
 // Returns a YYYY-MM-DD string in the user's LOCAL timezone.

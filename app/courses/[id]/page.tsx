@@ -1,11 +1,12 @@
 import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { getCourseProgress, getNextLesson } from "@/lib/progress"
+import { getCompletedLessonCount, getCourseProgress, getNextLesson } from "@/lib/progress"
 import { getCourse } from "@/lib/courses"
 import type { Course } from "@/lib/types"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { CourseMasteryHeader } from "@/components/ui/CourseMasteryHeader"
 import { MasteryStaircase } from "@/components/ui/MasteryStaircase"
+import { CourseKeyConceptsPanel } from "@/components/key-concepts/CourseKeyConceptsPanel"
 
 export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -49,7 +50,7 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
       <CourseMasteryHeader
         course={typedCourse}
         progress={progress}
-        completedCount={completedIds.length}
+        completedCount={getCompletedLessonCount(typedCourse, completedIds)}
         totalLessons={flatLessons.length}
         nextLesson={nextLesson}
         totalMinutes={totalMinutes}
@@ -73,6 +74,8 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
             activeLessonId={inProgressId}
           />
         </div>
+
+        <CourseKeyConceptsPanel lessonIds={flatLessons.map((l) => l.id)} />
       </main>
     </div>
   )

@@ -520,6 +520,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                 onNext={() => onComplete(true)}
                 isLastStep={isLastStep}
                 sound="celebration"
+                keyConceptId={step.keyConceptId}
               />
             </>
           )}

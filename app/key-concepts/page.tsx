@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { KeyConceptsBrowser } from "@/components/key-concepts/KeyConceptsBrowser"
 
@@ -17,13 +18,15 @@ export default async function KeyConceptsPage() {
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <QuestNav
-        back={{ href: "/dashboard", label: "Quest" }}
-        avatarInitial={name[0]?.toUpperCase() ?? "?"}
-        active="key-concepts"
-      />
-
+    <AppPageShell
+      nav={
+        <QuestNav
+          back={{ href: "/dashboard", label: "Quest" }}
+          avatarInitial={name[0]?.toUpperCase() ?? "?"}
+          active="key-concepts"
+        />
+      }
+    >
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-8 py-10 lg:py-14">
         <header className="mb-10">
           <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-amber-600 dark:text-amber-400">
@@ -39,6 +42,6 @@ export default async function KeyConceptsPage() {
 
         <KeyConceptsBrowser />
       </main>
-    </div>
+    </AppPageShell>
   )
 }

@@ -15,7 +15,7 @@ export function getXp(totalCompletedSteps: number, completedLessons: number): nu
 }
 
 // ── Levels (chess-themed ranks) ──────────────────────────────────────────────
-const LEVELS = [
+export const RANKS = [
   { min: 0,    title: "Beginner" },
   { min: 120,  title: "Pawn" },
   { min: 280,  title: "Knight" },
@@ -25,7 +25,9 @@ const LEVELS = [
   { min: 1520, title: "Tactician" },
   { min: 2000, title: "Master" },
   { min: 2600, title: "Grandmaster" },
-]
+] as const
+
+const LEVELS = RANKS
 
 export interface LevelInfo {
   level: number          // 1-based
@@ -54,6 +56,48 @@ export function getLevel(xp: number): LevelInfo {
     nextTitle: isMax ? null : LEVELS[i + 1].title,
     isMax,
   }
+}
+
+export interface RankTier {
+  level: number
+  title: string
+  minXp: number
+}
+
+export type RankStatus = "surpassed" | "current" | "upcoming"
+
+export interface RankProgressEntry extends RankTier {
+  status: RankStatus
+  /** XP still needed to reach this rank; 0 if surpassed or current */
+  xpToReach: number
+}
+
+export function getAllRanks(): RankTier[] {
+  return LEVELS.map((rank, i) => ({
+    level: i + 1,
+    title: rank.title,
+    minXp: rank.min,
+  }))
+}
+
+/** Every rank tier with surpassed / current / upcoming status for the XP ladder UI. */
+export function getRankProgress(xp: number): RankProgressEntry[] {
+  const current = getLevel(xp)
+  return LEVELS.map((rank, i) => {
+    const level = i + 1
+    let status: RankStatus
+    if (level < current.level) status = "surpassed"
+    else if (level === current.level) status = "current"
+    else status = "upcoming"
+
+    return {
+      level,
+      title: rank.title,
+      minXp: rank.min,
+      status,
+      xpToReach: status === "upcoming" ? rank.min - xp : 0,
+    }
+  })
 }
 
 // ── Weekly activity (for streak dots + bar chart) ────────────────────────────

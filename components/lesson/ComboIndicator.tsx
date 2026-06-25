@@ -78,7 +78,7 @@ export function ComboIndicator({ combo, lit }: Props) {
     >
       <span
         className={clsx(
-          "text-[10.5px] font-extrabold tracking-[0.1em] transition-colors duration-300 motion-reduce:transition-none",
+          "hidden sm:inline text-[10.5px] font-extrabold tracking-[0.1em] transition-colors duration-300 motion-reduce:transition-none",
           lit && !exiting ? "text-amber-400" : "text-amber-400/70",
         )}
       >

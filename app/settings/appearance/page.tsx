@@ -10,7 +10,7 @@ export default function AppearancePage() {
         <h2 className="text-base font-semibold text-gray-900 dark:text-slate-100 mb-1">Theme</h2>
         <p className="text-sm text-gray-500 dark:text-slate-400 mb-5">Choose your preferred color theme.</p>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4">
           {/* Light */}
           <ThemeCard
             id="light"

@@ -75,7 +75,7 @@ export function CoursePreviewCard({
             {preview.eyebrow}
           </span>
 
-          <h3 className="font-display text-2xl lg:text-[1.75rem] font-extrabold text-gray-900 dark:text-slate-100 leading-tight mt-1">
+          <h3 className="font-display text-xl sm:text-2xl lg:text-[1.75rem] font-extrabold text-gray-900 dark:text-slate-100 leading-tight mt-1">
             {preview.displayLabel}
           </h3>
         </div>

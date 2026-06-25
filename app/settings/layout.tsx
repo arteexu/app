@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { SettingsSidebar } from "./SettingsSidebar"
 
@@ -19,19 +20,21 @@ export default async function SettingsLayout({ children }: { children: React.Rea
   const avatarInitial = name[0]?.toUpperCase() ?? "?"
 
   return (
-    <div className="min-h-screen">
-      <QuestNav active="profile" avatarInitial={avatarInitial} back={{ href: "/dashboard", label: "Dashboard" }} />
-
+    <AppPageShell
+      nav={
+        <QuestNav active="profile" avatarInitial={avatarInitial} back={{ href: "/dashboard", label: "Dashboard" }} />
+      }
+    >
       {/* Page title */}
-      <div className="max-w-5xl mx-auto px-6 pt-8 pb-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-4">
         <h1 className="font-display text-2xl font-extrabold text-gray-900 dark:text-slate-100">Profile</h1>
       </div>
 
       {/* Sidebar + content */}
-      <div className="max-w-5xl mx-auto px-6 pb-12 flex gap-6 items-start">
+      <div className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 pb-12 flex flex-col md:flex-row gap-6 items-start">
         <SettingsSidebar name={name} email={email} avatarInitial={avatarInitial} />
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="flex-1 min-w-0 w-full">{children}</main>
       </div>
-    </div>
+    </AppPageShell>
   )
 }

@@ -29,10 +29,14 @@ function formatDayHeading(date: string, isToday: boolean): string {
 function HourlyActivityPanel({
   date,
   isToday,
+  dayIndex,
+  totalDays,
   onClose,
 }: {
   date: string
   isToday: boolean
+  dayIndex: number
+  totalDays: number
   onClose: () => void
 }) {
   const buckets = useSyncExternalStore(
@@ -43,23 +47,33 @@ function HourlyActivityPanel({
   const totalSec = buckets.reduce((s, v) => s + v, 0)
   const maxSec = Math.max(...buckets, 1)
   const hasActivity = totalSec > 0
+  const alignLeft = dayIndex <= 1
+  const alignRight = dayIndex >= totalDays - 2
 
   return (
     <div
       role="dialog"
       aria-label={`Activity for ${formatDayHeading(date, isToday)}`}
       className={clsx(
-        "absolute bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-30",
-        "w-[min(17rem,calc(100vw-2rem))] rounded-xl",
+        "absolute bottom-[calc(100%+10px)] z-30",
+        "w-[min(17rem,calc(100vw-1.5rem))] rounded-xl",
         "bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600",
         "shadow-lg shadow-indigo-500/10 dark:shadow-black/30",
         "p-3 text-left",
         "opacity-100 translate-y-0 transition-[opacity,transform] duration-200 motion-reduce:transition-none",
+        alignLeft && "left-0 translate-x-0",
+        alignRight && "right-0 left-auto translate-x-0",
+        !alignLeft && !alignRight && "left-1/2 -translate-x-1/2",
       )}
     >
       {/* caret */}
       <div
-        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-white dark:bg-slate-800 border-r border-b border-gray-200 dark:border-slate-600"
+        className={clsx(
+          "absolute -bottom-1.5 w-3 h-3 rotate-45 bg-white dark:bg-slate-800 border-r border-b border-gray-200 dark:border-slate-600",
+          alignLeft && "left-4",
+          alignRight && "right-4",
+          !alignLeft && !alignRight && "left-1/2 -translate-x-1/2",
+        )}
         aria-hidden
       />
 
@@ -233,7 +247,13 @@ export function StreakWeek({ streak, days }: Props) {
               </span>
 
               {isOpen && (
-                <HourlyActivityPanel date={d.date} isToday={d.isToday} onClose={close} />
+                <HourlyActivityPanel
+                  date={d.date}
+                  isToday={d.isToday}
+                  dayIndex={i}
+                  totalDays={days.length}
+                  onClose={close}
+                />
               )}
             </div>
           )

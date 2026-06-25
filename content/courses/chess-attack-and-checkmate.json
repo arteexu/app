@@ -14,6 +14,7 @@
           "title": "What Is the Goal of Chess?",
           "description": "Checkmate — and how to recognize it.",
           "estimatedMinutes": 5,
+          "keyConceptIds": ["kc-checkmate"],
           "steps": [
             {
               "type": "concept",
@@ -118,6 +119,7 @@
               "type": "puzzle",
               "id": "s-goal-backrank-puzzle",
               "subType": "checkmate-in-n",
+              "keyConceptId": "kc-checkmate",
               "question": "White to move. The black king is trapped behind its own pawns. Find checkmate in 1.",
               "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
               "orientation": "white",
@@ -195,6 +197,7 @@
           "title": "The Back Rank Mate",
           "description": "One of the most common checkmates — a rook or queen delivers mate on the first or eighth rank.",
           "estimatedMinutes": 8,
+          "keyConceptIds": ["kc-back-rank-mate"],
           "steps": [
             {
               "type": "concept",
@@ -230,6 +233,7 @@
               "type": "puzzle",
               "id": "s-brm-puzzle1",
               "subType": "checkmate-in-n",
+              "keyConceptId": "kc-back-rank-mate",
               "question": "White to move. Deliver checkmate in 1.",
               "fen": "6k1/6p1/6P1/8/8/8/8/R6K w - - 0 1",
               "orientation": "white",
@@ -241,7 +245,7 @@
                   }
                 }
               },
-              "explanation": "Re8# — the rook lands on e8, giving check. The black king on g8 is trapped: f7, g7, and h7 are blocked by its own pawns. No escape, no block. Checkmate.",
+              "explanation": "Re8# — the rook lands on e8, giving check. The black king on g8 is trapped. It has a pawn on g7 and the squares on h7 and f7 are blocked. Checkmate.",
               "successMessage": "Clean back rank mate! The pawns that shelter the king become its prison."
             },
             {
@@ -249,7 +253,7 @@
               "id": "s-brm-puzzle2",
               "subType": "checkmate-in-n",
               "question": "Black to move. Find checkmate in 2.",
-              "fen": "1r6/1q4k1/8/8/6n1/8/6P1/RN5K b - - 0 1",
+              "fen": "1r5k/1q6/8/8/6n1/8/6P1/RN5K b - - 0 1",
               "orientation": "black",
               "solution": {
                 "moves": ["Qxb1+", "Rxb1", "Rxb1+#"],
@@ -503,6 +507,7 @@
           "title": "Board Vision",
           "description": "See the whole board — find threats before they happen.",
           "estimatedMinutes": 7,
+          "keyConceptIds": ["kc-board-vision"],
           "steps": [
             {
               "type": "concept",
@@ -529,6 +534,7 @@
               "type": "puzzle",
               "id": "s-bv-puzzle1",
               "subType": "best-move",
+              "keyConceptId": "kc-board-vision",
               "question": "White to move. Find the only move that wins material immediately.",
               "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
               "orientation": "white",

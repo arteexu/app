@@ -21,8 +21,8 @@ export function LessonLayout({ board, children, footer }: Props) {
     // directly beneath the text (grouped near the top), NOT pinned to the bottom —
     // a short card would otherwise leave a large empty gap below the text.
     return (
-      <div className="flex-1 min-h-0 overflow-y-auto flex items-start justify-center p-8">
-        <div className={`w-full max-w-2xl${footer ? " flex flex-col gap-5" : ""}`}>
+      <div className="flex-1 min-h-0 overflow-y-auto flex items-start justify-center p-4 sm:p-8">
+        <div className={`w-full max-w-2xl min-w-0${footer ? " flex flex-col gap-5" : ""}`}>
           {children}
           {footer}
         </div>
@@ -31,9 +31,9 @@ export function LessonLayout({ board, children, footer }: Props) {
   }
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden h-full">
+    <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden h-full min-w-0">
       {/* Left: Board — flip control on the left, square board sized to remaining space */}
-      <div className="flex-[1_1_0] min-h-0 min-w-0 w-full flex items-center justify-center gap-2 sm:gap-3 p-3 lg:p-6 bg-slate-900 overflow-hidden">
+      <div className="flex-[0_0_auto] lg:flex-[1_1_0] min-h-0 min-w-0 w-full flex items-center justify-center gap-1.5 sm:gap-3 p-2 sm:p-3 lg:p-6 bg-slate-900 overflow-hidden max-h-[min(48vh,calc(100vw-2rem))] lg:max-h-none">
         {flipControl && (
           <FlipBoardButton
             onClick={flipControl.toggleFlip}
@@ -41,22 +41,19 @@ export function LessonLayout({ board, children, footer }: Props) {
           />
         )}
         <div className="flex-1 min-w-0 min-h-0 flex items-center justify-center">
-          <div
-            className="w-full aspect-square max-h-full"
-            style={{ maxWidth: "min(100%, calc(100vh - 160px))" }}
-          >
+          <div className="w-full aspect-square max-h-full max-w-[min(100%,calc(100vw-3.5rem))] lg:max-w-[min(100%,calc(100vh-10rem))]">
             {board}
           </div>
         </div>
       </div>
 
       {/* Right: Dialogue panel (relative → hosts the SolveReward overlay) */}
-      <div className="relative flex-[1_1_0] min-h-0 w-full lg:w-[400px] xl:w-[440px] lg:flex-none flex flex-col overflow-hidden bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-100 dark:border-slate-700">
-        <div className={`flex-1 min-h-0 overflow-y-auto flex flex-col gap-5 p-6${footer ? " pb-4" : ""}`}>
+      <div className="relative flex-1 min-h-0 min-w-0 w-full lg:w-[400px] xl:w-[440px] lg:flex-none flex flex-col overflow-hidden bg-white dark:bg-slate-800 border-t lg:border-t-0 lg:border-l border-gray-100 dark:border-slate-700">
+        <div className={`flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 sm:gap-5 p-4 sm:p-6${footer ? " pb-3 sm:pb-4" : ""}`}>
           {children}
         </div>
         {footer && (
-          <div className="flex-shrink-0 px-6 pb-6 pt-4 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <div className="flex-shrink-0 px-4 sm:px-6 pb-4 sm:pb-6 pt-3 sm:pt-4 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 pb-[max(1rem,env(safe-area-inset-bottom))]">
             {footer}
           </div>
         )}

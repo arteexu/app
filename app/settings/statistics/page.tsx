@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { XpBar } from "@/components/ui/XpBar"
+import { XpProgressButton } from "@/components/ui/XpProgressButton"
 import { WeeklyBarChart } from "@/components/ui/WeeklyBarChart"
 import { TrophyStrip } from "@/components/ui/TrophyStrip"
 import { SiteActivitySummary } from "@/components/statistics/SiteActivitySummary"
@@ -36,9 +37,10 @@ export default async function StatisticsPage() {
         <div className="mt-4 max-w-md">
           <XpBar info={stats.level} tone="light" />
         </div>
+        <XpProgressButton xp={stats.xp} level={stats.level} variant="light" className="mt-3" />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-4 gap-3">
         <MetricCard emoji="🔥" value={stats.currentStreak} label="Day streak" />
         <MetricCard emoji="🏆" value={stats.longestStreak} label="Best streak" />
         <MetricCard

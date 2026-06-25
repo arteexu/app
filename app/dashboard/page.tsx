@@ -3,6 +3,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { getCourseProgress, getNextLesson, findLesson } from "@/lib/progress"
 import { getXp, getLevel, getWeekActivity } from "@/lib/gamification"
+import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { QuestHero } from "@/components/ui/QuestHero"
 import { StreakWeek } from "@/components/ui/StreakWeek"
@@ -55,7 +56,8 @@ export default async function Dashboard() {
 
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
   const currentStreak = streak?.current_streak ?? 0
-  const level = getLevel(getXp(totalCompletedSteps, completedIds.length))
+  const xp = getXp(totalCompletedSteps, completedIds.length)
+  const level = getLevel(xp)
   const { days, totalHours } = getWeekActivity((attempts ?? []).map(a => a.attempted_at))
 
   let ctaHref: string | null
@@ -89,19 +91,18 @@ export default async function Dashboard() {
   }).filter((c): c is NonNullable<typeof c> => c !== null)
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <QuestNav active="dashboard" avatarInitial={name[0]?.toUpperCase() ?? "?"} />
-
+    <AppPageShell nav={<QuestNav active="dashboard" avatarInitial={name[0]?.toUpperCase() ?? "?"} />}>
       <main className="flex-1 w-full max-w-6xl mx-auto px-5 sm:px-8 py-7 flex flex-col gap-7">
         <div className="grid lg:grid-cols-[1.5fr_1fr] gap-5">
           <QuestHero
             name={name}
+            xp={xp}
             info={level}
             ctaHref={ctaHref}
             ctaLabel={ctaLabel}
             courseComplete={courseComplete}
           />
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-5">
+          <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-1 gap-5">
             <StreakWeek streak={currentStreak} days={days} />
             <WeeklyBarChart days={days} totalHours={totalHours} goal={WEEKLY_GOAL_HRS} />
           </div>
@@ -160,6 +161,6 @@ export default async function Dashboard() {
           </span>
         </Link>
       </main>
-    </div>
+    </AppPageShell>
   )
 }

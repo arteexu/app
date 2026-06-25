@@ -306,7 +306,7 @@ export function MasteryStaircase({ course, completedLessonIds, inProgressMap, ac
   let globalStep = 0
 
   return (
-    <div className="relative max-w-5xl mx-auto">
+    <div className="relative max-w-5xl mx-auto min-w-0 overflow-x-hidden">
       <div className="relative flex flex-col">
         {course.chapters.map((chapter, chapterIdx) => (
           <div key={chapter.id} className="flex flex-col">

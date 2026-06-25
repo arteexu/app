@@ -566,7 +566,113 @@
       "Qb8+",
       "Nxb8",
       "Rd8#"
-    ]
+    ],
+    "annotations": {
+      "4": {
+        "explanation": "Morphy opens the center immediately. With …d6 weakening Black's pawn chain, d4 strikes at the heart of the position and prepares to exploit the pin on g4.",
+        "alternatives": [
+          {
+            "san": "Bc4",
+            "note": "Bc4 develops toward f7, but Morphy plays d4 first — opening the center is the priority when Black's structure is already loose."
+          },
+          {
+            "san": "Nc3",
+            "note": "Nc3 is natural development, but d4 challenges the center right away and sets up the dxe5 tactic on the next move."
+          },
+          {
+            "san": "Be2",
+            "note": "Be2 is too passive. Morphy's whole plan is rapid, open play — strike in the center with d4."
+          }
+        ]
+      },
+      "6": {
+        "explanation": "dxe5! Morphy wins a pawn and opens the position. The pawn grab also threatens to trap the bishop on g4 if Black tries to hold the pawn.",
+        "alternatives": [
+          {
+            "san": "Bc4",
+            "note": "Bc4 is a good developing move, but there is something more forcing — capture on e5 first to win material and open lines."
+          },
+          {
+            "san": "Nc3",
+            "note": "Nc3 develops, but dxe5 is more urgent. You win a pawn and open the position while the bishop on g4 is still pinned to the queen."
+          },
+          {
+            "san": "h3",
+            "note": "h3 challenges the bishop, but after …Bxf3 your pawn structure is damaged. Take on e5 first — it's more forcing and wins a pawn."
+          },
+          {
+            "san": "Be2",
+            "note": "Be2 is passive. Morphy strikes in the center with dxe5, grabbing material and opening the game."
+          }
+        ]
+      },
+      "8": {
+        "explanation": "Qxf3 recaptures with the queen, keeping a powerful attacking piece aimed at f7. Morphy avoids the doubled f-pawns that gxf3 would create.",
+        "alternatives": [
+          {
+            "san": "gxf3",
+            "note": "gxf3 recaptures but leaves doubled, isolated f-pawns. The queen recapture keeps your structure intact and eyes the weak f7 square."
+          },
+          {
+            "san": "Bc4",
+            "note": "Bc4 develops, but you must recapture on f3 first. The queen on f3 is a powerful attacking piece — don't leave it behind."
+          }
+        ]
+      },
+      "10": {
+        "explanation": "Bc4 develops with a threat — the bishop and queen both target f7. Morphy develops every move with purpose, always creating threats.",
+        "alternatives": [
+          {
+            "san": "Be2",
+            "note": "Be2 is safe but slow. Bc4 adds immediate pressure on f7 and prepares the queen to jump to b3."
+          },
+          {
+            "san": "Nc3",
+            "note": "Nc3 develops, but Bc4 first creates an immediate threat on f7 — development with a purpose beats plain development."
+          }
+        ]
+      },
+      "12": {
+        "explanation": "Qb3! A classic Morphy move — the queen attacks b7 and eyes f7 at the same time. Black's undeveloped pieces can't keep up.",
+        "alternatives": [
+          {
+            "san": "Qd3",
+            "note": "Qd3 is less active. Qb3 hits b7 and f7 simultaneously — Morphy always chooses the move that creates the most threats."
+          },
+          {
+            "san": "O-O",
+            "note": "Castling is normally sound, but Qb3 creates immediate threats before Black can finish developing."
+          }
+        ]
+      },
+      "18": {
+        "explanation": "Nxb5! Morphy sacrifices the knight to rip open Black's position. The pawn on b5 was the only thing holding Black's center together.",
+        "alternatives": [
+          {
+            "san": "Bxf6",
+            "note": "Bxf6 damages Black's pawn structure but misses the point. The knight sacrifice on b5 opens lines and wins back material with interest."
+          },
+          {
+            "san": "Qxb5",
+            "note": "Qxb5 takes the pawn, but after …Qxb5 you've traded queens and lost the attack. The knight sacrifice keeps the initiative."
+          },
+          {
+            "san": "Bxb5",
+            "note": "Bxb5 wins a pawn safely, but Morphy's knight sacrifice is more forcing — it opens the position and keeps every piece in the attack."
+          }
+        ]
+      },
+      "24": {
+        "explanation": "Rxd7! Morphy sacrifices the exchange to remove Black's last defender. The rook on d7 was the only piece holding the position together.",
+        "alternatives": [
+          {
+            "san": "Bxd7+",
+            "label": "Also winning",
+            "note": "Bxd7+ wins the exchange, but Morphy's rook sacrifice is cleaner — it removes the defender and keeps the attack rolling toward mate."
+          }
+        ]
+      }
+    }
   },
   {
     "id": "kasparov-topalov-1999",

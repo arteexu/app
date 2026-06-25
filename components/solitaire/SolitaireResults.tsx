@@ -116,7 +116,7 @@ export function SolitaireResults({ setup, results, onPlayAgain, onNewGame }: Pro
         </div>
 
         {/* Game recap */}
-        <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex gap-5 items-center">
+        <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:items-center">
           <div className="w-28 sm:w-32 shrink-0 rounded-xl overflow-hidden shadow">
             <Chessboard
               options={{

@@ -91,12 +91,14 @@ export function CourseMasteryHeader({
             {nextLesson && (
               <Link
                 href={`/lessons/${nextLesson.id}`}
-                className="inline-flex items-center gap-2.5 mt-7 px-6 py-3.5 rounded-2xl bg-white text-[#1a1625] font-display font-extrabold text-base shadow-xl shadow-black/30 hover:scale-[1.02] active:scale-[0.98] transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1625]"
+                className="inline-flex items-center gap-2.5 mt-7 px-5 sm:px-6 py-3 sm:py-3.5 rounded-2xl bg-white text-[#1a1625] font-display font-extrabold text-sm sm:text-base shadow-xl shadow-black/30 hover:scale-[1.02] active:scale-[0.98] transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1625] max-w-full text-left"
               >
-                <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white grid place-items-center text-sm">
+                <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white grid place-items-center text-sm shrink-0">
                   ▶
                 </span>
-                {completedCount === 0 ? "Begin the ascent" : `Continue: ${nextLesson.title}`}
+                <span className="min-w-0 break-words">
+                  {completedCount === 0 ? "Begin the ascent" : `Continue: ${nextLesson.title}`}
+                </span>
               </Link>
             )}
           </div>

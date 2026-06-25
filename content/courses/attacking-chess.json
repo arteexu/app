@@ -14,6 +14,11 @@
           "title": "Attacking Chess",
           "description": "Step through an annotated Italian Game and find the best moves at every critical moment.",
           "estimatedMinutes": 18,
+          "keyConceptIds": [
+            "kc-the-initiative",
+            "kc-calculate-lines",
+            "kc-bring-pieces-attack"
+          ],
           "steps": [
             {
               "type": "concept",
@@ -82,7 +87,8 @@
                   }
                 }
               },
-              "explanation": "Good move! White double attacks the black bishop and the pawn on f7. White has sacrificed two pawns, but Black will quickly find out that material-oriented chess is poor chess. White's speedy development and Black's vulnerable king make for a very deadly combo.",
+              "keyConceptId": "kc-the-initiative",
+              "explanation": "Good move! White double attacks the black bishop and the pawn on f7. White has sacrificed two pawns, but Black will quickly find out that material-oriented chess is poor chess. White's speedy development and Black's vulnerable king make for a very deadly combo. KEY CONCEPT: when ahead in development, take the initiative and play fast — even sacrificing pieces.",
               "successMessage": "Strong attacking move! Material is less important than king safety and development."
             },
             {
@@ -122,7 +128,8 @@
                   }
                 }
               },
-              "explanation": "Bg5! White pins the knight on e7 and prepares to jump the knight to e5. Black's king on f8 has no safe haven — every move increases the pressure.",
+              "keyConceptId": "kc-calculate-lines",
+              "explanation": "Bg5! White pins the knight on e7 and prepares to jump the knight to e5. Black's king on f8 has no safe haven — every move increases the pressure. KEY CONCEPT: calculate lines rather than individual moves — see the whole sequence through to a winning position.",
               "successMessage": "Bg5 — pin and prepare Ne5!"
             },
             {
@@ -156,7 +163,8 @@
                   }
                 }
               },
-              "explanation": "Bg6!! This move deserves two exclamation marks. White threatens checkmate by opening up the square on f7 for the queen. White also threatens to swing the queen over to f3 for mate. In fact, mate is unstoppable.",
+              "keyConceptId": "kc-bring-pieces-attack",
+              "explanation": "Bg6!! This move deserves two exclamation marks. White threatens checkmate by opening up the square on f7 for the queen. White also threatens to swing the queen over to f3 for mate. In fact, mate is unstoppable. KEY CONCEPT: bring all pieces into the attack — the knight on e5 and bishops on g5 and g6 all swarm the exposed king.",
               "successMessage": "Brilliant! Bg6 — mate is unstoppable."
             },
             {

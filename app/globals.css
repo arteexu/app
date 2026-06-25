@@ -20,8 +20,13 @@
 }
 
 /* ─── Light mode: soft warm → violet quest gradient ──────────────────────────── */
+html {
+  overflow-x: hidden;
+}
+
 body {
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(120% 80% at 50% -10%, #fff7e6 0%, #fdf3ef 34%, #f3eeff 100%) fixed;
   color: #111827;

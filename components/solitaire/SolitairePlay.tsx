@@ -466,7 +466,7 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
   )
 
   const footer = (
-    <div className="flex items-center gap-2.5">
+    <div className="flex flex-col sm:flex-row items-stretch gap-2 sm:gap-2.5">
       {revealing ? (
         <button
           onClick={confirmReveal}
@@ -510,7 +510,7 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
               {game.opening}
             </p>
             <div className="flex flex-wrap items-center gap-2 mt-0.5">
-              <h1 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight truncate">
+              <h1 className="font-display text-lg sm:text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight break-words">
                 {game.title}
               </h1>
               {isAnnotatedGame(game) && <AnnotatedGameBadge />}

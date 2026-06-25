@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           } catch(e) {}
         `}} />
       </head>
-      <body className={`${inter.variable} ${baloo.variable} font-sans min-h-full`}>
+      <body className={`${inter.variable} ${baloo.variable} font-sans min-h-full overflow-x-hidden`}>
         <ThemeProvider>
           <BoardPreferencesProvider>
             <SiteActivityTracker />

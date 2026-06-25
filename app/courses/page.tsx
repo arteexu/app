@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { getAllCourses } from "@/lib/courses"
 import { getCourseProgress } from "@/lib/progress"
+import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 
 export default async function CoursesPage() {
@@ -23,12 +24,14 @@ export default async function CoursesPage() {
   const courses = getAllCourses()
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <QuestNav
-        back={{ href: "/dashboard", label: "Quest" }}
-        avatarInitial={name[0]?.toUpperCase() ?? "?"}
-      />
-
+    <AppPageShell
+      nav={
+        <QuestNav
+          back={{ href: "/dashboard", label: "Quest" }}
+          avatarInitial={name[0]?.toUpperCase() ?? "?"}
+        />
+      }
+    >
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-8 py-10 lg:py-14">
         <div className="mb-8">
           <h1 className="font-display text-3xl font-extrabold text-gray-900 dark:text-slate-100">
@@ -76,6 +79,6 @@ export default async function CoursesPage() {
           })}
         </div>
       </main>
-    </div>
+    </AppPageShell>
   )
 }

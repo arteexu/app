@@ -19,8 +19,8 @@ export function KeyConceptsBrowser() {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/50 px-5 py-4 flex items-center justify-between gap-4">
-        <div>
+      <div className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/50 px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="min-w-0">
           <p className="text-sm font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
             Your collection
           </p>

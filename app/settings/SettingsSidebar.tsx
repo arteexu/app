@@ -29,7 +29,7 @@ export function SettingsSidebar({ name, email, avatarInitial }: Props) {
   }
 
   return (
-    <aside className="w-56 flex-shrink-0 flex flex-col gap-1">
+    <aside className="w-full md:w-56 flex-shrink-0 flex flex-col gap-1">
 
       {/* Profile summary at the top of the sidebar */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-4 flex flex-col items-center gap-3 mb-2 shadow-sm">

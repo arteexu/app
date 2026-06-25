@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { SolitaireApp } from "@/components/solitaire/SolitaireApp"
 
@@ -23,9 +24,10 @@ export default async function SolitairePage() {
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      <QuestNav active="solitaire" avatarInitial={name[0]?.toUpperCase() ?? "?"} />
-      <SolitaireApp />
-    </div>
+    <AppPageShell nav={<QuestNav active="solitaire" avatarInitial={name[0]?.toUpperCase() ?? "?"} />}>
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <SolitaireApp />
+      </div>
+    </AppPageShell>
   )
 }

@@ -48,7 +48,7 @@ export function LessonHud({ steps, viewIndex, currentIndex, completedStepIds, on
   const canFwd = viewIndex < currentIndex
 
   return (
-    <div className="flex items-center gap-4 px-5 h-[60px] bg-[#0b1220] border-b border-slate-800 flex-shrink-0">
+    <div className="flex items-center gap-2 sm:gap-4 px-3 sm:px-5 h-[52px] sm:h-[60px] bg-[#0b1220] border-b border-slate-800 flex-shrink-0 min-w-0 overflow-hidden">
       <ComboIndicator combo={combo} lit={lit} />
 
       {/* Back arrow */}
@@ -57,7 +57,7 @@ export function LessonHud({ steps, viewIndex, currentIndex, completedStepIds, on
           canBack ? "text-slate-300 hover:bg-slate-800" : "text-slate-700 cursor-not-allowed")}>‹</button>
 
       {/* Step rail */}
-      <div className="flex-1 flex items-center min-w-0">
+      <div className="flex-1 flex items-center min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {steps.map((step, i) => {
           const done = completedStepIds.includes(step.id)
           const viewing = i === viewIndex
@@ -103,12 +103,12 @@ export function LessonHud({ steps, viewIndex, currentIndex, completedStepIds, on
           canFwd ? "text-slate-300 hover:bg-slate-800" : "text-slate-700 cursor-not-allowed")}>›</button>
 
       {/* Timer + XP */}
-      <div className="flex items-center gap-3.5 flex-shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3.5 flex-shrink-0">
         <TimerRing pct={timerPct} label={timerLabel} lit={lit} />
-        <div className="flex items-center gap-1.5 bg-[#111a2e] border border-slate-800 rounded-full px-3 py-1.5">
+        <div className="flex items-center gap-1 sm:gap-1.5 bg-[#111a2e] border border-slate-800 rounded-full px-2 sm:px-3 py-1 sm:py-1.5">
           <span className="text-[13px]">⚡</span>
-          <span className="font-display text-sm font-extrabold text-slate-200 font-mono">{sessionXp.toLocaleString()}</span>
-          <span className="text-[11px] font-bold text-slate-500">XP</span>
+          <span className="font-display text-xs sm:text-sm font-extrabold text-slate-200 font-mono">{sessionXp.toLocaleString()}</span>
+          <span className="hidden sm:inline text-[11px] font-bold text-slate-500">XP</span>
         </div>
       </div>
     </div>

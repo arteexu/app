@@ -150,11 +150,11 @@ export function WeeklyBarChart({ days, totalHours, goal }: Props) {
 
       {/* Daily bars vs pace line */}
       <div>
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
           <p className="text-[10px] font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide">
             Daily practice
           </p>
-          <p className="text-[10px] text-gray-400 dark:text-slate-500">
+          <p className="text-[10px] text-gray-400 dark:text-slate-500 text-right">
             dashed = <span className="font-bold text-indigo-500 dark:text-indigo-400">{formatH(dailyTarget)}h</span> pace
           </p>
         </div>

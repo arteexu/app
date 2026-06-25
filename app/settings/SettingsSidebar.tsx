@@ -5,8 +5,10 @@ import { createClient } from "@/lib/supabase/client"
 import { clsx } from "clsx"
 
 const NAV_ITEMS = [
-  { href: "/settings/profile",    label: "Profile",    icon: "👤" },
-  { href: "/settings/appearance", label: "Appearance", icon: "🎨" },
+  { href: "/settings/profile",     label: "Profile",     icon: "👤" },
+  { href: "/settings/board",       label: "Settings",    icon: "⚙️" },
+  { href: "/settings/appearance",  label: "Appearance",  icon: "🎨" },
+  { href: "/settings/statistics",  label: "Statistics",  icon: "📊" },
 ]
 
 interface Props {
@@ -43,7 +45,7 @@ export function SettingsSidebar({ name, email, avatarInitial }: Props) {
       {/* Nav items */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-2 flex flex-col gap-0.5 shadow-sm">
         {NAV_ITEMS.map(item => {
-          const active = pathname === item.href
+          const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
           return (
             <Link
               key={item.href}

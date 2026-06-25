@@ -1,12 +1,12 @@
 "use client"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { GoogleSignInButton } from "@/components/ui/GoogleSignInButton"
 
-export default function SignIn() {
+function SignInForm() {
   const router       = useRouter()
   const searchParams = useSearchParams()
   const [email,    setEmail]    = useState("")
@@ -48,17 +48,14 @@ export default function SignIn() {
             <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>
           )}
 
-          {/* Google OAuth */}
           <GoogleSignInButton label="Sign in with Google" />
 
-          {/* Divider */}
           <div className="flex items-center gap-3">
             <div className="flex-1 border-t border-gray-200 dark:border-slate-700" />
             <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">or</span>
             <div className="flex-1 border-t border-gray-200 dark:border-slate-700" />
           </div>
 
-          {/* Email / password */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-gray-700 dark:text-slate-300">Email</label>
@@ -98,5 +95,17 @@ export default function SignIn() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <p className="text-gray-500">Loading…</p>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   )
 }

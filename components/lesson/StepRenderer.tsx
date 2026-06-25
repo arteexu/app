@@ -15,7 +15,7 @@ interface Props {
   isLastStep: boolean
 }
 
-export function StepRenderer({ step, onStepComplete, isLastStep }: Props) {
+function renderStep(step: Step, onStepComplete: (isCorrect: boolean) => void, isLastStep: boolean) {
   switch (step.type) {
     case "concept":
       return <ConceptCard step={step} onContinue={() => onStepComplete(true)} />
@@ -36,4 +36,12 @@ export function StepRenderer({ step, onStepComplete, isLastStep }: Props) {
     default:
       return <div className="text-gray-400 text-center py-10">Step type not yet implemented.</div>
   }
+}
+
+export function StepRenderer({ step, onStepComplete, isLastStep }: Props) {
+  return (
+    <div className="flex-1 min-h-0 flex flex-col h-full">
+      {renderStep(step, onStepComplete, isLastStep)}
+    </div>
+  )
 }

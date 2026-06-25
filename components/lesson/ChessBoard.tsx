@@ -1,19 +1,20 @@
 "use client"
 import { Chessboard } from "react-chessboard"
-import type { Arrow, PieceDropHandlerArgs } from "react-chessboard"
+import type { Arrow, PieceDropHandlerArgs, PieceHandlerArgs } from "react-chessboard"
 import type { BoardAnnotations } from "@/lib/types"
 
 interface Props {
   fen: string
   orientation?: "white" | "black"
   onPieceDrop?: (from: string, to: string) => boolean
+  onPieceDrag?: (args: PieceHandlerArgs) => void
   onSquareClick?: (square: string) => void
   squareStyles?: Record<string, React.CSSProperties>
   arrows?: Arrow[]
   interactive?: boolean
 }
 
-export function ChessBoard({ fen, orientation = "white", onPieceDrop, onSquareClick, squareStyles, arrows, interactive = false }: Props) {
+export function ChessBoard({ fen, orientation = "white", onPieceDrop, onPieceDrag, onSquareClick, squareStyles, arrows, interactive = false }: Props) {
   return (
     <div className="rounded-xl overflow-hidden shadow-md w-full max-w-sm mx-auto">
       <Chessboard
@@ -30,6 +31,7 @@ export function ChessBoard({ fen, orientation = "white", onPieceDrop, onSquareCl
             ? ({ sourceSquare, targetSquare }: PieceDropHandlerArgs) =>
                 targetSquare ? onPieceDrop(sourceSquare, targetSquare) : false
             : undefined,
+          onPieceDrag: interactive && onPieceDrag ? onPieceDrag : undefined,
           onSquareClick: interactive && onSquareClick
             ? ({ square }) => onSquareClick(square)
             : undefined,

@@ -1,11 +1,19 @@
 "use client"
-import { useState } from "react"
-import { Chess } from "chess.js"
+import { useState, useEffect } from "react"
+import { Chess, type Square } from "chess.js"
 import type { FindAllCheckmates as FindAllCheckMatesType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
-import type { PieceDropHandlerArgs, SquareHandlerArgs } from "react-chessboard"
+import type { PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from "react-chessboard"
 import { Button } from "@/components/ui/button"
 import { LessonLayout } from "./LessonLayout"
+import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
+import { useLessonSounds } from "@/hooks/useLessonSounds"
+import { isBoardSoundEnabled, playBoardMoveSound } from "@/lib/ui-sounds"
+import { useBoardPreferences } from "@/components/BoardPreferencesProvider"
+import { useLegalMoveHighlights } from "@/hooks/useLegalMoveHighlights"
+import { usePieceLatchRef } from "@/hooks/usePieceLatchRef"
+import { buildSelectionStyles, buildUserHighlightStyles, composeSquareStyles, DRAG_ACTIVATION_DISTANCE } from "@/lib/legal-move-highlights"
+import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { clsx } from "clsx"
 
 interface Props {
@@ -18,34 +26,47 @@ interface Props {
 function normSan(san: string) { return san.replace(/[+#]/g, "") }
 
 export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
+  const { play } = useLessonSounds()
+  const boardOrientation = useLessonBoardOrientation(step.orientation ?? "white")
   const [game, setGame]               = useState(() => new Chess(step.fen))
   const [found, setFound]             = useState<string[]>([])   // SANs as returned by chess.js
   const [feedback, setFeedback]       = useState<{ msg: string; ok: boolean } | null>(null)
   const [allFound, setAllFound]       = useState(false)
-  const [selectedSquare, setSelectedSquare]   = useState<string | null>(null)
-  const [legalMoveSquares, setLegalMoveSquares] = useState<Record<string, React.CSSProperties>>({})
+  const [userHighlights, setUserHighlights] = useState<string[]>([])
+  const userHighlightHandlers = useUserSquareHighlightHandlers(setUserHighlights, !allFound)
 
   const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
+  const { showLegalMoves } = useBoardPreferences()
+  const {
+    selectedSquare,
+    latchAnimSquare,
+    legalMoveSquares,
+    selectSquare,
+    clearHighlights,
+    onPieceDrag,
+    onDragEnd,
+  } = useLegalMoveHighlights({
+    game,
+    enabled: showLegalMoves && !allFound,
+    isSelectable: (_square, piece) => !!piece && piece.color === learnerColor,
+  })
+
+  const boardRef = usePieceLatchRef(latchAnimSquare)
   const targetNorm   = step.checkmates.map(normSan)
+
+  useEffect(() => {
+    if (allFound) play("stepComplete")
+  }, [allFound, play])
+
+  useEffect(() => {
+    if (!feedback || isBoardSoundEnabled()) return
+    play(feedback.ok ? "correctMove" : "wrong")
+  }, [feedback, play])
 
   function resetBoard() {
     setGame(new Chess(step.fen))
-    setSelectedSquare(null)
-    setLegalMoveSquares({})
-  }
-
-  function selectSquare(square: string) {
-    const piece = game.get(square as any)
-    if (!piece || piece.color !== learnerColor) {
-      setSelectedSquare(null); setLegalMoveSquares({}); return
-    }
-    setSelectedSquare(square)
-    const moves = game.moves({ square: square as any, verbose: true })
-    const hl: Record<string, React.CSSProperties> = {
-      [square]: { backgroundColor: "rgba(99,102,241,0.45)" },
-    }
-    moves.forEach(m => { hl[m.to] = { backgroundColor: "rgba(99,102,241,0.2)", borderRadius: "50%" } })
-    setLegalMoveSquares(hl)
+    clearHighlights()
+    setUserHighlights([])
   }
 
   function attemptMove(from: string, to: string): boolean {
@@ -53,15 +74,16 @@ export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
     const copy = new Chess(game.fen())
     let result
     try {
-      result = copy.move({ from: from as any, to: to as any, promotion: "q" })
+      result = copy.move({ from: from as Square, to: to as Square, promotion: "q" })
     } catch { return false }
     if (!result) return false
+
+    playBoardMoveSound(result, copy)
 
     const san  = result.san
     const norm = normSan(san)
 
-    setSelectedSquare(null)
-    setLegalMoveSquares({})
+    clearHighlights()
 
     if (copy.isCheckmate()) {
       if (targetNorm.includes(norm)) {
@@ -99,32 +121,51 @@ export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
 
   function handleDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
     if (!targetSquare || allFound) return false
-    return attemptMove(sourceSquare, targetSquare)
+    const moved = attemptMove(sourceSquare, targetSquare)
+    onDragEnd()
+    return moved
+  }
+
+  function handlePieceDrag(args: PieceHandlerArgs) {
+    setUserHighlights([])
+    onPieceDrag(args)
   }
 
   function handleSquareClick({ square }: SquareHandlerArgs) {
     if (allFound) return
+    setUserHighlights([])
     if (selectedSquare) {
-      if (square === selectedSquare) { setSelectedSquare(null); setLegalMoveSquares({}); return }
+      if (square === selectedSquare) { clearHighlights(); return }
       if (!attemptMove(selectedSquare, square)) selectSquare(square)
       return
     }
     selectSquare(square)
   }
 
+  const squareStyles = composeSquareStyles(
+    buildUserHighlightStyles(userHighlights),
+    legalMoveSquares,
+    allFound ? {} : buildSelectionStyles(selectedSquare),
+  )
+
   const board = (
-    <Chessboard
-      options={{
-        position: game.fen(),
-        boardOrientation: step.orientation ?? "white",
-        allowDragging: !allFound,
-        squareStyles: legalMoveSquares,
-        darkSquareStyle: { backgroundColor: "#769656" },
-        lightSquareStyle: { backgroundColor: "#eeeed2" },
-        onPieceDrop: allFound ? undefined : handleDrop,
-        onSquareClick: allFound ? undefined : handleSquareClick,
-      }}
-    />
+    <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
+      <Chessboard
+        options={{
+          position: game.fen(),
+          boardOrientation,
+          allowDragging: !allFound,
+          dragActivationDistance: DRAG_ACTIVATION_DISTANCE,
+          squareStyles,
+          darkSquareStyle: { backgroundColor: "#769656" },
+          lightSquareStyle: { backgroundColor: "#eeeed2" },
+          onPieceDrop: allFound ? undefined : handleDrop,
+          onPieceDrag: allFound ? undefined : handlePieceDrag,
+          onSquareClick: allFound ? undefined : handleSquareClick,
+          ...(allFound ? {} : userHighlightHandlers),
+        }}
+      />
+    </div>
   )
 
   return (

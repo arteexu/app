@@ -4,6 +4,7 @@ import type { IdentifyStep as IdentifyStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
 import { FeedbackPanel } from "./FeedbackPanel"
 import { LessonLayout } from "./LessonLayout"
+import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
 
 interface Props {
   step: IdentifyStepType
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function IdentifyStep({ step, onComplete, isLastStep }: Props) {
+  const boardOrientation = useLessonBoardOrientation(step.orientation ?? "white")
   const [clicked, setClicked] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [showHint, setShowHint] = useState(false)
@@ -33,7 +35,7 @@ export function IdentifyStep({ step, onComplete, isLastStep }: Props) {
     <Chessboard
       options={{
         position: step.fen,
-        boardOrientation: step.orientation ?? "white",
+        boardOrientation,
         allowDragging: false,
         squareStyles,
         darkSquareStyle: { backgroundColor: "#769656" },

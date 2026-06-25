@@ -1,12 +1,18 @@
 "use client"
 import { useState } from "react"
-import { Chess } from "chess.js"
+import { Chess, type Square } from "chess.js"
 import type { PlayVsBotStep as PlayVsBotStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
-import type { PieceDropHandlerArgs, SquareHandlerArgs } from "react-chessboard"
-import { Button } from "@/components/ui/button"
+import type { PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from "react-chessboard"
 import { FeedbackPanel } from "./FeedbackPanel"
 import { LessonLayout } from "./LessonLayout"
+import { useBoardPreferences } from "@/components/BoardPreferencesProvider"
+import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
+import { useLegalMoveHighlights } from "@/hooks/useLegalMoveHighlights"
+import { usePieceLatchRef } from "@/hooks/usePieceLatchRef"
+import { buildLastMoveStyles, buildSelectionStyles, buildUserHighlightStyles, composeSquareStyles, DRAG_ACTIVATION_DISTANCE } from "@/lib/legal-move-highlights"
+import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
+import { playBoardMoveSound } from "@/lib/ui-sounds"
 import { clsx } from "clsx"
 
 interface Props {
@@ -16,15 +22,34 @@ interface Props {
 }
 
 export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
+  const boardOrientation = useLessonBoardOrientation(step.orientation ?? "white")
   const [game, setGame] = useState(() => new Chess(step.fen))
   const [moveCount, setMoveCount] = useState(0)
   const [outcome, setOutcome] = useState<"won" | "lost" | "draw" | null>(null)
   const [botThinking, setBotThinking] = useState(false)
-  const [selectedSquare, setSelectedSquare] = useState<string | null>(null)
-  const [legalMoveSquares, setLegalMoveSquares] = useState<Record<string, React.CSSProperties>>({})
   const [moveHistory, setMoveHistory] = useState<string[]>([])
+  const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null)
+  const [userHighlights, setUserHighlights] = useState<string[]>([])
+  const userHighlightHandlers = useUserSquareHighlightHandlers(setUserHighlights)
 
   const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
+  const { showLegalMoves } = useBoardPreferences()
+  const canInteract = !outcome && !botThinking && game.turn() === learnerColor
+  const {
+    selectedSquare,
+    latchAnimSquare,
+    legalMoveSquares,
+    selectSquare,
+    clearHighlights,
+    onPieceDrag,
+    onDragEnd,
+  } = useLegalMoveHighlights({
+    game,
+    enabled: showLegalMoves && canInteract,
+    isSelectable: (_square, piece) => !!piece && piece.color === learnerColor,
+  })
+
+  const boardRef = usePieceLatchRef(latchAnimSquare)
 
   function checkOutcome(g: Chess, history: string[]): boolean {
     if (g.isCheckmate()) {
@@ -44,7 +69,11 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
       const moves = g.moves()
       if (!moves.length) { setBotThinking(false); return }
       const move = moves[Math.floor(Math.random() * moves.length)]
-      g.move(move)
+      const botResult = g.move(move)
+      if (botResult) {
+        playBoardMoveSound(botResult, g)
+        setLastMove({ from: botResult.from, to: botResult.to })
+      }
       const newHistory = [...history, move]
       setMoveHistory(newHistory)
       setGame(new Chess(g.fen()))
@@ -58,42 +87,42 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
     const g = new Chess(game.fen())
     let result
     try {
-      result = g.move({ from: from as any, to: to as any, promotion: "q" })
+      result = g.move({ from: from as Square, to: to as Square, promotion: "q" })
     } catch { return false }
     if (!result) return false
+
+    playBoardMoveSound(result, g)
 
     const newHistory = [...moveHistory, result.san]
     setMoveHistory(newHistory)
     setGame(new Chess(g.fen()))
     setMoveCount(c => c + 1)
-    setSelectedSquare(null)
-    setLegalMoveSquares({})
+    setLastMove({ from: result.from, to: result.to })
+    clearHighlights()
 
     if (!checkOutcome(g, newHistory)) makeBotMove(g, newHistory)
     return true
   }
 
-  function selectSquare(square: string) {
-    const piece = game.get(square as any)
-    if (!piece || piece.color !== learnerColor) { setSelectedSquare(null); setLegalMoveSquares({}); return }
-    setSelectedSquare(square)
-    const moves = game.moves({ square: square as any, verbose: true })
-    const hl: Record<string, React.CSSProperties> = { [square]: { backgroundColor: "rgba(99,102,241,0.4)" } }
-    moves.forEach(m => { hl[m.to] = { backgroundColor: "rgba(99,102,241,0.2)", borderRadius: "50%" } })
-    setLegalMoveSquares(hl)
-  }
-
   function handleDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
     if (!targetSquare) return false
-    return attemptMove(sourceSquare, targetSquare)
+    const moved = attemptMove(sourceSquare, targetSquare)
+    onDragEnd()
+    return moved
+  }
+
+  function handlePieceDrag(args: PieceHandlerArgs) {
+    setUserHighlights([])
+    onPieceDrag(args)
   }
 
   function handleSquareClick({ square }: SquareHandlerArgs) {
-    if (outcome || botThinking || game.turn() !== learnerColor) return
+    if (!canInteract) return
+    setUserHighlights([])
     if (selectedSquare) {
-      // Clicking the same piece again deselects it
-      if (square === selectedSquare) { setSelectedSquare(null); setLegalMoveSquares({}); return }
-      if (!attemptMove(selectedSquare, square)) selectSquare(square); return
+      if (square === selectedSquare) { clearHighlights(); return }
+      if (!attemptMove(selectedSquare, square)) selectSquare(square)
+      return
     }
     selectSquare(square)
   }
@@ -103,26 +132,37 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
     setMoveCount(0)
     setOutcome(null)
     setBotThinking(false)
-    setSelectedSquare(null)
-    setLegalMoveSquares({})
+    clearHighlights()
     setMoveHistory([])
+    setLastMove(null)
+    setUserHighlights([])
   }
 
-  const isWon = outcome === "won"
+  const squareStyles = composeSquareStyles(
+    buildLastMoveStyles(lastMove?.from, lastMove?.to),
+    buildUserHighlightStyles(userHighlights),
+    legalMoveSquares,
+    canInteract ? buildSelectionStyles(selectedSquare) : {},
+  )
 
   const board = (
-    <Chessboard
-      options={{
-        position: game.fen(),
-        boardOrientation: step.orientation ?? "white",
-        allowDragging: !outcome && !botThinking,
-        squareStyles: legalMoveSquares,
-        darkSquareStyle: { backgroundColor: "#769656" },
-        lightSquareStyle: { backgroundColor: "#eeeed2" },
-        onPieceDrop: (!outcome && !botThinking) ? handleDrop : undefined,
-        onSquareClick: (!outcome && !botThinking) ? handleSquareClick : undefined,
-      }}
-    />
+    <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
+      <Chessboard
+        options={{
+          position: game.fen(),
+          boardOrientation,
+          allowDragging: !outcome && !botThinking,
+          dragActivationDistance: DRAG_ACTIVATION_DISTANCE,
+          squareStyles,
+          darkSquareStyle: { backgroundColor: "#769656" },
+          lightSquareStyle: { backgroundColor: "#eeeed2" },
+          onPieceDrop: canInteract ? handleDrop : undefined,
+          onPieceDrag: canInteract ? handlePieceDrag : undefined,
+          onSquareClick: canInteract ? handleSquareClick : undefined,
+          ...userHighlightHandlers,
+        }}
+      />
+    </div>
   )
 
   return (

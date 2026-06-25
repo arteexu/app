@@ -48,6 +48,105 @@ body {
   0%   { transform: translateY(14px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
+@keyframes comboPop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+@keyframes comboCountTick {
+  0%   { transform: translateY(0) scale(1); }
+  35%  { transform: translateY(-3px) scale(1.14); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes comboSegmentFill {
+  0%   { transform: scaleX(0.35); opacity: 0.45; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+@keyframes comboEnter {
+  0%   { opacity: 0; transform: translateX(-8px) scale(0.92); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes comboExit {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.92); }
+}
+.combo-indicator-pop { animation: comboPop 0.42s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
+.combo-count-tick { animation: comboCountTick 0.42s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
+.combo-segment-new { animation: comboSegmentFill 0.35s ease-out both; transform-origin: left center; }
+.combo-indicator-enter { animation: comboEnter 0.35s ease-out both; }
+.combo-indicator-exit { animation: comboExit 0.28s ease-in both; }
+.combo-segment { background: #1e293b; }
+.combo-segment-filled { background: linear-gradient(90deg, #d97706, #f59e0b); }
+.combo-indicator-lit .combo-segment-lit {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.55);
+}
+@keyframes stairRise {
+  0%   { opacity: 0; transform: translateY(18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* Click-latch tactile feedback on selected chess pieces (react-chessboard).
+   Avoid transform — dnd-kit applies inline transforms during drag. */
+@keyframes pieceLatch {
+  0%, 100% { filter: brightness(1); }
+  25%      { filter: brightness(1.18); }
+  50%      { filter: brightness(1.08); }
+  75%      { filter: brightness(1.14); }
+}
+.piece-latch {
+  animation: pieceLatch 200ms ease-out;
+}
+
+/* react-chessboard pieces are focusable (tabIndex=0) for dnd-kit keyboard drag.
+   Enter/Space drag is blocked in usePieceLatchRef; hide the browser focus ring
+   that appears when Enter is pressed after a mouse click on a piece/square. */
+[data-square] [aria-roledescription="draggable"]:focus,
+[data-square] [aria-roledescription="draggable"]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Wrong-move badge on the piece the learner tried to move (Solitaire Chess). */
+.wrong-move-piece {
+  position: relative;
+}
+.wrong-move-piece::after {
+  content: "✕";
+  position: absolute;
+  top: 4%;
+  right: 4%;
+  width: 24%;
+  height: 24%;
+  min-width: 14px;
+  min-height: 14px;
+  background: #dc2626;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(9px, 42%, 14px);
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 25;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [style*="confFall"], [style*="starPop"], [style*="rise"] { animation: none !important; }
+  .piece-latch { animation: none !important; }
+  .combo-indicator-pop,
+  .combo-count-tick,
+  .combo-segment-new,
+  .combo-indicator-enter,
+  .combo-indicator-exit { animation: none !important; }
+  .mastery-stair-step,
+  .mastery-stair-landing,
+  .mastery-stair-summit { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+.mastery-stair-step,
+.mastery-stair-landing,
+.mastery-stair-summit {
+  animation: stairRise 0.55s ease both;
 }

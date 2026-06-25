@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { Inter, Baloo_2 } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/ThemeProvider"
+import { BoardPreferencesProvider } from "@/components/BoardPreferencesProvider"
+import { SiteActivityTracker } from "@/components/SiteActivityTracker"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const baloo = Baloo_2({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-baloo" })
@@ -24,7 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}} />
       </head>
       <body className={`${inter.variable} ${baloo.variable} font-sans min-h-full`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <BoardPreferencesProvider>
+            <SiteActivityTracker />
+            {children}
+          </BoardPreferencesProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

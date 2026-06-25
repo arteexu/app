@@ -24,14 +24,22 @@ export type StepType =
 // ─── Concept Step ─────────────────────────────────────────────────────────────
 // Read-only visual explanation. Always the first step in a lesson. Not graded.
 
+export interface ConceptStage {
+  body: string           // plain text with **bold** support
+  fen?: string           // optional override; inherits step.fen when omitted
+  annotations?: BoardAnnotations
+  buttonLabel?: string   // defaults to "Next →" or "Got it →" on the final stage
+}
+
 export interface ConceptStep {
   type: "concept"
   id: string
   title: string
-  body: string           // plain text with **bold** support
+  body: string           // plain text with **bold** support (ignored when stages is set)
   fen?: string           // optional board position to display
   annotations?: BoardAnnotations
   analogy?: string       // optional alternative framing
+  stages?: ConceptStage[] // when set, learner clicks through each stage before continuing
 }
 
 // ─── Puzzle Step ──────────────────────────────────────────────────────────────
@@ -51,6 +59,11 @@ export interface PuzzleLine {
   wrongMoveExplanations?: Record<number, Record<string, string>>
   // Optional: show a refutation line for a specific wrong move
   refutationLines?: Record<number, Record<string, string[]>>  // step → wrong move → refutation moves
+  // Optional: for each learner move index, a map of SAN → feedback for moves that
+  // are recognized as good/correct but are NOT the intended solution. These are
+  // neither accepted (the puzzle does not advance) nor treated as plain wrong
+  // moves — the learner is encouraged to keep looking for the best move.
+  alternatives?: Record<number, Record<string, string>>
 }
 
 // The position and move BEFORE the puzzle starts — lets the learner step back

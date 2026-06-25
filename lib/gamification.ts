@@ -114,6 +114,9 @@ export interface Trophy {
   key: string
   emoji: string
   name: string
+  /** Short flavor copy shown in the detail panel. */
+  description: string
+  /** How to unlock — shown when locked or as a subtitle when earned. */
   hint: string
   earned: boolean
 }
@@ -136,11 +139,53 @@ export function getTrophies(input: TrophyInput): Trophy[] {
   ).length
 
   return [
-    { key: "first-mate",   emoji: "🏅", name: "First Mate",   hint: "Finish your first lesson",        earned: completedLessonIds.length >= 1 },
-    { key: "on-fire",      emoji: "🔥", name: "On Fire",      hint: "Reach a 3-day streak",             earned: Math.max(currentStreak, longestStreak) >= 3 },
-    { key: "sharpshooter", emoji: "🎯", name: "Sharpshooter", hint: "Hit 90% first-attempt accuracy",  earned: (masteryRate ?? 0) >= 90 },
-    { key: "week-warrior", emoji: "⚡", name: "Week Warrior", hint: "Hit your weekly time goal",        earned: weeklyHours >= weeklyGoal },
-    { key: "chapter-boss", emoji: "🛡️", name: "Chapter Boss", hint: "Complete a full chapter",          earned: chaptersDone >= 1 },
-    { key: "endgame-king", emoji: "👑", name: "Endgame King", hint: "Complete the whole course",        earned: progress >= 100 },
+    {
+      key: "first-mate",
+      emoji: "🏅",
+      name: "First Mate",
+      description: "You finished your first lesson. Every grandmaster started with a single step — this one's yours.",
+      hint: "Finish your first lesson",
+      earned: completedLessonIds.length >= 1,
+    },
+    {
+      key: "on-fire",
+      emoji: "🔥",
+      name: "On Fire",
+      description: "Three days in a row studying chess. Consistency beats talent when you're building real skill.",
+      hint: "Reach a 3-day streak",
+      earned: Math.max(currentStreak, longestStreak) >= 3,
+    },
+    {
+      key: "sharpshooter",
+      emoji: "🎯",
+      name: "Sharpshooter",
+      description: "You're nailing puzzles on the first try. Your board vision is getting sharp.",
+      hint: "Hit 90% first-attempt accuracy",
+      earned: (masteryRate ?? 0) >= 90,
+    },
+    {
+      key: "week-warrior",
+      emoji: "⚡",
+      name: "Week Warrior",
+      description: "You hit your weekly study goal. Steady practice is how mating patterns stick.",
+      hint: "Hit your weekly time goal",
+      earned: weeklyHours >= weeklyGoal,
+    },
+    {
+      key: "chapter-boss",
+      emoji: "🛡️",
+      name: "Chapter Boss",
+      description: "You cleared an entire chapter. That's a whole skill set mastered, not just one trick.",
+      hint: "Complete a full chapter",
+      earned: chaptersDone >= 1,
+    },
+    {
+      key: "endgame-king",
+      emoji: "👑",
+      name: "Endgame King",
+      description: "Every lesson in the course — done. You think in checkmate now.",
+      hint: "Complete the whole course",
+      earned: progress >= 100,
+    },
   ]
 }

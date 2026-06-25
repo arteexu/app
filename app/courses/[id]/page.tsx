@@ -1,25 +1,25 @@
 import { redirect, notFound } from "next/navigation"
-import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
-import { getCourseProgress } from "@/lib/progress"
-import course from "@/content/courses/chess-attack-and-checkmate.json"
+import { getCourseProgress, getNextLesson } from "@/lib/progress"
+import { getCourse } from "@/lib/courses"
 import type { Course } from "@/lib/types"
-import { ProgressBar } from "@/components/ui/progress-bar"
-import { LessonTree } from "@/components/ui/LessonTree"
+import { QuestNav } from "@/components/ui/QuestNav"
+import { CourseMasteryHeader } from "@/components/ui/CourseMasteryHeader"
+import { MasteryStaircase } from "@/components/ui/MasteryStaircase"
 
 export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const typedCourse = course as unknown as Course
-  if (id !== typedCourse.id) notFound()
+  const typedCourse = getCourse(id) as Course | undefined
+  if (!typedCourse) notFound()
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/signin")
 
-  const { data: progressRows } = await supabase
-    .from("user_progress")
-    .select("lesson_id, completed_step_ids, is_lesson_complete")
-    .eq("user_id", user.id)
+  const [{ data: profile }, { data: progressRows }] = await Promise.all([
+    supabase.from("profiles").select("display_name").eq("id", user.id).single(),
+    supabase.from("user_progress").select("lesson_id, completed_step_ids, is_lesson_complete").eq("user_id", user.id),
+  ])
 
   const allProgress = progressRows ?? []
   const completedIds = allProgress
@@ -32,42 +32,48 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
       .map((r: any) => [r.lesson_id as string, r.completed_step_ids as string[]])
   )
 
+  const inProgressId = [...inProgressMap.keys()][0]
   const progress = getCourseProgress(typedCourse, completedIds)
+  const nextLesson = getNextLesson(typedCourse, completedIds)
+  const flatLessons = typedCourse.chapters.flatMap(ch => ch.lessons)
+  const totalMinutes = flatLessons.reduce((sum, l) => sum + (l.estimatedMinutes ?? 0), 0)
+  const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
 
   return (
-    <div className="min-h-screen dark:bg-slate-900">
-      <nav className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex items-center gap-4">
-        <Link href="/dashboard" className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 transition">← Dashboard</Link>
-        <Link href="/dashboard" className="text-xl font-bold text-indigo-600 hover:text-indigo-500 transition mx-auto">
-          ChessMind
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 transition">
-            Dashboard
-          </Link>
-          <Link href="/settings/profile" className="text-sm font-medium text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 transition">
-            Profile
-          </Link>
-        </div>
-      </nav>
+    <div className="min-h-screen flex flex-col">
+      <QuestNav
+        back={{ href: "/dashboard", label: "Quest" }}
+        avatarInitial={name[0]?.toUpperCase() ?? "?"}
+      />
 
-      {/* Course header */}
-      <div className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-700 px-6 py-8">
-        <div className="max-w-lg mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">{typedCourse.title}</h1>
-          <p className="text-gray-500 dark:text-slate-400 mt-1">{typedCourse.description}</p>
-          <ProgressBar value={progress} showLabel className="mt-5" />
-        </div>
-      </div>
+      <CourseMasteryHeader
+        course={typedCourse}
+        progress={progress}
+        completedCount={completedIds.length}
+        totalLessons={flatLessons.length}
+        nextLesson={nextLesson}
+        totalMinutes={totalMinutes}
+      />
 
-      {/* Lesson tree */}
-      <div className="py-10">
-        <LessonTree
-          course={typedCourse}
-          completedLessonIds={completedIds}
-          inProgressMap={inProgressMap}
-        />
-      </div>
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-8 py-10 lg:py-14">
+        <div className="mb-8 lg:mb-10 text-center lg:text-left">
+          <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-slate-100">
+            Climb the steps
+          </h2>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-slate-400 mt-2 max-w-xl mx-auto lg:mx-0">
+            Each lesson is one tread higher toward checkmate mastery. Work through them in order — or jump to any step you like.
+          </p>
+        </div>
+
+        <div className="rounded-[2rem] border border-gray-100 dark:border-slate-800 bg-white/40 dark:bg-slate-900/30 backdrop-blur-sm px-3 sm:px-6 py-8 lg:py-12">
+          <MasteryStaircase
+            course={typedCourse}
+            completedLessonIds={completedIds}
+            inProgressMap={inProgressMap}
+            activeLessonId={inProgressId}
+          />
+        </div>
+      </main>
     </div>
   )
 }

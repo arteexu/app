@@ -3,10 +3,13 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import type { Course, Lesson } from "@/lib/types"
 import { StepRenderer } from "@/components/lesson/StepRenderer"
+import { LessonCompleteScreen } from "@/components/lesson/LessonCompleteScreen"
 import { LessonHud } from "@/components/lesson/LessonHud"
+import { LessonBoardOrientationProvider } from "@/hooks/useLessonBoardOrientation"
+import { LessonSoundProvider } from "@/hooks/useLessonSounds"
+import { playLessonSound } from "@/lib/ui-sounds"
 import { createClient } from "@/lib/supabase/client"
-import { calculateStreak, todayString, getNextLesson, isLessonUnlocked } from "@/lib/progress"
-import { clsx } from "clsx"
+import { calculateStreak, todayString, getNextLesson } from "@/lib/progress"
 
 interface Props {
   lesson: Lesson
@@ -25,7 +28,13 @@ const GRADED = ["puzzle", "multiple-choice", "move-multiple-choice", "identify",
 
 export function LessonPlayer(props: Props) {
   const [replayKey, setReplayKey] = useState(0)
-  return <LessonSession key={replayKey} {...props} onReplay={() => setReplayKey(k => k + 1)} />
+  return (
+    <LessonSoundProvider>
+      <LessonBoardOrientationProvider>
+        <LessonSession key={replayKey} {...props} onReplay={() => setReplayKey(k => k + 1)} />
+      </LessonBoardOrientationProvider>
+    </LessonSoundProvider>
+  )
 }
 
 interface SessionProps extends Props { onReplay: () => void }
@@ -69,8 +78,18 @@ function LessonSession({
 
     // HUD: combo / XP / ignite
     if (GRADED.includes(currentStep.type)) {
-      if (isCorrect) { setCombo(c => c + 1); setSessionXp(x => x + SOLVE_XP); setLit(true); setTimeout(() => setLit(false), 1600) }
-      else setCombo(0)
+      if (isCorrect) {
+        setCombo(c => {
+          const next = c + 1
+          if (next >= 2) playLessonSound("combo")
+          return next
+        })
+        setSessionXp(x => x + SOLVE_XP)
+        setLit(true)
+        setTimeout(() => setLit(false), 1600)
+      } else {
+        setCombo(0)
+      }
     }
 
     const stepId       = currentStep.id
@@ -106,88 +125,23 @@ function LessonSession({
     setViewIndex(next)
   }
 
-  // ── Completion screen (unchanged) ──
+  // ── Completion screen ──
   if (finished) {
     const nextLesson = getNextLesson(course, completedLessonIds)
     return (
       <div className="h-screen flex flex-col dark:bg-slate-900">
         <LessonNav chapterTitle={chapterTitle} lessonTitle={lesson.title} courseId={courseId} />
-        <div className="flex-1 min-h-0 flex flex-col lg:flex-row">
-          <div className="lg:w-96 flex flex-col items-center lg:items-start justify-center gap-6 px-10 py-10 lg:border-r border-gray-100 dark:border-slate-800">
-            <div className="text-6xl">🎉</div>
-            <div className="text-center lg:text-left">
-              <h2 className="font-display text-3xl font-extrabold text-gray-900 dark:text-slate-100">Lesson complete!</h2>
-              <p className="text-gray-500 dark:text-slate-400 mt-2 max-w-xs">
-                You finished <strong className="text-gray-700 dark:text-slate-200">{lesson.title}</strong>.
-                {nextLesson ? " The next lesson is now unlocked." : " You've completed the entire course!"}
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 w-full max-w-xs">
-              {nextLesson && (
-                <Link href={`/lessons/${nextLesson.id}`} className="flex items-center justify-center bg-indigo-600 text-white rounded-xl px-6 py-3 font-semibold hover:bg-indigo-500 transition">
-                  Next: {nextLesson.title} →
-                </Link>
-              )}
-              <button onClick={onReplay} className="flex items-center justify-center border border-gray-200 dark:border-slate-700 rounded-xl px-6 py-3 font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition">
-                ↺ Replay lesson
-              </button>
-              <Link href={`/courses/${courseId}`} className="flex items-center justify-center text-sm text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 transition">View all lessons</Link>
-              <Link href="/dashboard" className="flex items-center justify-center text-sm text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300 transition">Go to dashboard</Link>
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto px-8 py-8">
-            <p className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-6">Your path</p>
-            <div className="flex flex-col gap-8">
-              {course.chapters.map(chapter => (
-                <div key={chapter.id}>
-                  <p className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wide mb-3">{chapter.title}</p>
-                  <div className="flex flex-col gap-2">
-                    {chapter.lessons.map(l => {
-                      const isDone    = completedLessonIds.includes(l.id)
-                      const isCurrent = l.id === lesson.id
-                      const isNext    = nextLesson?.id === l.id
-                      const unlocked  = isLessonUnlocked(course, l.id, completedLessonIds)
-                      return (
-                        <div key={l.id} className="flex items-center gap-3">
-                          <div className={clsx(
-                            "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
-                            isDone && isCurrent  && "bg-green-500 text-white ring-2 ring-green-200 dark:ring-green-800",
-                            isDone && !isCurrent && "bg-indigo-600 text-white",
-                            isNext               && "bg-white dark:bg-slate-800 border-2 border-amber-400 text-amber-500",
-                            !isDone && !isNext && unlocked && "bg-white dark:bg-slate-800 border-2 border-indigo-300 text-indigo-400",
-                            !unlocked && "bg-gray-100 dark:bg-slate-800 text-gray-300 dark:text-slate-600"
-                          )}>
-                            {isDone ? "✓" : !unlocked ? "🔒" : "→"}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className={clsx("text-sm font-medium truncate",
-                                isDone ? "text-gray-900 dark:text-slate-100" : unlocked ? "text-gray-700 dark:text-slate-300" : "text-gray-400 dark:text-slate-600"
-                              )}>{l.title}</span>
-                              {isCurrent && isDone && <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full font-medium flex-shrink-0">Just finished!</span>}
-                              {isNext && <span className="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full font-medium flex-shrink-0">Up next</span>}
-                            </div>
-                            <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">{l.estimatedMinutes} min · {l.steps.length} steps</p>
-                          </div>
-                          {unlocked && (
-                            <Link href={`/lessons/${l.id}`} className={clsx(
-                              "flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg transition",
-                              isNext ? "bg-amber-500 text-white hover:bg-amber-400"
-                              : isCurrent && isDone ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200"
-                              : "text-indigo-600 dark:text-indigo-400 hover:underline"
-                            )}>
-                              {isNext ? "Start →" : isDone ? "Replay" : "Start"}
-                            </Link>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <LessonCompleteScreen
+          lesson={lesson}
+          course={course}
+          courseId={courseId}
+          chapterTitle={chapterTitle}
+          completedLessonIds={completedLessonIds}
+          nextLesson={nextLesson}
+          sessionXp={sessionXp}
+          elapsedSeconds={elapsed}
+          onReplay={onReplay}
+        />
       </div>
     )
   }
@@ -196,7 +150,7 @@ function LessonSession({
   if (!currentStep) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex flex-col">
+    <div className="h-screen overflow-hidden bg-gray-50 dark:bg-slate-900 flex flex-col">
       <LessonNav chapterTitle={chapterTitle} lessonTitle={lesson.title} courseId={courseId} />
 
       <LessonHud
@@ -213,9 +167,9 @@ function LessonSession({
       />
 
       {isReviewing && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 px-6 py-2 flex items-center justify-between">
-          <span className="text-xs text-amber-700 dark:text-amber-400 font-medium">Reviewing a completed step</span>
-          <button onClick={() => setViewIndex(currentIndex)} className="text-xs font-semibold text-amber-700 dark:text-amber-400 hover:underline">
+        <div className="flex-shrink-0 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 px-4 sm:px-6 py-1.5 flex items-center justify-between gap-3">
+          <span className="text-[11px] sm:text-xs text-amber-700 dark:text-amber-400 font-medium truncate">Reviewing a completed step</span>
+          <button onClick={() => setViewIndex(currentIndex)} className="text-[11px] sm:text-xs font-semibold text-amber-700 dark:text-amber-400 hover:underline whitespace-nowrap flex-shrink-0">
             Jump to current →
           </button>
         </div>

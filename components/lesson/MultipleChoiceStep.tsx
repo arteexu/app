@@ -6,6 +6,7 @@ import type { MultipleChoiceStep as MultipleChoiceStepType } from "@/lib/types"
 import { FeedbackPanel } from "./FeedbackPanel"
 import { Chessboard } from "react-chessboard"
 import { LessonLayout } from "./LessonLayout"
+import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
 import { annotationsToProps } from "./ChessBoard"
 import { clsx } from "clsx"
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function MultipleChoiceStep({ step, onComplete, isLastStep }: Props) {
+  const boardOrientation = useLessonBoardOrientation("white")
   const [selected, setSelected] = useState<number | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [showHint, setShowHint] = useState(false)
@@ -27,7 +29,7 @@ export function MultipleChoiceStep({ step, onComplete, isLastStep }: Props) {
     <Chessboard
       options={{
         position: step.fen,
-        boardOrientation: "white",
+        boardOrientation,
         allowDragging: false,
         squareStyles,
         arrows,

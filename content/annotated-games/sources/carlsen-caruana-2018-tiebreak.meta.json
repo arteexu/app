@@ -1,0 +1,142 @@
+{
+  "id": "carlsen-caruana-2018-tiebreak",
+  "title": "Carlsen vs Caruana — 2018 Tiebreak",
+  "description": "Magnus Carlsen squeezes Fabiano Caruana in a Taimanov Sicilian to win Game 3 of the 2018 World Championship rapid tiebreak — annotated by samsh.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship (tiebreak)",
+    "site": "London",
+    "eco": "B44",
+    "result": "1-0"
+  },
+  "conceptChecks": [
+    {
+      "id": "cc-e4",
+      "ply": 1,
+      "prompt": "The annotator marks 1.e4 with a \"!\". When White only needs a draw to clinch the match, why is 1.e4 called the practical choice?",
+      "options": [
+        {
+          "text": "It steers the game toward the most forcing lines — the surest way to make a draw with White.",
+          "explanation": "Correct. The annotator writes that if you specifically need a draw with White, \"1.e4 is absolutely the way to do it. Play the most forcing moves.\""
+        },
+        {
+          "text": "It is the only first move that can fight for an opening advantage.",
+          "explanation": "Not the claim. The annotator says e4, d4, Nf3 and c4 all have \"similar chances of fighting for an edge\" — 1.e4 is singled out for being the most forcing, not the only good move."
+        },
+        {
+          "text": "It wins a pawn by force in the opening.",
+          "explanation": "The annotator makes no such claim; 1.e4 is praised for forcing, drawish practicality, not for winning material."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Read the last sentence of the annotation."
+    },
+    {
+      "id": "cc-bc5",
+      "ply": 10,
+      "prompt": "Caruana, who must win, plays 5...Bc5 (\"!\") instead of the well-known 5...Nf6. Why does the annotator approve?",
+      "options": [
+        {
+          "text": "5...Nf6 leads to sterile equality, which is useless to a player who must win — 5...Bc5 keeps the game imbalanced.",
+          "explanation": "Correct. The note on 5...Nf6 says it \"ends in sterile equality very quickly... but this game is a bit different\" — Caruana needs winning chances, so 5...Bc5 is \"the best move under the circumstances.\""
+        },
+        {
+          "text": "5...Nf6 simply loses a piece to a tactic.",
+          "explanation": "No — the annotator calls the 5...Nf6 line safe and equal, not losing."
+        },
+        {
+          "text": "5...Bc5 sets up an immediate checkmate threat.",
+          "explanation": "The annotator claims no such threat; 5...Bc5 is about keeping tension and winning chances, not forcing mate."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare what each move does to Black's winning chances."
+    },
+    {
+      "id": "cc-f4",
+      "ply": 27,
+      "prompt": "What is the point of 14.f4 (\"!\") according to the annotation?",
+      "options": [
+        {
+          "text": "It grabs even more space, squeezing Black in Maroczy-bind style.",
+          "explanation": "Correct. The note is simply \"White takes even more space,\" continuing the space-advantage plan the annotator highlighted earlier (\"in the style of the Maroczy bind\")."
+        },
+        {
+          "text": "It launches an immediate mating attack on the black king.",
+          "explanation": "Not yet — at this stage the annotator stresses space and a slow squeeze, not a direct attack."
+        },
+        {
+          "text": "It wins the c5-pawn by force.",
+          "explanation": "The annotator does not mention winning the c5-pawn; 14.f4 is about space."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What has White been accumulating all game?"
+    },
+    {
+      "id": "cc-g4",
+      "ply": 47,
+      "prompt": "Why does the annotator praise 24.g4 (\"!\") as undoubtedly the best move, even though a draw already clinches the title?",
+      "options": [
+        {
+          "text": "It expands White's space further, and Carlsen accepts somewhat opening his own king to keep pressing for the win.",
+          "explanation": "Correct. The note credits Magnus \"for being willing to somewhat open his king in a game where a draw clinches the World Championship\" while \"White expands his space advantage further.\""
+        },
+        {
+          "text": "It forces an immediate queen trade into a dead-drawn endgame.",
+          "explanation": "The opposite of the annotator's point — 24.g4 keeps pressing and even risks the king, rather than bailing into a draw."
+        },
+        {
+          "text": "It defends against a dangerous Black attack.",
+          "explanation": "Black has no attack here; the annotator notes Black has been \"struggling to find any kind of active plan.\""
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The praise is about ambition, not safety."
+    },
+    {
+      "id": "cc-e5",
+      "ply": 51,
+      "prompt": "At move 26 Carlsen chooses 26.e5 rather than the aggressive 26.g5!?. How does the annotator explain the practical decision?",
+      "options": [
+        {
+          "text": "26.e5 heads for simplification and a safe result; 26.g5 would go directly for the king — understandable when a draw secures the championship.",
+          "explanation": "Correct. On 26.g5!? the note says \"White could have gone directly for the king, but one can hardly blame Magnus for looking for simplification and instant gratification.\""
+        },
+        {
+          "text": "26.g5 would have simply lost on the spot.",
+          "explanation": "No — the annotator actually says of 26.g5 that \"he'd likely have won.\" It was the more ambitious try, not a blunder."
+        },
+        {
+          "text": "26.e5 forces checkmate within a few moves.",
+          "explanation": "The annotator frames 26.e5 as simplification toward a safe result, not a forced mate."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does a draw already guarantee Carlsen here?"
+    },
+    {
+      "id": "cc-b4",
+      "ply": 81,
+      "prompt": "41.b4 (\"!\") comes with the note \"Passed pawns must be pushed!\". What does the annotator say ultimately decides the game?",
+      "options": [
+        {
+          "text": "White's passed c-pawn decides the game long before Black's attack can arrive.",
+          "explanation": "Correct. At 43.c6 the annotator writes that \"White's c-pawn will decide the game long before any attack has a dream of coming through.\""
+        },
+        {
+          "text": "A direct checkmate of the black king.",
+          "explanation": "Not the annotator's verdict — White wins via the passed pawn, and the note even calls White's king \"really hard to imagine\" getting mated."
+        },
+        {
+          "text": "A fork that wins Black's knight.",
+          "explanation": "No fork is mentioned; the deciding factor is the passed c-pawn racing to promotion."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Follow the c-pawn over the next few moves."
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 // The celebratory takeover shown when a graded step is solved. Render it as a
 // child of the LessonLayout right-panel (which is `relative`) — it overlays the
 // panel with a gradient, confetti, stars, an XP count-up, and bonus chips.
+import { useSoundOnActive } from "@/hooks/useLessonSounds"
 import { Confetti, Stars, useCountUp } from "./RewardFx"
 
 interface Props {
@@ -30,6 +31,7 @@ export function SolveReward({
   run = true, xp = 60, stars = 3, title = "Checkmate!", subtitle,
   firstTry = true, speedBonus = false, comboLabel, isLastStep, onContinue,
 }: Props) {
+  useSoundOnActive(run, "stepComplete")
   const xpShown = useCountUp(xp, run, 950)
   return (
     <div

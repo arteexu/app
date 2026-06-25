@@ -1,0 +1,227 @@
+{
+  "id": "attacking-chess",
+  "title": "Attacking Chess",
+  "description": "Learn to attack the king through a classic Italian Game — calculate lines, sacrifice material, and finish with unstoppable threats.",
+  "subject": "chess",
+  "chapters": [
+    {
+      "id": "ch-attacking-fundamentals",
+      "title": "Attacking Chess",
+      "description": "Sacrifice, development, and punishing materialistic play.",
+      "lessons": [
+        {
+          "id": "l-attacking-italian-trap",
+          "title": "Attacking Chess",
+          "description": "Step through an annotated Italian Game and find the best moves at every critical moment.",
+          "estimatedMinutes": 18,
+          "steps": [
+            {
+              "type": "concept",
+              "id": "s-ac-intro",
+              "title": "Attacking chess: lines, not moves",
+              "body": "In attacking chess, **speed of development** and **king safety** matter more than counting pawns.\n\nThis lesson walks through a classic **Italian Game** where White sacrifices material for a devastating attack. At each **STOP**, you'll find White's best continuation on the board — then read the annotator's commentary.\n\nRemember: strong players calculate **lines** (whole sequences), not isolated moves. Always ask: \"Where does this lead?\""
+            },
+            {
+              "type": "continuation",
+              "id": "s-ac-opening",
+              "title": "The Italian Game unfolds",
+              "description": "Step through the opening. White develops quickly, strikes in the center with d4, and sets a trap after castling.",
+              "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+              "orientation": "white",
+              "moves": [
+                "e4", "e5", "Nf3", "Nc6", "Bc4", "Bc5", "c3", "Nf6", "d4", "exd4",
+                "cxd4", "Bb4+", "Nc3", "Nxe4", "O-O", "Nxc3"
+              ],
+              "moveAnnotations": {
+                "4": "The classic Italian. White develops pieces into the center as fast as possible. This move order also allows White to castle the king out of the center — a great opening.",
+                "6": "White uses its move-advantage and plays c3 to set up d4, taking control of the center as fast as possible. White has an extra tempo — use it to pressure Black as much as possible and take the initiative!",
+                "8": "Boom! White strikes in the center with deadly force, attacking the e5 pawn and c5 bishop.",
+                "10": "Admittedly e5 is a better move here to grab more space and attack the f6 knight — but for this lesson we study one specific line after cxd4.",
+                "13": "With this combination Black seems to win a pawn while threatening another on c3. But White simply castles, preparing a deadly trap…",
+                "15": "Black captures on c3 — a blunder! White has a devastating continuation. Before you step forward, get ready to find it."
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ac-stop1",
+              "subType": "best-move",
+              "question": "Black just played …Nxc3. Find White's best continuation.",
+              "fen": "r1bqk2r/pppp1ppp/2n5/8/1bBP4/2n2N2/PP3PPP/R1BQ1RK1 w kq - 0 9",
+              "orientation": "white",
+              "solution": {
+                "moves": ["bxc3", "Bxc3"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qd3": "Too slow. The queen is hanging, but this move is not forcing enough.",
+                    "Nd5": "The knight has nowhere useful to go. There are no immediate threats.",
+                    "Re1": "Passive. Black is threatening …Nxc3 and …Nxe4 ideas — recapture on c3 immediately."
+                  }
+                }
+              },
+              "explanation": "bxc3! In chess we always want **lines** calculated rather than moves. It is not good to just see one move ahead — you must see until you find yourself in a good spot. After …Bxc3 White has a stunning follow-up.",
+              "successMessage": "Correct — recapture and keep calculating the whole line!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ac-stop2",
+              "subType": "best-move",
+              "question": "Black played …Bxc3. Find White's best move.",
+              "fen": "r1bqk2r/pppp1ppp/2n5/8/2BP4/2b2N2/P4PPP/R1BQ1RK1 w kq - 0 10",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Qb3", "Bxa1"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qd3": "Qd3 develops the queen but misses the tactical point. Look for a move that creates multiple threats at once against Black's king-side and the bishop on c3.",
+                    "Re1": "Re1 is logical development but too slow. Black's king is stuck in the center — find the forcing move that exploits that immediately."
+                  }
+                },
+                "alternatives": {
+                  "0": {
+                    "Ba3": "Great find! This is actually one of the best moves — White cuts off Black's castling possibilities while developing the bishop. If Black plays …Bxa1, then White follows with Re1+ Ne7 and Rxe7+, winning the black queen. For our purposes, try to find the other great move (Qb3)."
+                  }
+                }
+              },
+              "explanation": "Good move! White double attacks the black bishop and the pawn on f7. White has sacrificed two pawns, but Black will quickly find out that material-oriented chess is poor chess. White's speedy development and Black's vulnerable king make for a very deadly combo.",
+              "successMessage": "Strong attacking move! Material is less important than king safety and development."
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ac-stop3",
+              "subType": "best-move",
+              "question": "Black captured the rook on a1 with …Bxa1. What is White's best continuation?",
+              "fen": "r1bqk2r/pppp1ppp/2n5/8/2BP4/1Q3N2/P4PPP/b1B2RK1 w kq - 0 11",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Bxf7+", "Kf8"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qxf7+": "Qxf7+ is tempting but after …Kxf7 White has less than Bxf7+. The bishop sacrifice on f7 is the cleanest way to rip open Black's king.",
+                    "Re1+": "Re1+ allows Black to block with …Be6. Sacrifice on f7 first to destroy the pawn cover.",
+                    "Bg5": "Bg5 is strong later — but first blow open f7 with the bishop sacrifice."
+                  }
+                }
+              },
+              "explanation": "Bxf7+! White sacrifices the bishop to expose Black's king. After …Kf8 the attack continues with devastating effect — White's pieces swarm the exposed king while Black's extra rook on a1 is useless.",
+              "successMessage": "The classic bishop sacrifice on f7 — open the king!"
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ac-stop4",
+              "subType": "best-move",
+              "question": "Black played …Kf8. What is White's best continuation?",
+              "fen": "r1bq1k1r/pppp1Bpp/2n5/8/3P4/1Q3N2/P4PPP/b1B2RK1 w - - 1 12",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Bg5"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qf3": "Qf3 is playable but Bg5 is more precise — it pins the knight and prepares Ne5 with devastating threats.",
+                    "Ne5": "Ne5 is strong but Bg5 first is more accurate — pin the knight before jumping in.",
+                    "Re1": "Too slow. Black's king is exposed on f8 — develop the attack with Bg5."
+                  }
+                }
+              },
+              "explanation": "Bg5! White pins the knight on e7 and prepares to jump the knight to e5. Black's king on f8 has no safe haven — every move increases the pressure.",
+              "successMessage": "Bg5 — pin and prepare Ne5!"
+            },
+            {
+              "type": "continuation",
+              "id": "s-ac-middlegame",
+              "title": "Building the attack",
+              "description": "White continues the assault — the knight leaps to e5 and Black tries to defend with …d6.",
+              "fen": "r1bq1k1r/pppp1Bpp/2n5/6B1/3P4/1Q3N2/P4PPP/b4RK1 b - - 2 12",
+              "orientation": "white",
+              "moves": ["Ne7", "Ne5", "d6"],
+              "moveAnnotations": {
+                "0": "Black tries to block the e5 square, but White's attack is far from over.",
+                "1": "Ne5! The knight joins the attack, eyeing c6 and f7. Black's position is crumbling.",
+                "2": "Black blocks the knight — but White has a stunning resource ready."
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ac-stop5",
+              "subType": "best-move",
+              "question": "Black played …d6. Can you find the best continuation?",
+              "fen": "r1bq1k1r/ppp1nBpp/3p4/4N1B1/3P4/1Q6/P4PPP/b4RK1 w - - 0 14",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Bg6"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qf3": "Qf3 is good but Bg6 is brilliant — it opens the f7 square for the queen and threatens unstoppable mate.",
+                    "Nxf7": "Nxf7 wins material but Bg6 is more devastating — it threatens mate on f7.",
+                    "Re1": "Too slow. Bg6 threatens checkmate by opening f7 for the queen."
+                  }
+                }
+              },
+              "explanation": "Bg6!! This move deserves two exclamation marks. White threatens checkmate by opening up the square on f7 for the queen. White also threatens to swing the queen over to f3 for mate. In fact, mate is unstoppable.",
+              "successMessage": "Brilliant! Bg6 — mate is unstoppable."
+            },
+            {
+              "type": "concept",
+              "id": "s-ac-sideline-intro",
+              "title": "What if Black tries …d5?",
+              "body": "The main line continues **14…dxe5 15.Qf7#** — instant checkmate.\n\nBut if Black tries **14…d5** instead, White has a beautiful forcing sequence that ends in **mate in one**. Step through the sideline next, then find the finishing blow.",
+              "fen": "r1bq1k1r/ppp1n1pp/3p2B1/4N1B1/3P4/1Q6/P4PPP/b4RK1 b - - 1 14"
+            },
+            {
+              "type": "continuation",
+              "id": "s-ac-d5-variation",
+              "title": "The …d5 sideline",
+              "description": "If Black blocks with …d5, White forces the king into the open with a series of checks and captures.",
+              "fen": "r1bq1k1r/ppp1n1pp/3p2B1/4N1B1/3P4/1Q6/P4PPP/b4RK1 b - - 1 14",
+              "orientation": "white",
+              "moves": [
+                "d5", "Qf3+", "Nf5", "Bxd8", "Be6", "Bxf5", "Rxd8", "Bxe6+", "Ke7", "Qf7+", "Kd6", "Bxd5", "Rhe8"
+              ],
+              "moveAnnotations": {
+                "0": "Black tries to block the center — but White's attack is too fast.",
+                "1": "Qf3+! The queen joins with check, forcing Black's pieces into awkward squares.",
+                "4": "Bxf5 wins the knight while keeping the attack going.",
+                "7": "Bxe6+ drives the king forward — there is no escape.",
+                "9": "Qf7+ keeps the king on the run.",
+                "11": "Bxd5 — White has a huge material advantage, but there is something even better…",
+                "12": "Rhe8 — Black tries to defend, but White has mate in one."
+              }
+            },
+            {
+              "type": "puzzle",
+              "id": "s-ac-stop6",
+              "subType": "checkmate-in-n",
+              "question": "Can you find mate in 1?",
+              "fen": "3rr3/ppp2Qpp/3k4/3BN3/3P4/8/P4PPP/b4RK1 w - - 1 21",
+              "orientation": "white",
+              "solution": {
+                "moves": ["Nc4#"],
+                "wrongMoveExplanations": {
+                  "0": {
+                    "Qe8": "Qe8 is not checkmate — the king escapes. The knight delivers a smothered-style mate on c4.",
+                    "Bxe6": "Bxe6 wins material but misses the immediate mate. Find the knight jump!",
+                    "Qf5": "Qf5 gives check but is not mate — the king can move. Nc4# is the only checkmate."
+                  }
+                }
+              },
+              "explanation": "Nc4#! The knight delivers checkmate — the black king on d6 has no escape squares. A beautiful finish to the forcing line.",
+              "successMessage": "Nc4# — mate in one!"
+            },
+            {
+              "type": "continuation",
+              "id": "s-ac-main-finish",
+              "title": "The main line finishes",
+              "description": "Back to the main line — after Bg6, Black captures on e5 but White delivers instant checkmate.",
+              "fen": "r1bq1k1r/ppp1n1pp/3p2B1/4N1B1/3P4/1Q6/P4PPP/b4RK1 b - - 1 14",
+              "orientation": "white",
+              "moves": ["dxe5", "Qf7#"],
+              "moveAnnotations": {
+                "0": "Black captures the knight — but it is far too late.",
+                "1": "Qf7# — Checkmate! White's queen lands on f7 with the bishop on g6 controlling escape squares. Black's material advantage meant nothing against White's attack. This is attacking chess."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

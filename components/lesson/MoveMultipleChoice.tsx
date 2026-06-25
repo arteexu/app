@@ -3,13 +3,15 @@
 // All puzzle LOGIC is unchanged. <Chessboard> usage is IDENTICAL to the app
 // (untouched). Adds: a per-step solve timer (for the speed bonus), a `hadWrong`
 // flag (for first-try / star rating), and the SolveReward celebration overlay.
-import { useState, useRef } from "react"
-import { Chess } from "chess.js"
+import { useState } from "react"
+import { Chess, type Square } from "chess.js"
 import type { MoveMultipleChoice as MoveMultipleChoiceType, MoveCandidate } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
 import type { Arrow } from "react-chessboard"
 import { LessonLayout } from "./LessonLayout"
 import { SolveReward } from "./SolveReward"
+import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
+import { useLessonSounds } from "@/hooks/useLessonSounds"
 import { clsx } from "clsx"
 
 interface Props {
@@ -28,6 +30,8 @@ function getMoveSquares(fen: string, san: string): { from: string; to: string; f
 }
 
 export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
+  const { play } = useLessonSounds()
+  const boardOrientation = useLessonBoardOrientation(step.orientation ?? "white")
   const [previewSan,    setPreviewSan]    = useState<string | null>(null)
   const [previewBoard,  setPreviewBoard]  = useState(step.fen)
   const [previewHL,     setPreviewHL]     = useState<Record<string, React.CSSProperties>>({})
@@ -40,7 +44,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
   const [solved,          setSolved]          = useState(false)
 
   // Gamification: time + accuracy of this solve
-  const startRef = useRef<number>(Date.now())
+  const [startTime] = useState(() => Date.now())
   const [hadWrong, setHadWrong] = useState(false)
   const [solveSeconds, setSolveSeconds] = useState(0)
 
@@ -55,7 +59,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
       [move.from]: { backgroundColor: "rgba(245,158,11,0.4)"  },
       [move.to]:   { backgroundColor: "rgba(245,158,11,0.65)" },
     })
-    setPreviewArrow([{ startSquare: move.from as any, endSquare: move.to as any, color: "#f59e0b" }])
+    setPreviewArrow([{ startSquare: move.from as Square, endSquare: move.to as Square, color: "#f59e0b" }])
   }
 
   function submit() {
@@ -68,7 +72,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
     setRevealed(false)
 
     if (candidate.isCorrect) {
-      setSolveSeconds(Math.round((Date.now() - startRef.current) / 1000))
+      setSolveSeconds(Math.round((Date.now() - startTime) / 1000))
       setSolved(true)
       if (candidate.continuation?.length) {
         setTimeout(() => {
@@ -81,6 +85,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
       }
     } else {
       setHadWrong(true)
+      play("wrong")
     }
   }
 
@@ -93,7 +98,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
     <Chessboard
       options={{
         position: previewBoard,
-        boardOrientation: step.orientation ?? "white",
+        boardOrientation,
         allowDragging: false,
         squareStyles: previewHL,
         arrows: previewArrow,

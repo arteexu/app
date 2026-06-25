@@ -3,10 +3,18 @@ import { useState, useEffect } from "react"
 import { Chess } from "chess.js"
 import type { PuzzleStep as PuzzleStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
-import type { Arrow, PieceDropHandlerArgs, SquareHandlerArgs } from "react-chessboard"
+import type { Arrow, PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from "react-chessboard"
 import { Button } from "@/components/ui/button"
 import { FeedbackPanel } from "./FeedbackPanel"
 import { LessonLayout } from "./LessonLayout"
+import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
+import { useLessonSounds } from "@/hooks/useLessonSounds"
+import { isBoardSoundEnabled, playBoardMoveSound } from "@/lib/ui-sounds"
+import { useBoardPreferences } from "@/components/BoardPreferencesProvider"
+import { useLegalMoveHighlights } from "@/hooks/useLegalMoveHighlights"
+import { usePieceLatchRef } from "@/hooks/usePieceLatchRef"
+import { buildLastMoveStyles, buildSelectionStyles, buildUserHighlightStyles, composeSquareStyles, DRAG_ACTIVATION_DISTANCE } from "@/lib/legal-move-highlights"
+import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { annotationsToProps } from "./ChessBoard"
 import { clsx } from "clsx"
 
@@ -16,28 +24,67 @@ interface Props {
   isLastStep?: boolean
 }
 
-type PuzzleState = "idle" | "wrong" | "refuting" | "solved"
+type PuzzleState = "idle" | "wrong" | "alternative" | "refuting" | "solved"
 
 export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
+  const { play } = useLessonSounds()
+  const boardOrientation = useLessonBoardOrientation(step.orientation ?? "white")
   // ── Puzzle-solve state ────────────────────────────────────────────────────
   const [game, setGame]                     = useState(() => new Chess(step.fen))
   const [moveHistory, setMoveHistory]       = useState<string[]>([])
   const [state, setState]                   = useState<PuzzleState>("idle")
   const [wrongMoveExplanation, setWrong]    = useState("")
+  const [alternativeFeedback, setAltFeedback] = useState("")
   const [refutationLine, setRefutation]     = useState<string[]>([])
   const [refutationIndex, setRefIdx]        = useState(-1)
-  const [selectedSquare, setSelectedSq]     = useState<string | null>(null)
-  const [legalMoveSquares, setLegalHL]      = useState<Record<string, React.CSSProperties>>({})
+  const [lastMove, setLastMove]             = useState<{ from: string; to: string } | null>(null)
+  const [analysisLastMove, setAnalysisLastMove] = useState<{ from: string; to: string } | null>(null)
+  const [userHighlights, setUserHighlights] = useState<string[]>([])
+
+  const { showLegalMoves } = useBoardPreferences()
 
   // ── Pre-blunder animation state ───────────────────────────────────────────
   const [showingPrev, setShowingPrev]   = useState(!!step.preMovePosition)
   const [blunderPlayed, setBlunderPlayed] = useState(!step.preMovePosition)
 
   // ── Analysis mode state ───────────────────────────────────────────────────
-  const [analysisMode, setAnalysisMode]   = useState(false)
   const [analysisGame, setAnalysisGame]   = useState(() => new Chess(step.fen))
-  const [analysisSq, setAnalysisSq]       = useState<string | null>(null)
-  const [analysisHL, setAnalysisHL]       = useState<Record<string, React.CSSProperties>>({})
+  const [analysisMode, setAnalysisMode]   = useState(false)
+
+  const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
+  const solveInteractive = state === "idle" && !showingPrev && blunderPlayed && !analysisMode
+  const userHighlightHandlers = useUserSquareHighlightHandlers(
+    setUserHighlights,
+    analysisMode || solveInteractive,
+  )
+  const {
+    selectedSquare,
+    latchAnimSquare,
+    legalMoveSquares,
+    selectSquare,
+    clearHighlights,
+    onPieceDrag: onPuzzlePieceDrag,
+    onDragEnd: onPuzzleDragEnd,
+  } = useLegalMoveHighlights({
+    game,
+    enabled: showLegalMoves && solveInteractive,
+    isSelectable: (_square, piece) => !!piece && piece.color === learnerColor,
+  })
+  const {
+    selectedSquare: analysisSq,
+    latchAnimSquare: analysisLatchAnimSquare,
+    legalMoveSquares: analysisHL,
+    selectSquare: analysisSelectSquare,
+    clearHighlights: clearAnalysisHighlights,
+    onPieceDrag: onAnalysisPieceDrag,
+    onDragEnd: onAnalysisDragEnd,
+  } = useLegalMoveHighlights({
+    game: analysisGame,
+    enabled: showLegalMoves && analysisMode,
+    isSelectable: (_square, piece) => !!piece,
+  })
+
+  const boardRef = usePieceLatchRef(analysisMode ? analysisLatchAnimSquare : latchAnimSquare)
 
   // Auto-play blunder animation
   useEffect(() => {
@@ -62,7 +109,10 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
   const { squareStyles: annotationSquares, arrows: annotationArrows } = annotationsToProps(step.annotations)
   const learnerMoveIndex = moveHistory.length
-  const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
+
+  useEffect(() => {
+    if (state === "wrong" && !isBoardSoundEnabled()) play("wrong")
+  }, [state, play])
 
   // ── Puzzle-solve helpers ──────────────────────────────────────────────────
   function resetPuzzle() {
@@ -70,20 +120,12 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     setMoveHistory([])
     setState("idle")
     setWrong("")
+    setAltFeedback("")
     setRefutation([])
     setRefIdx(-1)
-    setSelectedSq(null)
-    setLegalHL({})
-  }
-
-  function selectSquare(square: string) {
-    const piece = game.get(square as any)
-    if (!piece || piece.color !== learnerColor) { setSelectedSq(null); setLegalHL({}); return }
-    setSelectedSq(square)
-    const moves = game.moves({ square: square as any, verbose: true })
-    const hl: Record<string, React.CSSProperties> = { [square]: { backgroundColor: "rgba(99,102,241,0.4)" } }
-    moves.forEach(m => { hl[m.to] = { backgroundColor: "rgba(99,102,241,0.2)", borderRadius: "50%" } })
-    setLegalHL(hl)
+    setLastMove(null)
+    setUserHighlights([])
+    clearHighlights()
   }
 
   function attemptMove(from: string, to: string): boolean {
@@ -94,9 +136,22 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
     const san = result.san
     const expectedSan = step.solution.moves[learnerMoveIndex]
-    setSelectedSq(null); setLegalHL({})
+    clearHighlights()
 
     if (!expectedSan || !movesMatch(san, expectedSan)) {
+      // Recognized-but-not-accepted alternative: a genuinely good move that
+      // isn't the intended solution. Encourage the learner to keep looking.
+      const alternatives = step.solution.alternatives?.[learnerMoveIndex] ?? {}
+      const altKey = Object.keys(alternatives).find(k => movesMatch(san, k))
+      if (altKey) {
+        playBoardMoveSound(result, game)
+        game.undo()
+        clearHighlights()
+        setState("alternative")
+        setAltFeedback(alternatives[altKey])
+        return true
+      }
+      playBoardMoveSound(result, game)
       game.undo()
       const explanations = step.solution.wrongMoveExplanations?.[learnerMoveIndex] ?? {}
       setState("wrong")
@@ -105,30 +160,52 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
       return true
     }
 
+    playBoardMoveSound(result, game)
+    setLastMove({ from: result.from, to: result.to })
+
     const newHistory = [...moveHistory, san]
     setMoveHistory(newHistory)
     setGame(new Chess(game.fen()))
     if (newHistory.length === step.solution.moves.length) { setState("solved"); return true }
 
+    if (!isBoardSoundEnabled()) play("correctMove")
+
     setTimeout(() => {
       const botMove = step.solution.moves[newHistory.length]
       if (!botMove) return
-      try { game.move(botMove) } catch { return }
+      let botResult
+      try { botResult = game.move(botMove) } catch { return }
+      if (botResult) {
+        playBoardMoveSound(botResult, game)
+        setLastMove({ from: botResult.from, to: botResult.to })
+      }
       setGame(new Chess(game.fen()))
-      setMoveHistory(h => [...h, botMove])
+      setMoveHistory(h => {
+        const updated = [...h, botMove]
+        if (updated.length === step.solution.moves.length) setState("solved")
+        return updated
+      })
     }, 400)
     return true
   }
 
   function handleDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
     if (state !== "idle" || !targetSquare) return false
-    return attemptMove(sourceSquare, targetSquare)
+    const moved = attemptMove(sourceSquare, targetSquare)
+    onPuzzleDragEnd()
+    return moved
+  }
+
+  function handlePuzzlePieceDrag(args: PieceHandlerArgs) {
+    setUserHighlights([])
+    onPuzzlePieceDrag(args)
   }
 
   function handleSquareClick({ square }: SquareHandlerArgs) {
     if (state !== "idle") return
+    setUserHighlights([])
     if (selectedSquare) {
-      if (square === selectedSquare) { setSelectedSq(null); setLegalHL({}); return }
+      if (square === selectedSquare) { clearHighlights(); return }
       if (!attemptMove(selectedSquare, square)) selectSquare(square)
       return
     }
@@ -137,33 +214,25 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
   // ── Analysis-mode helpers ─────────────────────────────────────────────────
   function enterAnalysis() {
-    // Start analysis from the current puzzle position
     setAnalysisGame(new Chess(game.fen()))
-    setAnalysisSq(null)
-    setAnalysisHL({})
+    setAnalysisLastMove(null)
+    setUserHighlights([])
+    clearAnalysisHighlights()
     setAnalysisMode(true)
   }
 
   function exitAnalysis() {
     setAnalysisMode(false)
-    setAnalysisSq(null)
-    setAnalysisHL({})
+    setAnalysisLastMove(null)
+    setUserHighlights([])
+    clearAnalysisHighlights()
   }
 
   function resetAnalysis() {
     setAnalysisGame(new Chess(step.fen))
-    setAnalysisSq(null)
-    setAnalysisHL({})
-  }
-
-  function analysisSelectSquare(square: string) {
-    const piece = analysisGame.get(square as any)
-    if (!piece) { setAnalysisSq(null); setAnalysisHL({}); return }
-    setAnalysisSq(square)
-    const moves = analysisGame.moves({ square: square as any, verbose: true })
-    const hl: Record<string, React.CSSProperties> = { [square]: { backgroundColor: "rgba(99,102,241,0.4)" } }
-    moves.forEach(m => { hl[m.to] = { backgroundColor: "rgba(99,102,241,0.2)", borderRadius: "50%" } })
-    setAnalysisHL(hl)
+    setAnalysisLastMove(null)
+    setUserHighlights([])
+    clearAnalysisHighlights()
   }
 
   function analysisMakeMove(from: string, to: string): boolean {
@@ -172,20 +241,30 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
       const copy = new Chess(analysisGame.fen())
       const r = copy.move({ from: from as any, to: to as any, promotion: "q" })
       if (!r) return false
+      playBoardMoveSound(r, copy)
       setAnalysisGame(new Chess(copy.fen()))
-      setAnalysisSq(null); setAnalysisHL({})
+      setAnalysisLastMove({ from: r.from, to: r.to })
+      clearAnalysisHighlights()
       return true
     } catch { return false }
   }
 
   function handleAnalysisDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
     if (!targetSquare) return false
-    return analysisMakeMove(sourceSquare, targetSquare)
+    const moved = analysisMakeMove(sourceSquare, targetSquare)
+    onAnalysisDragEnd()
+    return moved
+  }
+
+  function handleAnalysisPieceDrag(args: PieceHandlerArgs) {
+    setUserHighlights([])
+    onAnalysisPieceDrag(args)
   }
 
   function handleAnalysisClick({ square }: SquareHandlerArgs) {
+    setUserHighlights([])
     if (analysisSq) {
-      if (square === analysisSq) { setAnalysisSq(null); setAnalysisHL({}); return }
+      if (square === analysisSq) { clearAnalysisHighlights(); return }
       if (!analysisMakeMove(analysisSq, square)) analysisSelectSquare(square)
       return
     }
@@ -204,15 +283,44 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     return game.fen()
   })()
 
+  // The from/to of the move currently shown while stepping a refutation line.
+  const refutationLastMove = (() => {
+    if (state !== "refuting" || refutationLine.length === 0 || refutationIndex < 0) return null
+    const g = new Chess(game.fen())
+    let mv
+    for (let i = 0; i <= refutationIndex; i++) { try { mv = g.move(refutationLine[i]) } catch {} }
+    return mv ? { from: mv.from, to: mv.to } : null
+  })()
+
   const activeSquareStyles: Record<string, React.CSSProperties> = (() => {
-    if (analysisMode) return analysisHL
+    if (analysisMode) {
+      return composeSquareStyles(
+        buildLastMoveStyles(analysisLastMove?.from, analysisLastMove?.to),
+        buildUserHighlightStyles(userHighlights),
+        analysisHL,
+        buildSelectionStyles(analysisSq),
+      )
+    }
     if (showingPrev && step.preMovePosition?.highlightSquares) {
       const sq: Record<string, React.CSSProperties> = {}
       for (const [s, color] of Object.entries(step.preMovePosition.highlightSquares))
         sq[s] = { backgroundColor: color }
       return sq
     }
-    return state === "idle" ? { ...annotationSquares, ...legalMoveSquares } : {}
+    if (state === "refuting") {
+      return buildLastMoveStyles(refutationLastMove?.from, refutationLastMove?.to)
+    }
+    if (state === "idle") {
+      return composeSquareStyles(
+        annotationSquares,
+        buildLastMoveStyles(lastMove?.from, lastMove?.to),
+        buildUserHighlightStyles(userHighlights),
+        legalMoveSquares,
+        solveInteractive ? buildSelectionStyles(selectedSquare) : {},
+      )
+    }
+    // wrong / solved — keep the most recent move highlighted
+    return buildLastMoveStyles(lastMove?.from, lastMove?.to)
   })()
 
   const activeArrows: Arrow[] = (() => {
@@ -222,24 +330,28 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     return (state === "idle" && moveHistory.length === 0) ? annotationArrows : []
   })()
 
-  const solveInteractive = state === "idle" && !showingPrev && blunderPlayed && !analysisMode
   const showModeToggle   = blunderPlayed && !showingPrev && state !== "solved"
 
   const board = (
-    <Chessboard
-      options={{
-        position: displayFen,
-        boardOrientation: step.orientation ?? "white",
-        allowDragging: analysisMode || solveInteractive,
-        squareStyles: activeSquareStyles,
-        arrows: activeArrows,
-        darkSquareStyle: { backgroundColor: "#769656" },
-        lightSquareStyle: { backgroundColor: "#eeeed2" },
-        animationDurationInMs: !blunderPlayed ? 650 : 200,
-        onPieceDrop: analysisMode ? handleAnalysisDrop : (solveInteractive ? handleDrop : undefined),
-        onSquareClick: analysisMode ? handleAnalysisClick : (solveInteractive ? handleSquareClick : undefined),
-      }}
-    />
+    <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
+      <Chessboard
+        options={{
+          position: displayFen,
+          boardOrientation,
+          allowDragging: analysisMode || solveInteractive,
+          dragActivationDistance: DRAG_ACTIVATION_DISTANCE,
+          squareStyles: activeSquareStyles,
+          arrows: activeArrows,
+          darkSquareStyle: { backgroundColor: "#769656" },
+          lightSquareStyle: { backgroundColor: "#eeeed2" },
+          animationDurationInMs: !blunderPlayed ? 650 : 200,
+          onPieceDrop: analysisMode ? handleAnalysisDrop : (solveInteractive ? handleDrop : undefined),
+          onPieceDrag: analysisMode ? handleAnalysisPieceDrag : (solveInteractive ? handlePuzzlePieceDrag : undefined),
+          onSquareClick: analysisMode ? handleAnalysisClick : (solveInteractive ? handleSquareClick : undefined),
+          ...(analysisMode || solveInteractive ? userHighlightHandlers : {}),
+        }}
+      />
+    </div>
   )
 
   // ── Right panel ───────────────────────────────────────────────────────────
@@ -269,7 +381,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                 : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200"
             )}
           >
-            🔍 Analyse
+            🔍 Analyze
           </button>
         </div>
       )}
@@ -363,6 +475,17 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
             </div>
           )}
 
+          {/* Recognized alternative — good move, but not the best one */}
+          {state === "alternative" && (
+            <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl px-4 py-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2 font-semibold text-indigo-800 dark:text-indigo-300">★ Great find — but there is an even better move.</div>
+              <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">{alternativeFeedback}</p>
+              <Button onClick={resetPuzzle} variant="primary" size="sm" className="self-start">
+                Keep looking
+              </Button>
+            </div>
+          )}
+
           {/* Refutation */}
           {state === "refuting" && (
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-4 flex flex-col gap-3">
@@ -396,6 +519,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                 explanation={step.explanation}
                 onNext={() => onComplete(true)}
                 isLastStep={isLastStep}
+                sound="celebration"
               />
             </>
           )}

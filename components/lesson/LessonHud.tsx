@@ -5,6 +5,7 @@
 // same step-navigation contract as StepProgressBar (onGoTo to any reached step).
 import type { Step } from "@/lib/types"
 import { clsx } from "clsx"
+import { ComboIndicator } from "@/components/lesson/ComboIndicator"
 
 const stepIcon: Record<string, string> = {
   concept: "📖", puzzle: "♟", continuation: "▶", "multiple-choice": "≡",
@@ -48,19 +49,7 @@ export function LessonHud({ steps, viewIndex, currentIndex, completedStepIds, on
 
   return (
     <div className="flex items-center gap-4 px-5 h-[60px] bg-[#0b1220] border-b border-slate-800 flex-shrink-0">
-      {/* Combo meter */}
-      <div className="flex items-center gap-2.5 transition-opacity duration-300" style={{ opacity: lit ? 1 : 0.5 }}>
-        <span className={clsx("text-[10.5px] font-extrabold tracking-[0.1em]", lit ? "text-amber-400" : "text-slate-500")}>COMBO</span>
-        <div className="flex gap-1">
-          {[0, 1, 2, 3].map(i => (
-            <span key={i} className="w-4 h-[7px] rounded-[3px] transition-all duration-300" style={{
-              background: i < combo ? (lit ? "linear-gradient(90deg,#f59e0b,#fbbf24)" : "#475569") : "#1e293b",
-              boxShadow: i < combo && lit ? "0 0 8px rgba(245,158,11,.6)" : "none",
-            }} />
-          ))}
-        </div>
-        <span className={clsx("font-display text-[15px] font-extrabold", lit ? "text-amber-300" : "text-slate-500")}>{combo}×</span>
-      </div>
+      <ComboIndicator combo={combo} lit={lit} />
 
       {/* Back arrow */}
       <button onClick={() => onGoTo(viewIndex - 1)} disabled={!canBack} aria-label="Previous step"

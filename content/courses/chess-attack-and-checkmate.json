@@ -25,23 +25,94 @@
               "type": "concept",
               "id": "s-goal-queen-mate",
               "title": "A king with nowhere to run",
-              "body": "Look at the board. The black king on a8 is in **check** from the white bishop on c6 (the diagonal c6-b7-a8).\n\nNow watch it try to escape — and fail:\n- **b8** — the white **knight** on a6 controls b8 (highlighted green). Blocked.\n- **a7** — the white **king** on b6 controls a7 (highlighted blue). Blocked.\n- **b7** — the white **bishop** AND **king** both cover b7 (highlighted orange). Blocked.\n\nEvery square is watched. The king has no legal move. That is **checkmate** — the game ends here.",
+              "body": "",
               "fen": "k7/8/NKB5/8/8/8/8/8 b - - 0 1",
-              "annotations": {
-                "highlightSquares": {
-                  "a8": "rgba(239, 68, 68, 0.5)",
-                  "b8": "rgba(34, 197, 94, 0.35)",
-                  "a7": "rgba(59, 130, 246, 0.35)",
-                  "b7": "rgba(251, 146, 60, 0.4)"
+              "stages": [
+                {
+                  "body": "The black king on a8 is in **check** from the white bishop on c6 (along the diagonal c6–b7–a8).",
+                  "annotations": {
+                    "highlightSquares": {
+                      "a8": "rgba(239, 68, 68, 0.5)",
+                      "c6": "rgba(239, 68, 68, 0.25)"
+                    },
+                    "arrows": [
+                      { "from": "c6", "to": "a8", "color": "#ef4444" }
+                    ]
+                  }
                 },
-                "arrows": [
-                  { "from": "c6", "to": "a8", "color": "#ef4444" },
-                  { "from": "a6", "to": "b8", "color": "#22c55e" },
-                  { "from": "b6", "to": "a7", "color": "#3b82f6" },
-                  { "from": "c6", "to": "b7", "color": "#f97316" },
-                  { "from": "b6", "to": "b7", "color": "#f97316" }
-                ]
-              }
+                {
+                  "body": "The king would like to escape. What about **b8**?",
+                  "annotations": {
+                    "highlightSquares": {
+                      "a8": "rgba(239, 68, 68, 0.35)",
+                      "b8": "rgba(251, 191, 36, 0.45)"
+                    },
+                    "arrows": [
+                      { "from": "c6", "to": "a8", "color": "#ef4444" }
+                    ]
+                  }
+                },
+                {
+                  "body": "The white **knight** on a6 controls b8 — that square is **not available**.",
+                  "annotations": {
+                    "highlightSquares": {
+                      "a8": "rgba(239, 68, 68, 0.35)",
+                      "a6": "rgba(34, 197, 94, 0.45)",
+                      "b8": "rgba(34, 197, 94, 0.35)"
+                    },
+                    "arrows": [
+                      { "from": "c6", "to": "a8", "color": "#ef4444" },
+                      { "from": "a6", "to": "b8", "color": "#22c55e" }
+                    ]
+                  }
+                },
+                {
+                  "body": "What about **a7**? The king would try to step there…",
+                  "annotations": {
+                    "highlightSquares": {
+                      "a8": "rgba(239, 68, 68, 0.35)",
+                      "a7": "rgba(251, 191, 36, 0.45)"
+                    },
+                    "arrows": [
+                      { "from": "c6", "to": "a8", "color": "#ef4444" },
+                      { "from": "a8", "to": "a7", "color": "#94a3b8" }
+                    ]
+                  }
+                },
+                {
+                  "body": "The white king on b6 controls **a7** — blocked. What about **b7**?",
+                  "annotations": {
+                    "highlightSquares": {
+                      "a8": "rgba(239, 68, 68, 0.35)",
+                      "a7": "rgba(59, 130, 246, 0.35)",
+                      "b7": "rgba(251, 191, 36, 0.45)",
+                      "b6": "rgba(59, 130, 246, 0.25)"
+                    },
+                    "arrows": [
+                      { "from": "c6", "to": "a8", "color": "#ef4444" },
+                      { "from": "b6", "to": "a7", "color": "#3b82f6" },
+                      { "from": "a8", "to": "b7", "color": "#94a3b8" }
+                    ]
+                  }
+                },
+                {
+                  "body": "**b7 is blocked too** — the bishop on c6 and the king on b6 both cover it.\n\nEvery escape square is watched. The king has no legal move. That is **checkmate** — the game ends here.",
+                  "annotations": {
+                    "highlightSquares": {
+                      "a8": "rgba(239, 68, 68, 0.5)",
+                      "b7": "rgba(251, 146, 60, 0.45)",
+                      "b8": "rgba(34, 197, 94, 0.25)",
+                      "a7": "rgba(59, 130, 246, 0.25)"
+                    },
+                    "arrows": [
+                      { "from": "c6", "to": "a8", "color": "#ef4444" },
+                      { "from": "c6", "to": "b7", "color": "#f97316" },
+                      { "from": "b6", "to": "b7", "color": "#f97316" }
+                    ]
+                  },
+                  "buttonLabel": "Got it →"
+                }
+              ]
             },
             {
               "type": "puzzle",
@@ -146,11 +217,11 @@
               "id": "s-brm-continuation",
               "title": "Watch the back rank mate unfold",
               "description": "Step through this sequence to see how a rook invades the back rank and delivers checkmate.",
-              "fen": "2r3k1/5ppp/8/8/8/3R4/5PPP/3R2K1 w - - 0 1",
+              "fen": "2r3k1/5ppp/8/8/8/3Q4/5PPP/3R2K1 w - - 0 1",
               "orientation": "white",
-              "moves": ["Rd8+", "Rxd8", "Rxd8#"],
+              "moves": ["Qd8+", "Rxd8", "Rxd8#"],
               "moveAnnotations": {
-                "0": "Rd8+ — White sacrifices the first rook! d8 is empty, so this is a check along rank 8, not a capture. The black king is already trapped — it can't escape to f8 or h8 (both covered by the rook), and f7/g7/h7 are blocked by its own pawns. Black must take.",
+                "0": "Qd8+ — White sacrifices the queen! D8 is empty, so this is a check along rank 8, not a capture. The black king is already trapped — it can't escape to f8 or h8 (both covered by the rook), and f7/g7/h7 are blocked by its own pawns. Black must take.",
                 "1": "Rxd8 — Black has no choice. The rook captures the white rook to escape check. But now the d-file is open all the way to d3.",
                 "2": "Rxd8# — The second rook sweeps up the d-file to d8, capturing the black rook and delivering checkmate. The king still cannot escape — rank 8 is now controlled by this rook, and all 7th rank squares remain blocked."
               }
@@ -177,19 +248,19 @@
               "type": "puzzle",
               "id": "s-brm-puzzle2",
               "subType": "checkmate-in-n",
-              "question": "White to move. Find checkmate in 2.",
-              "fen": "2r3k1/5ppp/8/8/8/3R4/5PPP/3R2K1 w - - 0 1",
-              "orientation": "white",
+              "question": "Black to move. Find checkmate in 2.",
+              "fen": "1r6/1q4k1/8/8/6n1/8/6P1/RN5K b - - 0 1",
+              "orientation": "black",
               "solution": {
-                "moves": ["Rd8+", "Rxd8", "Rxd8+#"],
+                "moves": ["Qxb1+", "Rxb1", "Rxb1+#"],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Rc1": "Rc1 blunders mate in 1 after Rxc1+"
+                    "Qh7+": "Qh7+ checks the king but there is no continuation that checkmates after"
                   }
                 }
               },
-              "explanation": "Rd8+ sacrifices the first rook — the black king cannot escape (f8 and h8 are covered by the rook on rank 8, and f7/g7/h7 are blocked by Black's own pawns), so Rxd8 is forced. Then Rxd8# — the second rook sweeps up the d-file to deliver checkmate. Both White rooks must be on the d-file for this to work.",
-              "successMessage": "The rook sacrifice pattern! Remove the defender, then the second rook mates."
+              "explanation": "Qxb1+ sacrifices the rook — the white king cannot escape (g1 is covered by the queen, h2 is covered by the knight, and g2 is covered by white's pawn. The rook must capture back, and white delivers checkmate.",
+              "successMessage": "The backrank pattern! The king cannot escape, so white is always at the brink of checkmate!"
             },
             {
               "type": "puzzle",
@@ -241,7 +312,7 @@
               "type": "concept",
               "id": "s-mp-concept",
               "title": "What are mating patterns — and why learn them?",
-              "body": "A **mating pattern** is a recurring arrangement of pieces that reliably forces checkmate. Thousands of different games end in a handful of identical-looking configurations.\n\nLearning these patterns gives you three advantages:\n1. **Speed** — you spot checkmate opportunities in seconds instead of calculating from scratch.\n2. **Confidence** — you know what the winning position looks like, so you steer toward it.\n3. **Economy** — you stop wasting moves and finish games efficiently.\n\nIn this lesson you will learn four essential patterns:\n1. **The Rook Ladder** — two rooks herd a lone king to the edge, rank by rank\n2. **The Arabian Mate** — a knight and rook trap a king in the corner\n3. **Morphy's Mate** — a bishop and rook combine on the back rank\n4. **The Swiss Cheese Mate** — a queen exploits gaps in the pawn structure"
+              "body": "A **mating pattern** is a recurring arrangement of pieces that reliably forces checkmate. Thousands of different games end in a handful of identical-looking configurations.\n\nLearning these patterns gives you three advantages:\n1. **Speed** — you spot checkmate opportunities in seconds instead of calculating from scratch.\n2. **Confidence** — you know what the winning position looks like, so you steer toward it.\n3. **Economy** — you stop wasting moves and finish games efficiently.\n\nIn this lesson you will learn four essential patterns:\n1. **The Rook Ladder** — two rooks herd a lone king to the edge, rank by rank\n2. **The Arabian Mate** — a knight and rook trap a king in the corner\n3. **Morphy's Mate** — a bishop and rook combine on the back rank\n4. **The Swiss Cheese Mate** — a queen exploits gaps in the pawn structure."
             },
             {
               "type": "multiple-choice",
@@ -369,25 +440,6 @@
                 { "text": "You only need 5 moves maximum", "explanation": "The queen + king vs lone king can take up to 10 moves. The key is being systematic, not fast." }
               ],
               "correctIndex": 0
-            },
-            {
-              "type": "puzzle",
-              "id": "s-qk-puzzle1",
-              "subType": "checkmate-in-n",
-              "question": "White to move. The black king is already on the edge. Find checkmate in 2.",
-              "fen": "8/8/8/8/8/6K1/8/6kQ w - - 0 1",
-              "orientation": "white",
-              "solution": {
-                "moves": ["Qh2+", "Kg1", "Qg2#"],
-                "wrongMoveExplanations": {
-                  "0": {
-                    "Qg2+": "Qg2+ is stalemate if the king has no other moves — always check for stalemate before delivering check near a corner!",
-                    "Kf3": "Kf3 approaches but doesn't force immediate mate. The position requires precise queen moves."
-                  }
-                }
-              },
-              "explanation": "Qh2+ forces the king to g1 (the only legal move). Then Qg2# — the king is trapped in the corner by its own piece (the king's own squares are covered by White's king on g3 and queen on g2). Watch out for Qg2+ as move 1 — that would be stalemate!",
-              "successMessage": "Perfect — and you avoided the stalemate trap!"
             },
             {
               "type": "play-vs-bot",
@@ -598,25 +650,21 @@
                 {
                   "san": "Rxg6+",
                   "isCorrect": true,
-                  "shortFeedback": "✓ Correct! This is the decisive move.",
                   "continuation": ["Ke7"]
                 },
                 {
                   "san": "Rf8",
                   "isCorrect": false,
-                  "shortFeedback": "This move is not forcing enough.",
                   "explanation": "Rf8 looks active, but it gives Black time to seize the initiative. Black can respond with Qd1+, then follow up with Qh5+, giving a perpetual check — at minimum a draw. Alternatively, Black simply plays Rxf8 and White has no good continuation. A decisive attacking idea must be more forcing."
                 },
                 {
                   "san": "Qe7+",
                   "isCorrect": false,
-                  "shortFeedback": "A check is very forcing — but this one doesn't work.",
                   "explanation": "Well spotted that a check is the most forcing type of move! However, Qe7+ doesn't lead anywhere decisive. After Kxe7, White's queen is exchanged and the position simplifies in Black's favour. After Rxe7, White again has no follow-up — the rooks and queen are not coordinated for a mating attack. Forcing moves must force *something concrete*."
                 },
                 {
                   "san": "Qxf7+",
                   "isCorrect": false,
-                  "shortFeedback": "Very forcing — but Black can hold.",
                   "explanation": "Qxf7+ is a natural try: it's a queen check and captures material. However, after Black recaptures (Rxf7 or Kxf7), the queens come off and White doesn't have enough pieces left to mount a decisive attack on the Black king. Tactics need to lead to a clearly won endgame or mate — winning material isn't enough if the opponent can defend."
                 }
               ],

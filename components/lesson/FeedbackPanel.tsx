@@ -1,6 +1,8 @@
 "use client"
 // components/lesson/FeedbackPanel.tsx — restyled (Quest look). Same props/behavior.
+import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { useLessonSounds } from "@/hooks/useLessonSounds"
 import { clsx } from "clsx"
 
 interface Props {
@@ -9,9 +11,20 @@ interface Props {
   onNext: () => void
   isLastStep?: boolean
   nextLabel?: string
+  /** Override default correct/wrong chime; "celebration" = step-complete fanfare. */
+  sound?: "correct" | "wrong" | "celebration" | "none"
 }
 
-export function FeedbackPanel({ isCorrect, explanation, onNext, isLastStep, nextLabel }: Props) {
+export function FeedbackPanel({ isCorrect, explanation, onNext, isLastStep, nextLabel, sound }: Props) {
+  const { play } = useLessonSounds()
+
+  useEffect(() => {
+    if (sound === "none") return
+    if (sound === "celebration") { play("stepComplete"); return }
+    play(sound ?? (isCorrect ? "correct" : "wrong"))
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- play once when panel appears
+  }, [])
+
   return (
     <div
       className={clsx(

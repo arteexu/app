@@ -1,15 +1,13 @@
 import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { findLesson, findChapterForLesson } from "@/lib/progress"
-import course from "@/content/courses/chess-attack-and-checkmate.json"
-import type { Course } from "@/lib/types"
+import { findLessonInCourses } from "@/lib/courses"
 import { LessonPlayer } from "./LessonPlayer"
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const typedCourse = course as unknown as Course
-  const lesson = findLesson(typedCourse, id)
-  if (!lesson) notFound()
+  const match = findLessonInCourses(id)
+  if (!match) notFound()
+  const { course: typedCourse, lesson, chapter } = match
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -32,8 +30,6 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
   const completedStepIds: string[] = stepProgress?.completed_step_ids ?? []
   const completedLessonIds: string[] = (lessonProgress ?? []).map((r: any) => r.lesson_id)
-  const chapter = findChapterForLesson(typedCourse, id)
-
   return (
     <LessonPlayer
       lesson={lesson}

@@ -10,6 +10,7 @@ import { annotationsToProps } from "./ChessBoard"
 import { buildLastMoveStyles, buildUserHighlightStyles, composeSquareStyles } from "@/lib/legal-move-highlights"
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { playBoardMoveSound } from "@/lib/ui-sounds"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   step: ContinuationStepType
@@ -145,7 +146,7 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
 
       {annotation && (
         <div className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded-xl px-4 py-3 text-indigo-900 dark:text-indigo-200 text-sm">
-          {annotation}
+          <MarkdownText>{annotation}</MarkdownText>
         </div>
       )}
 

@@ -7,6 +7,7 @@
 
 import { useState } from "react"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 import type { ConceptCheck } from "@/lib/annotated/types"
 import { useLessonSounds } from "@/hooks/useLessonSounds"
 
@@ -132,7 +133,7 @@ export function ConceptCheckCard({ check, answeredIndex, onAnswered }: Props) {
           <span className={clsx("font-display font-extrabold block mb-1", isCorrect ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
             {isCorrect ? "✓ Correct!" : "Not quite —"}
           </span>
-          {check.options[selected].explanation}
+          <MarkdownText>{check.options[selected].explanation}</MarkdownText>
         </div>
       )}
     </div>

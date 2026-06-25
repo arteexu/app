@@ -23,6 +23,7 @@ import {
   moveFactAt,
 } from "@/lib/solitaire/engine"
 import { LessonLayout } from "@/components/lesson/LessonLayout"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 import { FlipBoardButton } from "./FlipBoardButton"
 import { AnnotatedGameBadge } from "./AnnotatedGameBadge"
 import { isAnnotatedGame } from "@/lib/solitaire/games"
@@ -647,7 +648,9 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
                     Hide
                   </button>
                 </div>
-                <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">{explainCard.text}</p>
+                <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">
+                  <MarkdownText>{explainCard.text}</MarkdownText>
+                </p>
               </div>
             ) : (
               <button

@@ -15,6 +15,7 @@ import { usePieceLatchRef } from "@/hooks/usePieceLatchRef"
 import { buildSelectionStyles, buildUserHighlightStyles, composeSquareStyles, DRAG_ACTIVATION_DISTANCE } from "@/lib/legal-move-highlights"
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   step: FindAllCheckMatesType
@@ -227,7 +228,9 @@ export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
             <p className="text-lg font-extrabold text-green-700 dark:text-green-400">
               🎯 {step.successMessage ?? `All ${step.checkmates.length} checkmates found!`}
             </p>
-            <p className="text-sm text-green-600 dark:text-green-500 leading-relaxed">{step.explanation}</p>
+            <p className="text-sm text-green-600 dark:text-green-500 leading-relaxed">
+              <MarkdownText>{step.explanation}</MarkdownText>
+            </p>
           </div>
           <Button onClick={() => onComplete(true)} variant="primary" size="lg">
             {isLastStep ? "Finish lesson →" : "Continue →"}

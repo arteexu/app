@@ -7,6 +7,7 @@
 import { clsx } from "clsx"
 import type { Variation } from "@/lib/annotated/types"
 import { nagStyle } from "@/lib/annotated/nags"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   variation: Variation
@@ -55,7 +56,9 @@ export function VariationLine({ variation, insteadOf }: Props) {
 
       <div className="px-3.5 pb-3 pt-1 text-sm leading-relaxed text-gray-700 dark:text-slate-300">
         {variation.comment && (
-          <p className="italic text-gray-500 dark:text-slate-400 mb-1.5">{variation.comment}</p>
+          <p className="italic text-gray-500 dark:text-slate-400 mb-1.5">
+            <MarkdownText>{variation.comment}</MarkdownText>
+          </p>
         )}
         <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
           {moves.map((m, i) => (
@@ -70,7 +73,9 @@ export function VariationLine({ variation, insteadOf }: Props) {
                 )}
               </span>
               {m.comment && (
-                <span className="italic text-gray-500 dark:text-slate-400">{m.comment}</span>
+                <span className="italic text-gray-500 dark:text-slate-400">
+                  <MarkdownText>{m.comment}</MarkdownText>
+                </span>
               )}
             </span>
           ))}

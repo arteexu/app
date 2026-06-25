@@ -11,6 +11,7 @@ import { annotationsToProps } from "./ChessBoard"
 import { buildUserHighlightStyles, composeSquareStyles } from "@/lib/legal-move-highlights"
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   step: ConceptStep
@@ -98,7 +99,7 @@ export function ConceptCard({ step, onContinue }: Props) {
       )}
 
       <div className="text-gray-700 dark:text-slate-300 text-[15px] leading-relaxed">
-        {renderBody(body)}
+        <MarkdownText paragraphs strongClassName="text-gray-900 dark:text-slate-100">{body}</MarkdownText>
       </div>
 
       {step.analogy && isLastStage && (
@@ -108,25 +109,5 @@ export function ConceptCard({ step, onContinue }: Props) {
         </div>
       )}
     </LessonLayout>
-  )
-}
-
-function renderBody(body: string) {
-  const paragraphs = body.split("\n\n")
-  return (
-    <div className="flex flex-col gap-3">
-      {paragraphs.map((para, pi) => {
-        const parts = para.split(/(\*\*[^*]+\*\*)/)
-        return (
-          <p key={pi}>
-            {parts.map((part, i) =>
-              part.startsWith("**") && part.endsWith("**")
-                ? <strong key={i} className="text-gray-900 dark:text-slate-100">{part.slice(2, -2)}</strong>
-                : <span key={i}>{part}</span>
-            )}
-          </p>
-        )
-      })}
-    </div>
   )
 }

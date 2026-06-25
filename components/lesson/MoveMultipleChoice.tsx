@@ -13,6 +13,7 @@ import { SolveReward } from "./SolveReward"
 import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
 import { useLessonSounds } from "@/hooks/useLessonSounds"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   step: MoveMultipleChoiceType
@@ -180,7 +181,11 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
               Reveal explanation
             </button>
           )}
-          {revealed && submittedResult.explanation && <p className="leading-relaxed opacity-90">{submittedResult.explanation}</p>}
+          {revealed && submittedResult.explanation && (
+            <p className="leading-relaxed opacity-90">
+              <MarkdownText>{submittedResult.explanation}</MarkdownText>
+            </p>
+          )}
           <button onClick={retry} className="self-start text-xs font-semibold px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition">
             ← Try another move
           </button>

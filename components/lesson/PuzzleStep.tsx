@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { Chess } from "chess.js"
 import type { PuzzleStep as PuzzleStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
@@ -17,6 +17,7 @@ import { buildLastMoveStyles, buildSelectionStyles, buildUserHighlightStyles, co
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { annotationsToProps } from "./ChessBoard"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   step: PuzzleStepType
@@ -25,6 +26,18 @@ interface Props {
 }
 
 type PuzzleState = "idle" | "wrong" | "alternative" | "refuting" | "solved"
+
+type AnalysisMove = { san: string; from: string; to: string }
+
+function buildAnalysisPosition(startFen: string, moves: AnalysisMove[], index: number): Chess {
+  const g = new Chess(startFen)
+  for (let i = 0; i <= index; i++) {
+    try {
+      g.move({ from: moves[i].from as any, to: moves[i].to as any, promotion: "q" })
+    } catch { break }
+  }
+  return g
+}
 
 export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   const { play } = useLessonSounds()
@@ -38,7 +51,6 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   const [refutationLine, setRefutation]     = useState<string[]>([])
   const [refutationIndex, setRefIdx]        = useState(-1)
   const [lastMove, setLastMove]             = useState<{ from: string; to: string } | null>(null)
-  const [analysisLastMove, setAnalysisLastMove] = useState<{ from: string; to: string } | null>(null)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
 
   const { showLegalMoves } = useBoardPreferences()
@@ -48,8 +60,18 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   const [blunderPlayed, setBlunderPlayed] = useState(!step.preMovePosition)
 
   // ── Analysis mode state ───────────────────────────────────────────────────
-  const [analysisGame, setAnalysisGame]   = useState(() => new Chess(step.fen))
-  const [analysisMode, setAnalysisMode]   = useState(false)
+  const [analysisMode, setAnalysisMode]       = useState(false)
+  const [analysisStartFen, setAnalysisStartFen] = useState(step.fen)
+  const [analysisMoves, setAnalysisMoves]     = useState<AnalysisMove[]>([])
+  const [analysisIndex, setAnalysisIndex]     = useState(-1)
+
+  const analysisGame = useMemo(
+    () => buildAnalysisPosition(analysisStartFen, analysisMoves, analysisIndex),
+    [analysisStartFen, analysisMoves, analysisIndex],
+  )
+  const analysisLastMove = analysisIndex >= 0
+    ? { from: analysisMoves[analysisIndex].from, to: analysisMoves[analysisIndex].to }
+    : null
 
   const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
   const solveInteractive = state === "idle" && !showingPrev && blunderPlayed && !analysisMode
@@ -99,13 +121,49 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   useEffect(() => {
     if (!step.preMovePosition) return
     function onKey(e: KeyboardEvent) {
+      if (analysisMode) return
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
       if (e.key === "ArrowLeft"  && blunderPlayed && !showingPrev) { e.preventDefault(); setShowingPrev(true)  }
       if (e.key === "ArrowRight" && showingPrev)                   { e.preventDefault(); setShowingPrev(false) }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [blunderPlayed, showingPrev, step.preMovePosition])
+  }, [analysisMode, blunderPlayed, showingPrev, step.preMovePosition])
+
+  const analysisGoBack = useCallback(() => {
+    setAnalysisIndex(i => Math.max(-1, i - 1))
+    clearAnalysisHighlights()
+    setUserHighlights([])
+  }, [clearAnalysisHighlights])
+
+  const analysisGoForward = useCallback(() => {
+    setAnalysisIndex(i => Math.min(analysisMoves.length - 1, i + 1))
+    clearAnalysisHighlights()
+    setUserHighlights([])
+  }, [analysisMoves.length, clearAnalysisHighlights])
+
+  const analysisJumpTo = useCallback((index: number) => {
+    setAnalysisIndex(index)
+    clearAnalysisHighlights()
+    setUserHighlights([])
+  }, [clearAnalysisHighlights])
+
+  // Arrow-key navigation for analysis mode
+  useEffect(() => {
+    if (!analysisMode) return
+    function onKey(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (e.key === "ArrowLeft") {
+        e.preventDefault()
+        analysisGoBack()
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault()
+        analysisGoForward()
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [analysisMode, analysisGoBack, analysisGoForward])
 
   const { squareStyles: annotationSquares, arrows: annotationArrows } = annotationsToProps(step.annotations)
   const learnerMoveIndex = moveHistory.length
@@ -155,7 +213,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
       game.undo()
       const explanations = step.solution.wrongMoveExplanations?.[learnerMoveIndex] ?? {}
       setState("wrong")
-      setWrong(explanations[san] ?? "That's not the right move. Think: checks, captures, threats.")
+      setWrong(explanations[san] ?? "")
       setRefutation(step.solution.refutationLines?.[learnerMoveIndex]?.[san] ?? [])
       return true
     }
@@ -214,8 +272,9 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
   // ── Analysis-mode helpers ─────────────────────────────────────────────────
   function enterAnalysis() {
-    setAnalysisGame(new Chess(game.fen()))
-    setAnalysisLastMove(null)
+    setAnalysisStartFen(game.fen())
+    setAnalysisMoves([])
+    setAnalysisIndex(-1)
     setUserHighlights([])
     clearAnalysisHighlights()
     setAnalysisMode(true)
@@ -223,14 +282,16 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
   function exitAnalysis() {
     setAnalysisMode(false)
-    setAnalysisLastMove(null)
+    setAnalysisMoves([])
+    setAnalysisIndex(-1)
     setUserHighlights([])
     clearAnalysisHighlights()
   }
 
   function resetAnalysis() {
-    setAnalysisGame(new Chess(step.fen))
-    setAnalysisLastMove(null)
+    setAnalysisStartFen(step.fen)
+    setAnalysisMoves([])
+    setAnalysisIndex(-1)
     setUserHighlights([])
     clearAnalysisHighlights()
   }
@@ -238,12 +299,14 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   function analysisMakeMove(from: string, to: string): boolean {
     if (from === to) return false
     try {
-      const copy = new Chess(analysisGame.fen())
+      const copy = buildAnalysisPosition(analysisStartFen, analysisMoves, analysisIndex)
       const r = copy.move({ from: from as any, to: to as any, promotion: "q" })
       if (!r) return false
       playBoardMoveSound(r, copy)
-      setAnalysisGame(new Chess(copy.fen()))
-      setAnalysisLastMove({ from: r.from, to: r.to })
+      const newMove: AnalysisMove = { san: r.san, from: r.from, to: r.to }
+      const newMoves = [...analysisMoves.slice(0, analysisIndex + 1), newMove]
+      setAnalysisMoves(newMoves)
+      setAnalysisIndex(newMoves.length - 1)
       clearAnalysisHighlights()
       return true
     } catch { return false }
@@ -403,6 +466,68 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
           <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">
             Explore freely — both sides can move. When you're ready, switch back to <strong>Solve</strong> to submit your answer.
           </p>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              onClick={analysisGoBack}
+              variant="secondary"
+              size="sm"
+              disabled={analysisIndex === -1}
+            >
+              ◀ Back
+            </Button>
+            <Button
+              onClick={analysisGoForward}
+              variant="secondary"
+              size="sm"
+              disabled={analysisIndex >= analysisMoves.length - 1}
+            >
+              Forward ▶
+            </Button>
+            <span className="text-xs text-gray-400 dark:text-slate-500">
+              {analysisMoves.length === 0
+                ? "Starting position"
+                : analysisIndex === -1
+                  ? `Starting position · ${analysisMoves.length} move${analysisMoves.length === 1 ? "" : "s"} explored`
+                  : `Move ${analysisIndex + 1} of ${analysisMoves.length}`}
+            </span>
+          </div>
+
+          {analysisMoves.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => analysisJumpTo(-1)}
+                className={clsx(
+                  "text-xs rounded-lg px-2 py-1 font-mono transition-colors",
+                  analysisIndex === -1
+                    ? "bg-indigo-600 text-white"
+                    : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60",
+                )}
+              >
+                Start
+              </button>
+              {analysisMoves.map((m, i) => (
+                <button
+                  key={i}
+                  onClick={() => analysisJumpTo(i)}
+                  className={clsx(
+                    "text-xs rounded-lg px-2 py-1 font-mono transition-colors",
+                    i === analysisIndex
+                      ? "bg-indigo-600 text-white"
+                      : i < analysisIndex
+                        ? "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60"
+                        : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600",
+                  )}
+                >
+                  {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m.san}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <p className="text-xs text-gray-400 dark:text-slate-500">
+            Tip: use ← → arrow keys to step through your variation
+          </p>
         </div>
       )}
 
@@ -430,7 +555,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
           )}
           {showingPrev && step.preMovePosition.annotation && (
             <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed px-1">
-              {step.preMovePosition.annotation}
+              <MarkdownText>{step.preMovePosition.annotation}</MarkdownText>
             </p>
           )}
         </div>
@@ -462,8 +587,12 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
           {/* Wrong move */}
           {state === "wrong" && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl px-4 py-4 flex flex-col gap-3">
-              <div className="flex items-center gap-2 font-semibold text-red-800 dark:text-red-400">✗ Not the best move.</div>
-              <p className="text-sm text-red-900 dark:text-red-300 leading-relaxed">{wrongMoveExplanation}</p>
+              <div className="flex items-center gap-2 font-semibold text-red-800 dark:text-red-400">✗ Not quite.</div>
+              {wrongMoveExplanation && (
+                <p className="text-sm text-red-900 dark:text-red-300 leading-relaxed">
+                  <MarkdownText>{wrongMoveExplanation}</MarkdownText>
+                </p>
+              )}
               <div className="flex gap-2 flex-wrap">
                 <Button onClick={resetPuzzle} variant="primary" size="sm">Try again</Button>
                 {refutationLine.length > 0 && (
@@ -479,7 +608,9 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
           {state === "alternative" && (
             <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-xl px-4 py-4 flex flex-col gap-3">
               <div className="flex items-center gap-2 font-semibold text-indigo-800 dark:text-indigo-300">★ Great find — but there is an even better move.</div>
-              <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">{alternativeFeedback}</p>
+              <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">
+                <MarkdownText>{alternativeFeedback}</MarkdownText>
+              </p>
               <Button onClick={resetPuzzle} variant="primary" size="sm" className="self-start">
                 Keep looking
               </Button>
@@ -511,7 +642,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
             <>
               {step.successMessage && (
                 <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl px-4 py-3 text-green-800 dark:text-green-300 text-sm font-medium">
-                  🏆 {step.successMessage}
+                  🏆 <MarkdownText>{step.successMessage}</MarkdownText>
                 </div>
               )}
               <FeedbackPanel

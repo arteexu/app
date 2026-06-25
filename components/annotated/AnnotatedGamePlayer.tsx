@@ -17,6 +17,7 @@ import { nagStyle, primaryGlyph } from "@/lib/annotated/nags"
 import { buildUserHighlightStyles, composeSquareStyles } from "@/lib/legal-move-highlights"
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { LessonLayout } from "@/components/lesson/LessonLayout"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 import { LessonSoundProvider, useLessonSounds } from "@/hooks/useLessonSounds"
 import { playBoardMoveSound } from "@/lib/ui-sounds"
 import { Confetti } from "@/components/lesson/RewardFx"
@@ -323,7 +324,7 @@ function PlayerInner({ game }: { game: AnnotatedGame }) {
 
               {currentPly.comment && (
                 <div className="rounded-2xl bg-indigo-50 dark:bg-indigo-900/25 border border-indigo-100 dark:border-indigo-800/60 px-4 py-3 text-indigo-900 dark:text-indigo-100 text-[15px] leading-relaxed">
-                  {currentPly.comment}
+                  <MarkdownText>{currentPly.comment}</MarkdownText>
                 </div>
               )}
 

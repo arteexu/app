@@ -14,6 +14,7 @@ import { buildLastMoveStyles, buildSelectionStyles, buildUserHighlightStyles, co
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { playBoardMoveSound } from "@/lib/ui-sounds"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   step: PlayVsBotStepType
@@ -214,7 +215,9 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
               {moveRating(moveCount)}
             </p>
           </div>
-          <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">{step.explanation}</p>
+          <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed">
+            <MarkdownText>{step.explanation}</MarkdownText>
+          </p>
           <div className="flex gap-3 flex-wrap">
             <button
               onClick={reset}

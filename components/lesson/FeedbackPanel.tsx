@@ -6,6 +6,7 @@ import { useLessonSounds } from "@/hooks/useLessonSounds"
 import { KeyConceptUnlockCard } from "@/components/key-concepts/KeyConceptUnlockCard"
 import { unlockKeyConcept } from "@/lib/key-concepts-storage"
 import { clsx } from "clsx"
+import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   isCorrect: boolean
@@ -49,7 +50,7 @@ export function FeedbackPanel({ isCorrect, explanation, onNext, isLastStep, next
           {isCorrect ? "✓ Correct!" : "✗ Not quite."}
         </div>
         <p className={clsx("text-sm leading-relaxed", isCorrect ? "text-green-900/90 dark:text-green-200/90" : "text-red-900/90 dark:text-red-200/90")}>
-          {explanation}
+          <MarkdownText>{explanation}</MarkdownText>
         </p>
         <Button onClick={onNext} variant={isCorrect ? "primary" : "secondary"} size="md" className="self-start">
           {nextLabel ?? (isLastStep ? "Finish lesson →" : "Next →")}

@@ -6,6 +6,7 @@ import { WeeklyBarChart } from "@/components/ui/WeeklyBarChart"
 import { TrophyStrip } from "@/components/ui/TrophyStrip"
 import { SiteActivitySummary } from "@/components/statistics/SiteActivitySummary"
 import { SolitaireStatsPanel } from "@/components/statistics/SolitaireStatsPanel"
+import { CheckmateBadgesPanel } from "@/components/checkmate-badges/CheckmateBadgesPanel"
 import { fetchUserStats, WEEKLY_GOAL_HRS } from "@/lib/user-stats"
 
 export default async function StatisticsPage() {
@@ -113,6 +114,19 @@ export default async function StatisticsPage() {
           </span>
         </div>
         <TrophyStrip trophies={stats.trophies} />
+      </section>
+
+      <section aria-labelledby="checkmate-badges-heading" className="flex flex-col gap-3">
+        <h3
+          id="checkmate-badges-heading"
+          className="font-display text-lg font-extrabold text-gray-900 dark:text-slate-100"
+        >
+          Checkmate badges
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-slate-400 -mt-1">
+          Earned by checkmating in the King + Queen and King + Rook vs lone King endgame drills. Quickest tracks fewest moves to mate.
+        </p>
+        <CheckmateBadgesPanel />
       </section>
 
       <section aria-labelledby="solitaire-heading" className="flex flex-col gap-3">

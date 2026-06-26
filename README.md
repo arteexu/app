@@ -28,7 +28,7 @@ ChessMind is an interactive chess learning app for intermediate young players wh
 **What Alex needs from ChessMind**
 
 - Active decision points: guess the move, calculate the line, then compare against the annotator.
-- Pattern vocabulary — **Key Concepts** like *the initiative*, *calculate lines*, and *bring all pieces into the attack* — unlocked through solving, not memorized from a list.
+- Pattern vocabulary — **Key Concepts** like *The Initiative*, *calculate lines*, and *Bring All Pieces Into The Attack* — unlocked through solving, not memorized from a list.
 - Coach-style feedback when a move fails: why it doesn't work, what the opponent gets, and what the position demands instead.
 - A structured attack-focused path from fundamentals to annotated master games, at a pace that respects both their age and their existing chess foundation.
 
@@ -52,10 +52,10 @@ Strong players think in **lines** — whole sequences — and always ask: *Where
 
 Isolated tactics do not transfer to real games. As learners solve, they **collect Key Concepts** — durable ideas such as:
 
-- **The initiative** — when ahead in development, play fast even if it means sacrificing material.
+- **The Initiative** — when ahead in development, play fast even if it means sacrificing material.
 - **Calculate lines** — see the sequence, not just the next move.
-- **Bring all pieces into the attack** — queens alone do not checkmate kings; coordinated armies do.
-- **Consider your opponent's plans** — chess is two-sided; your idea must survive their reply.
+- **Bring All Pieces Into The Attack** — queens alone do not checkmate kings; coordinated armies do.
+- **Consider Your Opponent's Plans** — chess is two-sided; your idea must survive their reply.
 
 Concepts unlock through play and reappear across lessons so patterns stick. This pattern-recognition layer is central to how ChessMind builds lasting understanding, not one-off puzzle memory.
 

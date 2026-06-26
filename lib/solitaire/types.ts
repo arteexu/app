@@ -39,6 +39,21 @@ export interface SolitaireGame {
    */
   maxStartMove?: number
   note: string
+  /**
+   * Optional starting position (FEN) the `moves` are played from. Omit for games
+   * that begin from the standard initial position (the curated master games all
+   * do). Used by engine-generated games that start from a chosen opening or a
+   * custom FEN — `moves` then lists the engine's play from this position, and the
+   * side-to-move / move-number helpers derive their offset from this FEN.
+   */
+  startFen?: string
+  /**
+   * True for transient engine-vs-engine games produced by the "Generate a game"
+   * flow (see lib/solitaire/generate.ts). The curated master games omit this.
+   * The play screen uses it to offer a "Skip to end" shortcut that jumps straight
+   * to the results/final position without solving the whole line.
+   */
+  isGenerated?: boolean
   /** Full game in SAN, e.g. ["e4", "c5", "Nf3", …]. Every entry is legal. */
   moves: string[]
   /**

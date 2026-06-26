@@ -34,7 +34,7 @@ function renderStep(step: Step, onStepComplete: (isCorrect: boolean) => void, is
     case "move-multiple-choice":
       return <MoveMultipleChoice step={step} onComplete={onStepComplete} isLastStep={isLastStep} />
     default:
-      return <div className="text-gray-400 text-center py-10">Step type not yet implemented.</div>
+      return <div className="text-gray-400 dark:text-slate-500 text-center py-10">Step type not yet implemented.</div>
   }
 }
 

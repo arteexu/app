@@ -14,15 +14,17 @@ import type { SolitaireSetup } from "@/lib/solitaire/types"
 import type { MoveResult, MoveOutcome } from "@/lib/solitaire-scoring"
 import {
   getCutoffPly,
-  isUserPly,
+  isUserPlyIn,
   chessAt,
   sanMatches,
-  fullMoveNumber,
+  moveNumberAtPly,
   userPlies,
   describeMove,
   moveFactAt,
+  sideAtPly,
 } from "@/lib/solitaire/engine"
 import { LessonLayout } from "@/components/lesson/LessonLayout"
+import { SanNotation } from "@/components/chess/SanNotation"
 import { MarkdownText } from "@/components/ui/MarkdownText"
 import { FlipBoardButton } from "./FlipBoardButton"
 import { AnnotatedGameBadge } from "./AnnotatedGameBadge"
@@ -133,7 +135,7 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
   const animMs = reduce ? 0 : 260
 
   const currentChess = useMemo(() => chessAt(game, cursor), [game, cursor])
-  const isUserTurn = phase === "playing" && cursor < cutoff && isUserPly(cursor, side)
+  const isUserTurn = phase === "playing" && cursor < cutoff && isUserPlyIn(game, cursor, side)
   const canInteract = isUserTurn && !revealing && !opponentThinking
 
   const {
@@ -190,7 +192,7 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
       setPhase("finished")
       return
     }
-    if (isUserPly(cursor, side)) return // wait for the learner
+    if (isUserPlyIn(game, cursor, side)) return // wait for the learner
     if (revealing) return
     setOpponentThinking(true)
     const t = setTimeout(() => {
@@ -373,6 +375,33 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
     advance(cursor)
   }
 
+  // Jump straight to the results screen without solving the rest. Every one of
+  // the learner's still-unplayed moves (from the current cursor to the cutoff)
+  // is recorded as "skipped" (0 points, counts as not-solved) so scoring stays
+  // consistent and nothing is double-counted — the current move hasn't been
+  // resolved yet, so it has no prior result. Offered on generated games only.
+  function skipToEnd() {
+    if (phase !== "playing") return
+    for (let p = cursor; p < cutoff; p++) {
+      if (isUserPlyIn(game, p, side)) {
+        resultsRef.current = [
+          ...resultsRef.current,
+          { ply: p, expectedSan: game.moves[p], attempts: 0, outcome: "skipped" },
+        ]
+      }
+    }
+    setResults(resultsRef.current)
+    setRevealing(false)
+    setWrongMove(null)
+    setWrongMoveFen(null)
+    setOpponentThinking(false)
+    setAttempts(0)
+    setFeedback({ kind: "idle" })
+    clearHighlights()
+    setCursor(cutoff)
+    setPhase("finished")
+  }
+
   const canRetryWrongMove = feedback.kind === "wrong" || feedback.kind === "alternative"
 
   // Keyboard shortcuts: Enter retry (wrong-move only), R reveal / play-revealed, S skip.
@@ -519,12 +548,23 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
               {game.white} vs {game.black}
             </p>
           </div>
-          <button
-            onClick={onExit}
-            className="shrink-0 text-xs font-semibold text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 transition"
-          >
-            Exit
-          </button>
+          <div className="shrink-0 flex items-center gap-2">
+            {game.isGenerated && phase === "playing" && (
+              <button
+                onClick={skipToEnd}
+                title="Reveal the full game and jump to the summary"
+                className="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-full hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition"
+              >
+                Skip to end ⏭
+              </button>
+            )}
+            <button
+              onClick={onExit}
+              className="text-xs font-semibold text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 transition"
+            >
+              Exit
+            </button>
+          </div>
         </div>
 
         {/* Stats row */}
@@ -546,7 +586,7 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
             <span className="font-semibold text-gray-500 dark:text-slate-400">
               Guess {Math.min(guessesDone + 1, totalGuesses)} of {totalGuesses}
             </span>
-            <span className="font-mono text-gray-400 dark:text-slate-500">Move {fullMoveNumber(cursor)}</span>
+            <span className="font-mono text-gray-400 dark:text-slate-500">Move {moveNumberAtPly(game, cursor)}</span>
           </div>
           <div className="h-2 rounded-full bg-gray-100 dark:bg-slate-700 overflow-hidden">
             <div
@@ -673,14 +713,18 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
               <span
                 key={ply}
                 className={clsx(
-                  "text-xs rounded-lg px-2 py-1 font-mono",
-                  isUserPly(ply, side)
+                  "text-sm rounded-lg px-2 py-1 font-mono",
+                  isUserPlyIn(game, ply, side)
                     ? "bg-indigo-600 text-white"
                     : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300"
                 )}
               >
-                {ply % 2 === 0 ? `${fullMoveNumber(ply)}. ` : ""}
-                {san}
+                {sideAtPly(game, ply) === "white"
+                  ? `${moveNumberAtPly(game, ply)}. `
+                  : ply === startPly
+                    ? `${moveNumberAtPly(game, ply)}… `
+                    : ""}
+                <SanNotation san={san} color={sideAtPly(game, ply)} />
               </span>
             ))}
           </div>

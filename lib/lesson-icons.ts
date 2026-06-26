@@ -9,6 +9,7 @@ export const LESSON_ICON: Record<string, string> = {
   "l-find-checkmates":  "🎯",
   "l-scholars-mate":    "⚡",
   "l-advanced-tactics": "♗",
+  "l-how-to-attack": "♞",
   "l-attacking-italian-trap": "♗",
   "l-attacking-caro-kann": "♘",
 }

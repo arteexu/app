@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { Chess } from "chess.js"
 import type { ContinuationStep as ContinuationStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
@@ -11,6 +11,11 @@ import { buildLastMoveStyles, buildUserHighlightStyles, composeSquareStyles } fr
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { playBoardMoveSound } from "@/lib/ui-sounds"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { MoveQualityMoveLabel } from "./MoveQualityMoveLabel"
+import { useMoveQualityPieceBadge } from "@/hooks/useMoveQualityPieceBadge"
+import { destinationSquareForMove } from "@/lib/move-quality"
+import { TacticalPatternUnlockCard } from "@/components/tactical-patterns/TacticalPatternUnlockCard"
+import { unlockTacticalPattern } from "@/lib/tactical-patterns-storage"
 
 interface Props {
   step: ContinuationStepType
@@ -22,8 +27,26 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
   const boardOrientation = useLessonBoardOrientation(step.orientation ?? "white")
   const [moveIndex, setMoveIndex] = useState(-1)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
+  const [patternUnlocks, setPatternUnlocks] = useState<Array<{ id: string; celebrate: boolean }>>([])
   const userHighlightHandlers = useUserSquareHighlightHandlers(setUserHighlights)
   const prevMoveIndex = useRef(-1)
+  const moveIndexRef = useRef(-1)
+  const boardRef = useRef<HTMLDivElement>(null)
+  const lastMoveIndex = step.moves.length - 1
+  const patternIds = useMemo(() => [...new Set([
+    ...(step.tacticalPatternIds ?? []),
+    ...(step.tacticalPatternId ? [step.tacticalPatternId] : []),
+  ])], [step.tacticalPatternId, step.tacticalPatternIds])
+
+  useEffect(() => {
+    moveIndexRef.current = moveIndex
+  }, [moveIndex])
+
+  const goToMoveIndex = useCallback((index: number) => {
+    setMoveIndex(index)
+    if (index !== lastMoveIndex || patternIds.length === 0) return
+    setPatternUnlocks(patternIds.map((id) => ({ id, celebrate: unlockTacticalPattern(id) })))
+  }, [lastMoveIndex, patternIds])
 
   // Stepping to a new move (or resetting) clears any user-drawn square markers.
   useEffect(() => {
@@ -49,12 +72,12 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
     if (e.key === "ArrowLeft") {
       e.preventDefault()
-      setMoveIndex(i => Math.max(-1, i - 1))
+      goToMoveIndex(Math.max(-1, moveIndexRef.current - 1))
     } else if (e.key === "ArrowRight") {
       e.preventDefault()
-      setMoveIndex(i => Math.min(step.moves.length - 1, i + 1))
+      goToMoveIndex(Math.min(lastMoveIndex, moveIndexRef.current + 1))
     }
-  }, [step.moves.length])
+  }, [goToMoveIndex, lastMoveIndex])
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown)
@@ -74,26 +97,44 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
   })()
 
   const annotation = moveIndex >= 0 ? step.moveAnnotations?.[moveIndex] : undefined
-  const { arrows, squareStyles } = annotationsToProps(step.annotations)
-  const isAtEnd = moveIndex === step.moves.length - 1
+  const resetBoardAnnotations = annotationsToProps(step.annotations)
+  const moveBoardAnnotations = moveIndex >= 0
+    ? annotationsToProps(step.moveBoardAnnotations?.[moveIndex])
+    : { arrows: [], squareStyles: {} }
+  const activeArrows = moveIndex === -1 ? resetBoardAnnotations.arrows : moveBoardAnnotations.arrows
+  const isAtEnd = moveIndex === lastMoveIndex
 
   function handleSquareClick() {
     setUserHighlights([])
   }
 
   const composedSquareStyles = composeSquareStyles(
-    moveIndex === -1 ? squareStyles : buildLastMoveStyles(lastMove?.from, lastMove?.to),
+    moveIndex === -1 ? resetBoardAnnotations.squareStyles : moveBoardAnnotations.squareStyles,
+    moveIndex >= 0 ? buildLastMoveStyles(lastMove?.from, lastMove?.to) : {},
     buildUserHighlightStyles(userHighlights),
   )
 
+  const activeQuality =
+    moveIndex >= 0 && step.moveQualities?.[moveIndex]
+      ? {
+          square: destinationSquareForMove(step.fen, step.moves, moveIndex) ?? "",
+          quality: step.moveQualities[moveIndex],
+        }
+      : null
+
+  useMoveQualityPieceBadge(
+    boardRef,
+    activeQuality?.square ? activeQuality : null,
+  )
+
   const board = (
-    <div className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
+    <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
       <Chessboard
         options={{
           position: currentFen,
           boardOrientation,
           allowDragging: false,
-          arrows: moveIndex === -1 ? arrows : [],
+          arrows: activeArrows,
           squareStyles: composedSquareStyles,
           darkSquareStyle: { backgroundColor: "#769656" },
           lightSquareStyle: { backgroundColor: "#eeeed2" },
@@ -111,26 +152,29 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Button
-              onClick={() => setMoveIndex(i => Math.max(-1, i - 1))}
+              onClick={() => goToMoveIndex(Math.max(-1, moveIndex - 1))}
               variant="secondary" size="sm"
               disabled={moveIndex === -1}
             >
               ◀ Prev
             </Button>
             <Button
-              onClick={() => setMoveIndex(i => Math.min(step.moves.length - 1, i + 1))}
+              onClick={() => goToMoveIndex(Math.min(lastMoveIndex, moveIndex + 1))}
               variant="secondary" size="sm"
               disabled={isAtEnd}
             >
               Next ▶
             </Button>
-            <Button onClick={() => setMoveIndex(-1)} variant="ghost" size="sm">
+            <Button onClick={() => goToMoveIndex(-1)} variant="ghost" size="sm">
               ↺ Reset
             </Button>
           </div>
           <p className="text-xs text-gray-400 dark:text-slate-500">
             Tip: use ← → arrow keys to navigate
           </p>
+          {isAtEnd && patternUnlocks.map(({ id, celebrate }) => (
+            <TacticalPatternUnlockCard key={id} patternId={id} celebrate={celebrate} />
+          ))}
           {isAtEnd && (
             <Button onClick={() => onComplete(true)} variant="primary" size="lg" className="mt-1">
               {isLastStep ? "Finish lesson →" : "Continue →"}
@@ -141,7 +185,9 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
     >
       <div>
         <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">{step.title}</h3>
-        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">{step.description}</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+          <MarkdownText strongClassName="text-gray-700 dark:text-slate-200">{step.description}</MarkdownText>
+        </p>
       </div>
 
       {annotation && (
@@ -155,14 +201,21 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
         {step.moves.map((move, i) => (
           <button
             key={i}
-            onClick={() => setMoveIndex(i)}
+            onClick={() => goToMoveIndex(i)}
             className={`text-sm rounded-lg px-2.5 py-1 font-mono transition-colors motion-reduce:transition-none ${
               i === moveIndex ? "bg-indigo-600 text-white"
               : i < moveIndex ? "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60"
               : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600"
             }`}
           >
-            {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{move}
+            {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}
+            <MoveQualityMoveLabel
+              san={move}
+              quality={step.moveQualities?.[i]}
+              fen={step.fen}
+              moveIndex={i}
+              className={i === moveIndex ? "!text-white" : undefined}
+            />
           </button>
         ))}
       </div>

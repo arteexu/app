@@ -3,7 +3,10 @@
 // The celebratory takeover shown when a graded step is solved. Render it as a
 // child of the LessonLayout right-panel (which is `relative`) — it overlays the
 // panel with a gradient, confetti, stars, an XP count-up, and bonus chips.
-import { useSoundOnActive } from "@/hooks/useLessonSounds"
+import { useState } from "react"
+import { useLessonSounds, useSoundOnActive } from "@/hooks/useLessonSounds"
+import { KeyConceptUnlockCard } from "@/components/key-concepts/KeyConceptUnlockCard"
+import { unlockKeyConcept } from "@/lib/key-concepts-storage"
 import { Confetti, Stars, useCountUp } from "./RewardFx"
 
 interface Props {
@@ -17,6 +20,8 @@ interface Props {
   comboLabel?: string     // e.g. "4× combo" — omit to hide
   isLastStep?: boolean
   onContinue: () => void
+  keyConceptId?: string
+  keyConceptIds?: string[]
 }
 
 function Chip({ icon, label }: { icon: string; label: string }) {
@@ -30,7 +35,13 @@ function Chip({ icon, label }: { icon: string; label: string }) {
 export function SolveReward({
   run = true, xp = 60, stars = 3, title = "Checkmate!", subtitle,
   firstTry = true, speedBonus = false, comboLabel, isLastStep, onContinue,
+  keyConceptId, keyConceptIds,
 }: Props) {
+  const conceptIds = [...new Set([...(keyConceptIds ?? []), ...(keyConceptId ? [keyConceptId] : [])])]
+  const [conceptUnlocks] = useState(() =>
+    conceptIds.map((id) => ({ id, celebrate: unlockKeyConcept(id) })),
+  )
+  const { play } = useLessonSounds()
   useSoundOnActive(run, "stepComplete")
   const xpShown = useCountUp(xp, run, 950)
   return (
@@ -57,10 +68,20 @@ export function SolveReward({
           {firstTry && <Chip icon="🎯" label="First try" />}
           {comboLabel && <Chip icon="🔥" label={comboLabel} />}
         </div>
+        {conceptUnlocks.length > 0 && (
+          <div className="flex flex-col gap-2 w-full mt-2">
+            {conceptUnlocks.map(({ id, celebrate }) => (
+              <KeyConceptUnlockCard key={id} conceptId={id} celebrate={celebrate} />
+            ))}
+          </div>
+        )}
       </div>
 
       <button
-        onClick={onContinue}
+        onClick={() => {
+          play("stepAdvance")
+          onContinue()
+        }}
         className="mt-auto bg-white text-indigo-700 font-display font-extrabold text-[17px] py-3.5 rounded-2xl cursor-pointer shadow-[0_12px_28px_-10px_rgba(0,0,0,0.4)] hover:scale-[1.02] active:scale-95 transition-transform"
       >
         {isLastStep ? "Finish lesson →" : "Continue →"}

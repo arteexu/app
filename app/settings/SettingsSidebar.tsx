@@ -7,6 +7,7 @@ import { clsx } from "clsx"
 const NAV_ITEMS = [
   { href: "/settings/profile",     label: "Profile",     icon: "👤" },
   { href: "/settings/board",       label: "Settings",    icon: "⚙️" },
+  { href: "/settings/sounds",      label: "Sounds",      icon: "🔊" },
   { href: "/settings/appearance",  label: "Appearance",  icon: "🎨" },
   { href: "/settings/statistics",  label: "Statistics",  icon: "📊" },
 ]

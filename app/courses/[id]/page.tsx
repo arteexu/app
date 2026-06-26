@@ -1,13 +1,14 @@
 import { redirect, notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { getCompletedLessonCount, getCourseProgress, getNextLesson } from "@/lib/progress"
-import { getCourse } from "@/lib/courses"
+import { getCourse, getCourseLessons } from "@/lib/courses"
 import type { Course } from "@/lib/types"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { CourseMasteryHeader } from "@/components/ui/CourseMasteryHeader"
 import { MasteryStaircase } from "@/components/ui/MasteryStaircase"
 import { CourseKeyConceptsPanel } from "@/components/key-concepts/CourseKeyConceptsPanel"
+import { CourseTacticalPatternsPanel } from "@/components/tactical-patterns/CourseTacticalPatternsPanel"
 
 export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -37,7 +38,7 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
   const inProgressId = [...inProgressMap.keys()][0]
   const progress = getCourseProgress(typedCourse, completedIds)
   const nextLesson = getNextLesson(typedCourse, completedIds)
-  const flatLessons = typedCourse.chapters.flatMap(ch => ch.lessons)
+  const flatLessons = getCourseLessons(typedCourse)
   const totalMinutes = flatLessons.reduce((sum, l) => sum + (l.estimatedMinutes ?? 0), 0)
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
 
@@ -45,7 +46,7 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Quest" }}
+          back={{ href: "/dashboard", label: "Courses" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
         />
       }
@@ -79,6 +80,7 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
         </div>
 
         <CourseKeyConceptsPanel lessonIds={flatLessons.map((l) => l.id)} />
+        <CourseTacticalPatternsPanel lessonIds={flatLessons.map((l) => l.id)} />
       </main>
     </AppPageShell>
   )

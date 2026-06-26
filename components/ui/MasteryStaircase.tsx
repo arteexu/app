@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { Fragment, useId } from "react"
 import type { Course } from "@/lib/types"
+import { getChapterLessons } from "@/lib/courses"
+import { getCourseLessons } from "@/lib/courses"
 import { isLessonUnlocked } from "@/lib/progress"
 import { getLessonIcon } from "@/lib/lesson-icons"
 import { clsx } from "clsx"
@@ -299,8 +301,18 @@ function ChapterLanding({
   )
 }
 
+function SectionLanding({ title }: { title: string }) {
+  return (
+    <div className="relative z-[1] w-full max-w-2xl mx-auto mb-10 lg:mb-14 text-center mastery-stair-landing">
+      <h3 className="font-display text-lg sm:text-xl font-extrabold text-gray-800 dark:text-slate-200">
+        {title}
+      </h3>
+    </div>
+  )
+}
+
 export function MasteryStaircase({ course, completedLessonIds, inProgressMap, activeLessonId }: Props) {
-  const flatLessons = course.chapters.flatMap(ch => ch.lessons)
+  const flatLessons = getCourseLessons(course)
   const totalLessons = flatLessons.length
   const allComplete = totalLessons > 0 && completedLessonIds.length >= totalLessons
   let globalStep = 0
@@ -325,7 +337,8 @@ export function MasteryStaircase({ course, completedLessonIds, inProgressMap, ac
               variant={chapterIdx === 0 ? "base" : "mid"}
             />
 
-            {chapter.lessons.map((lesson, lessonIdx) => {
+            {getChapterLessons(chapter).map((lesson, lessonIdx) => {
+              const sectionTitle = chapter.sections?.find((s) => s.lessons[0]?.id === lesson.id)?.title
               globalStep++
               const stepNumber = globalStep
               const align = alignForStep(stepNumber)
@@ -333,6 +346,9 @@ export function MasteryStaircase({ course, completedLessonIds, inProgressMap, ac
 
               return (
                 <Fragment key={lesson.id}>
+                  {sectionTitle && (
+                    <SectionLanding title={sectionTitle} />
+                  )}
                   <SpineConnector
                     from={fromAlign}
                     to={align}
@@ -341,7 +357,8 @@ export function MasteryStaircase({ course, completedLessonIds, inProgressMap, ac
                   <div
                     className={clsx(
                       "relative z-[1] w-full px-2 sm:px-6 mb-8 lg:mb-12 lg:[transform:translateY(calc(var(--step)*-3px))]",
-                      lessonIdx === 0 && "mt-6 lg:mt-10",
+                      lessonIdx === 0 && !sectionTitle && "mt-6 lg:mt-10",
+                      lessonIdx === 0 && sectionTitle && "mt-2 lg:mt-4",
                       align === "left" ? "lg:pr-[18%]" : "lg:pl-[18%]"
                     )}
                     style={{ ["--step" as string]: stepNumber }}

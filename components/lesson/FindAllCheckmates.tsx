@@ -6,6 +6,8 @@ import { Chessboard } from "react-chessboard"
 import type { PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from "react-chessboard"
 import { Button } from "@/components/ui/button"
 import { LessonLayout } from "./LessonLayout"
+import { KeyConceptUnlockCard } from "@/components/key-concepts/KeyConceptUnlockCard"
+import { unlockKeyConcept } from "@/lib/key-concepts-storage"
 import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
 import { useLessonSounds } from "@/hooks/useLessonSounds"
 import { isBoardSoundEnabled, playBoardMoveSound } from "@/lib/ui-sounds"
@@ -16,6 +18,8 @@ import { buildSelectionStyles, buildUserHighlightStyles, composeSquareStyles, DR
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { clsx } from "clsx"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { SanNotation } from "@/components/chess/SanNotation"
+import { sideToMove } from "@/lib/engine/format"
 
 interface Props {
   step: FindAllCheckMatesType
@@ -54,6 +58,14 @@ export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
 
   const boardRef = usePieceLatchRef(latchAnimSquare)
   const targetNorm   = step.checkmates.map(normSan)
+  const [conceptUnlocks, setConceptUnlocks] = useState<{ id: string; celebrate: boolean }[]>([])
+
+  useEffect(() => {
+    if (!allFound) return
+    const ids = [...new Set([...(step.keyConceptIds ?? []), ...(step.keyConceptId ? [step.keyConceptId] : [])])]
+    if (ids.length === 0) return
+    setConceptUnlocks(ids.map((id) => ({ id, celebrate: unlockKeyConcept(id) })))
+  }, [allFound, step.keyConceptId, step.keyConceptIds])
 
   useEffect(() => {
     if (allFound) play("stepComplete")
@@ -194,7 +206,11 @@ export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
                     : "bg-gray-50 dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-gray-300 dark:text-slate-600"
                 )}
               >
-                {isFound ? `✓ ${target}` : "?"}
+                {isFound ? (
+                  <>
+                    ✓ <SanNotation san={target} side={sideToMove(step.fen)} />
+                  </>
+                ) : "?"}
               </div>
             )
           })}
@@ -224,6 +240,9 @@ export function FindAllCheckmates({ step, onComplete, isLastStep }: Props) {
       {/* Completion */}
       {allFound && (
         <div className="flex flex-col gap-4">
+          {conceptUnlocks.map(({ id, celebrate }) => (
+            <KeyConceptUnlockCard key={id} conceptId={id} celebrate={celebrate} />
+          ))}
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl px-5 py-4 flex flex-col gap-2">
             <p className="text-lg font-extrabold text-green-700 dark:text-green-400">
               🎯 {step.successMessage ?? `All ${step.checkmates.length} checkmates found!`}

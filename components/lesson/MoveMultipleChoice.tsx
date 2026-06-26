@@ -14,6 +14,8 @@ import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
 import { useLessonSounds } from "@/hooks/useLessonSounds"
 import { clsx } from "clsx"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { SanNotation } from "@/components/chess/SanNotation"
+import { sideToMove } from "@/lib/engine/format"
 
 interface Props {
   step: MoveMultipleChoiceType
@@ -50,8 +52,13 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
   const [solveSeconds, setSolveSeconds] = useState(0)
 
   function previewCandidate(candidate: MoveCandidate) {
-    if (submitted && !solved) return
     if (solved) return
+    if (submitted && !solved) {
+      setSubmitted(false)
+      setSubmittedSan(null)
+      setSubmittedResult(null)
+      setRevealed(false)
+    }
     const move = getMoveSquares(step.fen, candidate.san)
     if (!move) return
     setPreviewSan(candidate.san)
@@ -130,7 +137,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
             <button
               key={c.san}
               onClick={() => previewCandidate(c)}
-              disabled={(submitted && !solved) || solved}
+              disabled={solved || (submitted && submittedResult?.isCorrect)}
               className={clsx(
                 "flex items-center gap-3 text-left px-4 py-3.5 rounded-2xl border-2 transition-all duration-150 select-none",
                 isPreviewing && "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 shadow-[0_6px_16px_-8px_rgba(99,102,241,0.5)]",
@@ -144,9 +151,11 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
                 ],
               )}
             >
-              <span className={clsx("font-mono text-sm font-extrabold rounded-lg px-2.5 py-1.5 flex-shrink-0",
+              <span className={clsx("text-sm font-extrabold rounded-lg px-2.5 py-1.5 flex-shrink-0 inline-flex items-baseline",
                 isSubmitted && !c.isCorrect ? "bg-white dark:bg-slate-900 text-red-600 border border-red-300"
-                  : "bg-slate-900 dark:bg-slate-950 text-white")}>{c.san}</span>
+                  : "bg-slate-900 dark:bg-slate-950 text-white")}>
+                <SanNotation san={c.san} side={sideToMove(step.fen)} />
+              </span>
               <span className={clsx("flex-1 text-sm leading-snug",
                 (isSubmitted && !c.isCorrect) ? "text-red-700 dark:text-red-400" : "text-gray-600 dark:text-slate-300")}>
                 {c.shortFeedback ? (isPreviewing || isSubmitted ? c.shortFeedback : c.shortFeedback) : ""}
@@ -168,7 +177,7 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
           onClick={submit}
           className="self-start mt-1 px-6 py-3 bg-indigo-600 text-white rounded-xl font-display font-extrabold text-sm transition-all shadow-[0_4px_0_#312e81] hover:shadow-[0_2px_0_#312e81] hover:translate-y-[2px] active:shadow-none active:translate-y-[4px]"
         >
-          Submit: {previewSan}
+          Submit: <SanNotation san={previewSan} side={sideToMove(step.fen)} className="inline-flex" />
         </button>
       )}
 
@@ -211,6 +220,8 @@ export function MoveMultipleChoice({ step, onComplete, isLastStep }: Props) {
           title={step.successMessage ? "Solved!" : "Checkmate!"}
           subtitle={step.successMessage ?? `${submittedSan} — well found.`}
           isLastStep={isLastStep}
+          keyConceptId={step.keyConceptId}
+          keyConceptIds={step.keyConceptIds}
           onContinue={() => onComplete(true)}
         />
       )}

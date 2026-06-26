@@ -47,8 +47,8 @@ export function IdentifyStep({ step, onComplete, isLastStep }: Props) {
 
   return (
     <LessonLayout board={board}>
-      <p className="text-xl font-semibold text-gray-900 leading-snug">{step.question}</p>
-      <p className="text-sm text-gray-500">Click the correct square on the board.</p>
+      <p className="text-xl font-semibold text-gray-900 dark:text-slate-100 leading-snug">{step.question}</p>
+      <p className="text-sm text-gray-500 dark:text-slate-400">Click the correct square on the board.</p>
 
       {step.hint && !submitted && (
         <button onClick={() => setShowHint(v => !v)} className="text-sm text-indigo-500 hover:underline self-start">
@@ -66,7 +66,7 @@ export function IdentifyStep({ step, onComplete, isLastStep }: Props) {
       )}
 
       {!submitted && !clicked && (
-        <p className="text-sm text-gray-400 italic">Click a square on the board to select it.</p>
+        <p className="text-sm text-gray-400 dark:text-slate-500 italic">Click a square on the board to select it.</p>
       )}
 
       {submitted && (

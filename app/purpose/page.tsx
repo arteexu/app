@@ -46,7 +46,7 @@ export default async function PurposePage() {
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Quest" }}
+          back={{ href: "/dashboard", label: "Courses" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
         />
       }
@@ -91,7 +91,7 @@ export default async function PurposePage() {
             href="/dashboard"
             className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/25 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
           >
-            Back to your quest
+            Back to Courses
           </Link>
         </div>
       </main>

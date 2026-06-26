@@ -27,7 +27,7 @@ export function CourseKeyConceptsPanel({ lessonIds }: Props) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
         <div>
           <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
-            Key concepts in this course
+            Key Concepts in this course
           </p>
           <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 mt-1">
             Ideas to carry into your games

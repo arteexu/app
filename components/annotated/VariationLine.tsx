@@ -8,6 +8,8 @@ import { clsx } from "clsx"
 import type { Variation } from "@/lib/annotated/types"
 import { nagStyle } from "@/lib/annotated/nags"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { SanNotation } from "@/components/chess/SanNotation"
+import { colorFromPly } from "@/lib/san-notation"
 
 interface Props {
   variation: Variation
@@ -18,6 +20,7 @@ interface Props {
 interface RenderedMove {
   prefix: string
   san: string
+  ply: number
   glyph?: string
   comment?: string
 }
@@ -29,7 +32,7 @@ function renderMoves(variation: Variation): RenderedMove[] {
     const moveNumber = Math.floor((ply - 1) / 2) + 1
     const isWhite = ply % 2 === 1
     const prefix = isWhite ? `${moveNumber}.` : i === 0 ? `${moveNumber}...` : ""
-    out.push({ prefix, san: m.san, glyph: m.nags?.[0], comment: m.comment })
+    out.push({ prefix, san: m.san, ply, glyph: m.nags?.[0], comment: m.comment })
     ply++
   })
   return out
@@ -37,7 +40,7 @@ function renderMoves(variation: Variation): RenderedMove[] {
 
 export function VariationLine({ variation, insteadOf }: Props) {
   const moves = renderMoves(variation)
-  const firstSan = moves[0] ? `${moves[0].prefix}${moves[0].san}` : "sideline"
+  const first = moves[0]
 
   return (
     <details className="group rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50/70 dark:bg-slate-800/50 open:bg-white dark:open:bg-slate-800">
@@ -48,7 +51,14 @@ export function VariationLine({ variation, insteadOf }: Props) {
         <span className="text-gray-400 dark:text-slate-500 font-normal">
           {insteadOf ? `Instead of ${insteadOf}:` : "Sideline:"}
         </span>
-        <span className="font-mono text-indigo-700 dark:text-indigo-300">{firstSan}</span>
+        {first ? (
+          <span className="inline-flex items-baseline gap-0.5 text-indigo-700 dark:text-indigo-300">
+            {first.prefix && <span className="font-mono">{first.prefix}</span>}
+            <SanNotation san={first.san} color={colorFromPly(first.ply - 1)} />
+          </span>
+        ) : (
+          <span>sideline</span>
+        )}
         <span className="ml-auto text-[11px] font-normal text-gray-400 dark:text-slate-500 group-open:hidden">
           show line
         </span>
@@ -63,9 +73,9 @@ export function VariationLine({ variation, insteadOf }: Props) {
         <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
           {moves.map((m, i) => (
             <span key={i} className="inline-flex items-baseline gap-1">
-              <span className="font-mono text-gray-800 dark:text-slate-200">
-                {m.prefix}
-                {m.san}
+              <span className="inline-flex items-baseline gap-0.5 text-gray-800 dark:text-slate-200">
+                {m.prefix && <span className="font-mono">{m.prefix}</span>}
+                <SanNotation san={m.san} color={colorFromPly(m.ply - 1)} />
                 {m.glyph && (
                   <span className={clsx("ml-0.5 px-1 rounded text-[11px] font-bold align-baseline", nagStyle(m.glyph).className)}>
                     {m.glyph}

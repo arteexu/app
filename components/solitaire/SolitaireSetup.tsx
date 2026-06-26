@@ -7,15 +7,13 @@
 import { useEffect, useMemo, useState } from "react"
 import { Chessboard } from "react-chessboard"
 import { clsx } from "clsx"
-import type { SolitaireGame, SolitaireSetup } from "@/lib/solitaire/types"
+import type { Side, SolitaireGame, SolitaireSetup } from "@/lib/solitaire/types"
 import {
   getAllGames,
   getGame,
-  getGamesByOpening,
   getOpenings,
   groupByEra,
   isAnnotatedGame,
-  pickRandomGame,
 } from "@/lib/solitaire/games"
 import {
   getStartPlyBounds,
@@ -31,6 +29,7 @@ import { buildUserHighlightStyles, composeSquareStyles } from "@/lib/legal-move-
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { DifficultyPips } from "./DifficultyPips"
 import { FlipBoardButton } from "./FlipBoardButton"
+import { SanNotation } from "@/components/chess/SanNotation"
 import { AnnotatedGameBadge } from "./AnnotatedGameBadge"
 
 interface Props {
@@ -52,6 +51,10 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
   useEffect(() => setMounted(true), [])
 
   const [opening, setOpening] = useState<string | null>(initialSetup?.game.opening ?? null)
+  // Filter by the side the featured (winning) player had — i.e. the side the
+  // learner will guess. null = both colors.
+  const [color, setColor] = useState<Side | null>(null)
+  const [search, setSearch] = useState("")
   const [gameId, setGameId] = useState<string>(initialSetup?.game.id ?? allGames[0].id)
   const game = getGame(gameId) ?? allGames[0]
 
@@ -78,8 +81,23 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId])
 
-  const gamesInOpening = useMemo(() => getGamesByOpening(opening), [opening])
-  const eraGroups = useMemo(() => groupByEra(gamesInOpening), [gamesInOpening])
+  // Combined client-side filter: opening AND color AND free-text search (all
+  // applied together). See filterGames() for the matching rules.
+  const filteredGames = useMemo(
+    () => filterGames(allGames, opening, color, search),
+    [allGames, opening, color, search]
+  )
+
+  const eraGroups = useMemo(() => groupByEra(filteredGames), [filteredGames])
+  const hasActiveFilters = opening !== null || color !== null || search.trim() !== ""
+
+  // Keep the selected game inside the current filter set: if a filter change
+  // drops the selection out of view, jump to the first remaining match so the
+  // right-hand preview/setup panel always reflects a game that's actually listed.
+  // Reconciled at event time (in the change handlers) rather than in an effect.
+  function reconcileSelection(next: SolitaireGame[]) {
+    if (next.length > 0 && !next.some((g) => g.id === gameId)) setGameId(next[0].id)
+  }
 
   const clampedStartPly = Math.min(Math.max(startPly, plyBounds.minPly), plyBounds.maxPly)
   const clampedBoardPly = Math.min(Math.max(boardPly, 0), game.moves.length)
@@ -94,10 +112,6 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
   const startSide = sideToMoveAt(clampedStartPly)
   const startMoveNo = fullMoveNumber(clampedStartPly)
   const startLastSan = clampedStartPly > 0 ? game.moves[clampedStartPly - 1] : null
-  const startLastMoveLabel =
-    clampedStartPly > 0
-      ? `${fullMoveNumber(clampedStartPly - 1)}${(clampedStartPly - 1) % 2 === 0 ? "." : "…"} ${startLastSan}`
-      : null
 
   function setStartAndBoardPly(next: number) {
     const clamped = Math.min(Math.max(next, plyBounds.minPly), plyBounds.maxPly)
@@ -137,12 +151,33 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
 
   function changeOpening(next: string | null) {
     setOpening(next)
-    const pool = getGamesByOpening(next)
-    if (!pool.some((g) => g.id === gameId)) setGameId(pool[0].id)
+    reconcileSelection(filterGames(allGames, next, color, search))
   }
 
+  function changeColor(next: Side | null) {
+    setColor(next)
+    reconcileSelection(filterGames(allGames, opening, next, search))
+  }
+
+  function changeSearch(next: string) {
+    setSearch(next)
+    reconcileSelection(filterGames(allGames, opening, color, next))
+  }
+
+  function clearFilters() {
+    setOpening(null)
+    setColor(null)
+    setSearch("")
+    reconcileSelection(allGames)
+  }
+
+  // Shuffle within whatever is currently filtered (never repeats the current game
+  // when another match exists).
   function shuffle() {
-    setGameId(pickRandomGame(opening, gameId).id)
+    const others = filteredGames.filter((g) => g.id !== gameId)
+    const pool = others.length > 0 ? others : filteredGames
+    if (pool.length === 0) return
+    setGameId(pool[Math.floor(Math.random() * pool.length)].id)
   }
 
   function start() {
@@ -168,21 +203,87 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
           </p>
         </header>
 
-        {/* ── Opening filter ── */}
+        {/* ── Filter / search bar ── */}
         <section className="flex flex-col gap-3">
           <h2 className="font-display text-lg font-extrabold text-gray-900 dark:text-slate-100">
-            1 · Choose an opening
+            1 · Find a game
           </h2>
-          <div className="flex flex-wrap gap-2">
-            <FilterChip label={`All openings (${allGames.length})`} active={opening === null} onClick={() => changeOpening(null)} />
-            {openings.map((o) => (
-              <FilterChip
-                key={o.opening}
-                label={`${o.opening} (${o.count})`}
-                active={opening === o.opening}
-                onClick={() => changeOpening(o.opening)}
+          <div className="rounded-3xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm p-4 sm:p-5 flex flex-col gap-4">
+            {/* Search */}
+            <div className="relative">
+              <span className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-gray-400 dark:text-slate-500">
+                <SearchIcon />
+              </span>
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => changeSearch(e.target.value)}
+                placeholder="Search player, opponent, event, or opening…"
+                aria-label="Search games"
+                className="w-full rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 pl-10 pr-9 py-2.5 text-sm font-medium text-gray-900 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
-            ))}
+              {search !== "" && (
+                <button
+                  onClick={() => changeSearch("")}
+                  aria-label="Clear search"
+                  className="absolute inset-y-0 right-2.5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-slate-300 transition"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Opening + color */}
+            <div className="grid sm:grid-cols-2 gap-3">
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                  Opening
+                </span>
+                <select
+                  value={opening ?? ""}
+                  onChange={(e) => changeOpening(e.target.value || null)}
+                  aria-label="Filter by opening"
+                  className="appearance-none rounded-2xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_0.75rem_center] bg-[length:1.1rem] pr-10 cursor-pointer"
+                >
+                  <option value="">All openings ({allGames.length})</option>
+                  {openings.map((o) => (
+                    <option key={o.opening} value={o.opening}>
+                      {o.opening} ({o.count})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="flex flex-col gap-1.5">
+                <span className="text-xs font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                  You play (winning side)
+                </span>
+                <div className="grid grid-cols-3 gap-1 rounded-2xl bg-gray-100 dark:bg-slate-900/60 p-1">
+                  <ColorTab label="All" active={color === null} onClick={() => changeColor(null)} />
+                  <ColorTab label="♔ White" active={color === "white"} onClick={() => changeColor("white")} />
+                  <ColorTab label="♚ Black" active={color === "black"} onClick={() => changeColor("black")} />
+                </div>
+              </div>
+            </div>
+
+            {/* Result count + clear */}
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <p className="text-sm font-semibold text-gray-500 dark:text-slate-400">
+                Showing{" "}
+                <span className="font-display font-extrabold text-gray-900 dark:text-slate-100">
+                  {filteredGames.length}
+                </span>{" "}
+                of {allGames.length} {allGames.length === 1 ? "game" : "games"}
+              </p>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
           </div>
         </section>
 
@@ -196,31 +297,50 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
               </h2>
               <button
                 onClick={shuffle}
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 px-3 py-1.5 rounded-full transition"
+                disabled={filteredGames.length === 0}
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 px-3 py-1.5 rounded-full transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
               >
                 🎲 Surprise me
               </button>
             </div>
-            <div className="flex flex-col gap-5">
-              {eraGroups.map((group) => (
-                <div key={group.era} className="flex flex-col gap-2">
-                  <div className="flex items-baseline gap-2 border-b border-gray-100 dark:border-slate-800 pb-1.5">
-                    <h3 className="font-display text-sm font-extrabold text-gray-700 dark:text-slate-200">
-                      {group.era}
-                    </h3>
-                    <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-500">{group.subtitle}</span>
-                    <span className="ml-auto text-[11px] font-semibold text-gray-300 dark:text-slate-600">
-                      {group.games.length} {group.games.length === 1 ? "game" : "games"}
-                    </span>
+            {filteredGames.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50/60 dark:bg-slate-800/40 p-10 text-center">
+                <div className="text-4xl mb-2" aria-hidden>🔍</div>
+                <p className="font-display font-extrabold text-gray-900 dark:text-slate-100">
+                  No games match your filters
+                </p>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                  Try a different opening, color, or search term.
+                </p>
+                <button
+                  onClick={clearFilters}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full transition"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-5">
+                {eraGroups.map((group) => (
+                  <div key={group.era} className="flex flex-col gap-2">
+                    <div className="flex items-baseline gap-2 border-b border-gray-100 dark:border-slate-800 pb-1.5">
+                      <h3 className="font-display text-sm font-extrabold text-gray-700 dark:text-slate-200">
+                        {group.era}
+                      </h3>
+                      <span className="text-[11px] font-semibold text-gray-400 dark:text-slate-500">{group.subtitle}</span>
+                      <span className="ml-auto text-[11px] font-semibold text-gray-300 dark:text-slate-600">
+                        {group.games.length} {group.games.length === 1 ? "game" : "games"}
+                      </span>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {group.games.map((g) => (
+                        <GameCard key={g.id} game={g} selected={g.id === gameId} onSelect={() => setGameId(g.id)} />
+                      ))}
+                    </div>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    {group.games.map((g) => (
-                      <GameCard key={g.id} game={g} selected={g.id === gameId} onSelect={() => setGameId(g.id)} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Configure + preview */}
@@ -293,10 +413,19 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
               </div>
               <div className="mt-2 flex flex-col gap-1">
                 <p className="text-xs text-gray-500 dark:text-slate-400 leading-snug">
-                  {startLastMoveLabel ? (
+                  {startLastSan ? (
                     <>
                       Solitaire begins after{" "}
-                      <span className="font-mono text-gray-600 dark:text-slate-300">{startLastMoveLabel}</span>.{" "}
+                      <span className="inline-flex items-baseline gap-0.5 text-gray-600 dark:text-slate-300">
+                        <span className="font-mono">
+                          {fullMoveNumber(clampedStartPly - 1)}
+                          {(clampedStartPly - 1) % 2 === 0 ? "." : "…"}
+                        </span>
+                        <SanNotation
+                          san={startLastSan}
+                          color={sideToMoveAt(clampedStartPly - 1)}
+                        />
+                      </span>.{" "}
                     </>
                   ) : (
                     <>Solitaire begins at move 1 (starting position). </>
@@ -332,16 +461,52 @@ export function SolitaireSetupScreen({ initialSetup, onStart }: Props) {
   )
 }
 
-function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+/**
+ * Apply the opening + color + free-text filters together (AND logic).
+ * - `opening`: exact opening name, or null for all openings.
+ * - `color`:  the side the featured (winning) player had — null for both.
+ * - `search`: case-insensitive substring matched against title, both player
+ *             names, event and opening name.
+ */
+function filterGames(
+  games: SolitaireGame[],
+  opening: string | null,
+  color: Side | null,
+  search: string
+): SolitaireGame[] {
+  const q = search.trim().toLowerCase()
+  return games.filter((g) => {
+    if (opening && g.opening !== opening) return false
+    if (color && playableSide(g) !== color) return false
+    if (q) {
+      const haystack = [g.title, g.white, g.black, g.event ?? "", g.opening, g.eco]
+        .join(" ")
+        .toLowerCase()
+      if (!haystack.includes(q)) return false
+    }
+    return true
+  })
+}
+
+function SearchIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  )
+}
+
+function ColorTab({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
       aria-pressed={active}
       className={clsx(
-        "px-3.5 py-1.5 rounded-full text-sm font-bold transition border",
+        "rounded-xl py-2 text-sm font-bold transition",
         active
-          ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-          : "bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 hover:text-indigo-600 dark:hover:text-indigo-400"
+          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm"
+          : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200"
       )}
     >
       {label}

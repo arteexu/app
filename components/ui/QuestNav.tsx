@@ -3,7 +3,14 @@ import Link from "next/link"
 import { clsx } from "clsx"
 
 interface Props {
-  active?: "dashboard" | "solitaire" | "profile" | "key-concepts"
+  active?:
+    | "dashboard"
+    | "solitaire"
+    | "analysis"
+    | "profile"
+    | "key-concepts"
+    | "tactical-patterns"
+    | "leaderboard"
   avatarInitial?: string
   /** optional left "back" link, e.g. on settings pages */
   back?: { href: string; label: string }
@@ -31,9 +38,12 @@ export function QuestNav({ active, avatarInitial = "?", back }: Props) {
       </Link>
 
       <div className="ml-auto flex items-center gap-0.5 sm:gap-1.5 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <NavLink href="/dashboard" label="Quest" active={active === "dashboard"} />
+        <NavLink href="/dashboard" label="Courses" active={active === "dashboard"} />
         <NavLink href="/solitaire" label="Solitaire" longLabel="Solitaire Chess" active={active === "solitaire"} />
-        <NavLink href="/key-concepts" label="Concepts" longLabel="Key concepts" active={active === "key-concepts"} />
+        <NavLink href="/leaderboard" label="Ranks" longLabel="Leaderboard" active={active === "leaderboard"} />
+        <NavLink href="/analysis" label="Analysis" longLabel="Free Analysis" active={active === "analysis"} />
+        <NavLink href="/key-concepts" label="Concepts" longLabel="Key Concepts" active={active === "key-concepts"} />
+        <NavLink href="/tactical-patterns" label="Patterns" longLabel="Tactical Patterns" active={active === "tactical-patterns"} />
         <NavLink
           href="/settings/profile"
           label="Profile"

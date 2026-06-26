@@ -14,7 +14,8 @@
           "title": "What Is the Goal of Chess?",
           "description": "Checkmate — and how to recognize it.",
           "estimatedMinutes": 5,
-          "keyConceptIds": ["kc-checkmate"],
+          "keyConceptIds": ["kc-checkmate", "kc-back-rank-mate"],
+          "tacticalPatternIds": ["tp-back-rank-mate", "tp-smoothered-mate"],
           "steps": [
             {
               "type": "concept",
@@ -119,7 +120,8 @@
               "type": "puzzle",
               "id": "s-goal-backrank-puzzle",
               "subType": "checkmate-in-n",
-              "keyConceptId": "kc-checkmate",
+              "keyConceptIds": ["kc-checkmate", "kc-back-rank-mate"],
+              "tacticalPatternId": "tp-back-rank-mate",
               "question": "White to move. The black king is trapped behind its own pawns. Find checkmate in 1.",
               "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
               "orientation": "white",
@@ -155,6 +157,7 @@
               "type": "puzzle",
               "id": "s-goal-smothered-puzzle",
               "subType": "checkmate-in-n",
+              "tacticalPatternId": "tp-smoothered-mate",
               "question": "White to move. The black king is smothered by its own pieces. Find the knight checkmate in 1.",
               "fen": "6rk/6pp/8/6N1/8/8/5PPP/6K1 w - - 0 1",
               "orientation": "white",
@@ -198,6 +201,7 @@
           "description": "One of the most common checkmates — a rook or queen delivers mate on the first or eighth rank.",
           "estimatedMinutes": 8,
           "keyConceptIds": ["kc-back-rank-mate"],
+          "tacticalPatternIds": ["tp-back-rank-mate"],
           "steps": [
             {
               "type": "concept",
@@ -224,8 +228,7 @@
               "orientation": "white",
               "moves": ["Qd8+", "Rxd8", "Rxd8#"],
               "moveAnnotations": {
-                "0": "Qd8+ — White sacrifices the queen! D8 is empty, so this is a check along rank 8, not a capture. The black king is already trapped — it can't escape to f8 or h8 (both covered by the rook), and f7/g7/h7 are blocked by its own pawns. Black must take.",
-                "1": "Rxd8 — Black has no choice. The rook captures the white rook to escape check. But now the d-file is open all the way to d3.",
+                "0": "Qd8+ — White sacrifices the queen! The black king is already trapped — it can't escape to f8 or h8 (both covered by the rook), and f7/g7/h7 are blocked by its own pawns. Black must take.",
                 "2": "Rxd8# — The second rook sweeps up the d-file to d8, capturing the black rook and delivering checkmate. The king still cannot escape — rank 8 is now controlled by this rook, and all 7th rank squares remain blocked."
               }
             },
@@ -234,6 +237,7 @@
               "id": "s-brm-puzzle1",
               "subType": "checkmate-in-n",
               "keyConceptId": "kc-back-rank-mate",
+              "tacticalPatternId": "tp-back-rank-mate",
               "question": "White to move. Deliver checkmate in 1.",
               "fen": "6k1/6p1/6P1/8/8/8/8/R6K w - - 0 1",
               "orientation": "white",
@@ -305,6 +309,12 @@
           "title": "Common Mating Patterns",
           "description": "Four essential checkmating patterns every chess player must recognise — from the lawnmower to the epaulette.",
           "estimatedMinutes": 14,
+          "tacticalPatternIds": [
+            "tp-rook-ladder",
+            "tp-arabian-mate",
+            "tp-morphy-mate",
+            "tp-swiss-cheese-mate"
+          ],
           "steps": [
             {
               "type": "concept",
@@ -335,6 +345,7 @@
               "id": "s-mp-rook-ladder",
               "title": "The Rook Ladder",
               "description": "Two rooks cut off rank after rank, driving the lone king toward the edge. Step through each move to see the technique.",
+              "tacticalPatternId": "tp-rook-ladder",
               "fen": "7K/7R/6R1/k7/8/8/8/8 w - - 0 1",
               "orientation": "white",
               "moves": ["Rh5+", "Kb4", "Rg4+", "Kc3", "Rh3+", "Kd2", "Rg2+", "Ke1", "Rh1#"],
@@ -354,6 +365,7 @@
               "type": "puzzle",
               "id": "s-mp-arabian",
               "subType": "checkmate-in-n",
+              "tacticalPatternId": "tp-arabian-mate",
               "question": "White to move. The black king is in the corner. Use the knight and rook to deliver the Arabian Mate in 1.",
               "fen": "7k/R7/5N2/5K2/8/8/8/8 w - - 0 1",
               "orientation": "white",
@@ -374,6 +386,7 @@
               "type": "puzzle",
               "id": "s-mp-morphy",
               "subType": "checkmate-in-n",
+              "tacticalPatternId": "tp-morphy-mate",
               "question": "White to move. The black king is sheltered by its own pawns — but those pawns are now a prison. Find Morphy's Mate in 1.",
               "fen": "6k1/5p1p/7B/8/8/8/8/3R3K w - - 0 1",
               "orientation": "white",
@@ -394,6 +407,7 @@
               "type": "puzzle",
               "id": "s-mp-swiss-cheese",
               "subType": "checkmate-in-n",
+              "tacticalPatternId": "tp-swiss-cheese-mate",
               "question": "White to move. Black's pawn structure has holes like Swiss cheese — dark squares g6, g7, and h8 are all weak. Find the queen checkmate in 1.",
               "fen": "q5k1/5p1p/5QpP/8/8/8/5PPP/6K1 w - - 0 1",
               "orientation": "white",
@@ -500,63 +514,14 @@
     {
       "id": "ch-board-vision",
       "title": "Board Vision",
-      "description": "Train your eye to see every threat — find checks, captures, and all available checkmates.",
+      "description": "Train your eye to see every threat — find all available checkmates.",
       "lessons": [
-        {
-          "id": "l-board-vision",
-          "title": "Board Vision",
-          "description": "See the whole board — find threats before they happen.",
-          "estimatedMinutes": 7,
-          "keyConceptIds": ["kc-board-vision"],
-          "steps": [
-            {
-              "type": "concept",
-              "id": "s-bv-concept",
-              "title": "Board vision: seeing threats before they land",
-              "body": "Strong players don't just look at the piece they're moving — they scan the **entire board**.\n\nEvery move changes the position. You need to ask: after I move, what can my opponent do? What squares are newly attacked? What pieces are now undefended?\n\nThe three things to scan every move:\n1. **Checks** — is the king attacked?\n2. **Captures** — can any piece be taken for free?\n3. **Threats** — what is my opponent threatening to do next?\n\nThese are also called **candidate moves** — the forcing moves you must consider first.",
-              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
-              "analogy": "Think of board vision like peripheral vision in a sport. A great basketball player doesn't stare at the ball — they see the whole court. A great chess player doesn't stare at one piece — they see every threat on the board."
-            },
-            {
-              "type": "multiple-choice",
-              "id": "s-bv-mc1",
-              "question": "What should you always check FIRST when considering a move?",
-              "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
-              "options": [
-                { "text": "Checks, captures, and threats — in that order", "explanation": "Correct. Forcing moves (checks first, then captures, then threats) narrow your candidate list and ensure you don't miss a tactic." },
-                { "text": "The move that develops the most pieces", "explanation": "Development matters, but only after you've verified your king is safe and there's no immediate tactic to play or defend." },
-                { "text": "The move your opponent least expects", "explanation": "Surprise has value, but not at the cost of missing a forced sequence. Candidate moves — checks, captures, threats — come first." },
-                { "text": "The move that controls the center", "explanation": "Center control is important in the long run, but a forcing tactic beats positional goals every time." }
-              ],
-              "correctIndex": 0
-            },
-            {
-              "type": "puzzle",
-              "id": "s-bv-puzzle1",
-              "subType": "best-move",
-              "keyConceptId": "kc-board-vision",
-              "question": "White to move. Find the only move that wins material immediately.",
-              "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
-              "orientation": "white",
-              "solution": {
-                "moves": ["Ng5"],
-                "wrongMoveExplanations": {
-                  "0": {
-                    "Nxe5": "Nxe5 loses the knight to Qd4+, forking the knight and king.",
-                    "d3": "A quiet developing move misses the immediate tactical shot."
-                  }
-                }
-              },
-              "explanation": "Ng5 attacks f7 — the weakest point in Black's position, defended only by the king. This creates an unstoppable double threat: Nxf7 winning the rook, or Bxf7+ leading to checkmate. The candidate move check reveals it immediately.",
-              "successMessage": "Nice eye! Ng5 exploits the weakest square in Black's position."
-            }
-          ]
-        },
         {
           "id": "l-find-checkmates",
           "title": "Find All the Checkmates",
           "description": "Train your board vision: find every square where the queen can deliver checkmate.",
           "estimatedMinutes": 8,
+          "keyConceptIds": ["kc-see-the-whole-board"],
           "steps": [
             {
               "type": "concept",
@@ -567,6 +532,7 @@
             {
               "type": "find-all-checkmates",
               "id": "s-fc-puzzle1",
+              "keyConceptId": "kc-see-the-whole-board",
               "question": "White to move. Find ALL 6 checkmates in this position — each one is a different queen move. The board resets after each find.",
               "fen": "k7/6Q1/1KN5/8/8/8/8/8 w - - 0 1",
               "orientation": "white",
@@ -639,6 +605,7 @@
           "title": "Choosing the Right Move",
           "description": "Four candidate moves, one winner — understand the difference between good and great.",
           "estimatedMinutes": 10,
+          "keyConceptIds": ["kc-candidate-moves"],
           "steps": [
             {
               "type": "concept",
@@ -649,6 +616,7 @@
             {
               "type": "move-multiple-choice",
               "id": "s-adv-mmc1",
+              "keyConceptId": "kc-candidate-moves",
               "question": "White to move. Which is the best among these four candidate moves? Click each one to see it played on the board, then select the strongest.",
               "fen": "7R/1Q3r2/1b2rkp1/5p2/3q1P2/8/6R1/7K w - - 0 1",
               "orientation": "white",

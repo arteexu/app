@@ -8,6 +8,10 @@ import type { SolitaireGame, Side } from "./types"
 /** Full move 50 = 100 half-moves. We never play beyond this. */
 export const MOVE_50_PLY_CAP = 100
 
+/** The standard chess starting position as a FEN. */
+export const STANDARD_START_FEN =
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+
 /** Prefer leaving at least this many guesses when defaulting the start move. */
 export const MIN_GUESSES = 3
 
@@ -33,9 +37,48 @@ export function isUserPly(ply: number, side: Side): boolean {
   return sideToMoveAt(ply) === side
 }
 
+// ── Custom-start-aware variants ──────────────────────────────────────────────
+// Curated master games start from the standard position, so ply parity alone
+// tells you the side to move and the full-move number. Engine-generated games
+// may instead start from a `startFen` (an opening's position or a pasted FEN),
+// where ply 0 can be Black to move and the move counter need not begin at 1.
+// These helpers offset by the start FEN so the play/results screens stay correct
+// for both kinds of game; they reduce to the parity helpers above when there is
+// no startFen.
+
+/** Side to move at the game's starting position (White unless `startFen` says otherwise). */
+export function startSideOf(game: SolitaireGame): Side {
+  if (!game.startFen) return "white"
+  return game.startFen.split(/\s+/)[1] === "b" ? "black" : "white"
+}
+
+/** Starting full-move number (1 unless `startFen` carries a different counter). */
+function startFullMoveOf(game: SolitaireGame): number {
+  if (!game.startFen) return 1
+  const n = Number(game.startFen.split(/\s+/)[5])
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
+/** Side to move at `ply`, accounting for a custom start FEN. */
+export function sideAtPly(game: SolitaireGame, ply: number): Side {
+  const base = startSideOf(game) === "white" ? 0 : 1
+  return (base + ply) % 2 === 0 ? "white" : "black"
+}
+
+/** 1-based full-move number at `ply`, accounting for a custom start FEN. */
+export function moveNumberAtPly(game: SolitaireGame, ply: number): number {
+  const blackStart = startSideOf(game) === "black" ? 1 : 0
+  return startFullMoveOf(game) + Math.floor((ply + blackStart) / 2)
+}
+
+/** Whether `ply` belongs to `side`, accounting for a custom start FEN. */
+export function isUserPlyIn(game: SolitaireGame, ply: number, side: Side): boolean {
+  return sideAtPly(game, ply) === side
+}
+
 /** A fresh Chess instance advanced through the first `ply` half-moves. */
 export function chessAt(game: SolitaireGame, ply: number): Chess {
-  const chess = new Chess()
+  const chess = game.startFen ? new Chess(game.startFen) : new Chess()
   const limit = Math.min(ply, game.moves.length)
   for (let i = 0; i < limit; i++) chess.move(game.moves[i])
   return chess
@@ -50,7 +93,7 @@ export function fenAfter(game: SolitaireGame, ply: number): string {
 export function userPlies(game: SolitaireGame, side: Side, startPly = 0): number[] {
   const cutoff = getCutoffPly(game)
   const plies: number[] = []
-  for (let p = startPly; p < cutoff; p++) if (isUserPly(p, side)) plies.push(p)
+  for (let p = startPly; p < cutoff; p++) if (isUserPlyIn(game, p, side)) plies.push(p)
   return plies
 }
 

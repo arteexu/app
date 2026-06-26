@@ -9,7 +9,7 @@ import { QuestHero } from "@/components/ui/QuestHero"
 import { StreakWeek } from "@/components/ui/StreakWeek"
 import { WeeklyBarChart } from "@/components/ui/WeeklyBarChart"
 import { CoursePreviewCard } from "@/components/ui/CoursePreviewCard"
-import { getCourse } from "@/lib/courses"
+import { getCourse, getCourseLessons } from "@/lib/courses"
 import { COURSE_PREVIEWS } from "@/lib/course-previews"
 import { WEEKLY_GOAL_HRS } from "@/lib/user-stats"
 
@@ -77,7 +77,7 @@ export default async function Dashboard() {
   const courseCards = COURSE_PREVIEWS.map(preview => {
     const course = getCourse(preview.id)
     if (!course) return null
-    const lessons = course.chapters.flatMap(ch => ch.lessons)
+    const lessons = getCourseLessons(course)
     const totalMinutes = lessons.reduce((sum, l) => sum + (l.estimatedMinutes ?? 0), 0)
     const completedCount = completedIds.filter(id => lessons.some(l => l.id === id)).length
     return {
@@ -108,6 +108,57 @@ export default async function Dashboard() {
           </div>
         </div>
 
+        <section aria-labelledby="review-heading">
+          <div className="mb-3">
+            <h2 id="review-heading" className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
+              Review
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+              Revisit concepts and tactical patterns you&apos;ve unlocked across lessons.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Link
+              href="/key-concepts"
+              className="group rounded-2xl border-2 border-indigo-200/70 dark:border-indigo-800/60 bg-white dark:bg-slate-800 p-5 flex items-center gap-4 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md hover:shadow-indigo-500/10 transition-all"
+            >
+              <span className="shrink-0 w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 grid place-items-center text-2xl">
+                💡
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-display font-extrabold text-gray-900 dark:text-slate-100">
+                  Review Key Concepts
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+                  Strategic ideas from your courses
+                </p>
+              </div>
+              <span className="shrink-0 text-indigo-500 dark:text-indigo-400 opacity-60 group-hover:opacity-100 transition-opacity">
+                →
+              </span>
+            </Link>
+            <Link
+              href="/tactical-patterns"
+              className="group rounded-2xl border-2 border-amber-200/70 dark:border-amber-800/60 bg-white dark:bg-slate-800 p-5 flex items-center gap-4 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-md hover:shadow-amber-500/10 transition-all"
+            >
+              <span className="shrink-0 w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 grid place-items-center text-2xl">
+                ⚡
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-display font-extrabold text-gray-900 dark:text-slate-100">
+                  Review Tactical Patterns
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+                  Forks, pins, clearance, and more
+                </p>
+              </div>
+              <span className="shrink-0 text-amber-500 dark:text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity">
+                →
+              </span>
+            </Link>
+          </div>
+        </section>
+
         <section aria-labelledby="courses-heading">
           <div className="flex items-end justify-between gap-3 mb-3">
             <div>
@@ -115,7 +166,7 @@ export default async function Dashboard() {
                 Your courses
               </h2>
               <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
-                Two paths to a sharper attack. Open one to see its chapters and quest.
+                Two paths to a sharper attack. Open one to see its chapters and lessons.
               </p>
             </div>
             <Link href="/courses" className="shrink-0 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
@@ -158,6 +209,60 @@ export default async function Dashboard() {
           </div>
           <span className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/30 group-hover:scale-[1.03] transition-transform">
             ▶ Play
+          </span>
+        </Link>
+
+        <div className="relative overflow-hidden rounded-3xl border border-rose-200/60 dark:border-rose-800/60 bg-gradient-to-r from-rose-50 via-fuchsia-50 to-indigo-50 dark:from-rose-950/40 dark:via-fuchsia-950/40 dark:to-indigo-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-fuchsia-600 text-white grid place-items-center text-3xl shadow-md shadow-rose-500/30">
+            ⚔️
+          </span>
+          <div className="min-w-0 flex-1">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
+              New mode
+            </span>
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+              Multiplayer Solitaire
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+              Get matched with an opponent on the same game — higher score wins, head-to-head Elo. Or practice casually.
+            </p>
+          </div>
+          <div className="shrink-0 flex items-center gap-3">
+            <Link
+              href="/leaderboard"
+              className="hidden sm:inline-flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-display font-extrabold px-4 py-2.5 rounded-2xl hover:scale-[1.03] transition-transform"
+            >
+              🏆 Ranks
+            </Link>
+            <Link
+              href="/solitaire?mode=match"
+              className="inline-flex items-center gap-2 bg-rose-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-rose-500/30 hover:scale-[1.03] transition-transform"
+            >
+              ⚔️ Find Match
+            </Link>
+          </div>
+        </div>
+
+        <Link
+          href="/analysis"
+          className="group relative overflow-hidden rounded-3xl border border-sky-200/60 dark:border-sky-800/60 bg-gradient-to-r from-sky-50 via-indigo-50 to-cyan-50 dark:from-sky-950/40 dark:via-indigo-950/40 dark:to-cyan-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-sky-500/10 transition-shadow"
+        >
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white grid place-items-center text-3xl shadow-md shadow-sky-500/30">
+            🔎
+          </span>
+          <div className="min-w-0 flex-1">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400">
+              New mode
+            </span>
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+              Free Analysis
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+              Play any position for both sides and get live Stockfish evaluation, best moves, and lines.
+            </p>
+          </div>
+          <span className="shrink-0 inline-flex items-center gap-2 bg-sky-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-sky-500/30 group-hover:scale-[1.03] transition-transform">
+            🔎 Analyze
           </span>
         </Link>
       </main>

@@ -4,6 +4,12 @@ import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { KeyConceptsBrowser } from "@/components/key-concepts/KeyConceptsBrowser"
 
+export const metadata = {
+  title: "Key Concepts — Attacking Principles | ChessMind",
+  description:
+    "Unlock reusable attacking principles — initiative, development, and bringing every piece into the attack — as you solve lesson puzzles.",
+}
+
 export default async function KeyConceptsPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -21,7 +27,7 @@ export default async function KeyConceptsPage() {
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Quest" }}
+          back={{ href: "/dashboard", label: "Courses" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
           active="key-concepts"
         />
@@ -33,7 +39,7 @@ export default async function KeyConceptsPage() {
             Attacking principles
           </p>
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-slate-100 mt-2">
-            Key concepts
+            Key Concepts
           </h1>
           <p className="text-base text-gray-600 dark:text-slate-400 mt-3 max-w-2xl leading-relaxed">
             Unlock ideas as you solve lesson puzzles. Each concept is a reusable attacking principle you can apply in your own games.

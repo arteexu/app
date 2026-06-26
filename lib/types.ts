@@ -1,3 +1,5 @@
+import type { MoveQuality } from "./move-quality"
+
 // ─── Board Annotations ────────────────────────────────────────────────────────
 
 export interface BoardArrow {
@@ -89,6 +91,17 @@ export interface PuzzleStep {
   explanation: string              // shown after solving (or after all retries)
   preMovePosition?: PuzzlePreMove  // optional: opponent's previous move, for context
   keyConceptId?: string            // unlocks a key concept when this step is solved
+  keyConceptIds?: string[]         // unlocks multiple key concepts when this step is solved
+  tacticalPatternId?: string       // unlocks a tactical pattern when this step is solved
+  tacticalPatternIds?: string[]    // unlocks multiple tactical patterns when this step is solved
+  /** When set, unlock tacticalPatternId as soon as the learner correctly plays this move index (0-based). */
+  tacticalPatternUnlockMoveIndex?: number
+  /** move index in solution.moves → tactical pattern unlocked when that learner move is played correctly. */
+  tacticalPatternUnlocks?: Record<number, string>
+  /** move index in solution.moves → quality marker (notation color + piece badge). */
+  moveQualities?: Record<number, MoveQuality>
+  /** Delay in ms before the opponent reply after each learner move (0-based index). Default 400. */
+  responseDelayMs?: Record<number, number>
 }
 
 // ─── Continuation Step ────────────────────────────────────────────────────────
@@ -103,7 +116,13 @@ export interface ContinuationStep {
   orientation?: "white" | "black"
   moves: string[]           // SAN moves in order
   moveAnnotations?: Record<number, string>  // move index → explanation shown at that move
+  /** move index → board arrows/highlights shown while stepping at that move. */
+  moveBoardAnnotations?: Record<number, BoardAnnotations>
+  /** move index → quality marker (notation color + piece badge when that move is shown). */
+  moveQualities?: Record<number, MoveQuality>
   annotations?: BoardAnnotations
+  tacticalPatternId?: string
+  tacticalPatternIds?: string[]
 }
 
 // ─── Play vs Bot Step ─────────────────────────────────────────────────────────
@@ -175,6 +194,8 @@ export interface MoveMultipleChoice {
   orientation?: "white" | "black"
   candidates: MoveCandidate[]
   successMessage?: string
+  keyConceptId?: string
+  keyConceptIds?: string[]
 }
 
 // ─── Find All Checkmates Step ─────────────────────────────────────────────────
@@ -190,6 +211,8 @@ export interface FindAllCheckmates {
   checkmates: string[]      // all target mating moves in SAN (e.g. ["Qf8#", "Qg8#"])
   explanation: string       // shown when all are found
   successMessage?: string
+  keyConceptId?: string
+  keyConceptIds?: string[]
 }
 
 export type Step =
@@ -211,6 +234,13 @@ export interface Lesson {
   estimatedMinutes: number
   steps: Step[]
   keyConceptIds?: string[]
+  tacticalPatternIds?: string[]
+}
+
+export interface Section {
+  id: string
+  title: string
+  lessons: Lesson[]
 }
 
 export interface Chapter {
@@ -218,6 +248,8 @@ export interface Chapter {
   title: string
   description: string
   lessons: Lesson[]
+  /** Optional grouped lessons shown under section headings within a chapter. */
+  sections?: Section[]
 }
 
 export interface Course {

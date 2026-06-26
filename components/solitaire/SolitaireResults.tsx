@@ -6,14 +6,27 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
+import { clsx } from "clsx"
 import { Chessboard } from "react-chessboard"
 import type { SolitaireSetup } from "@/lib/solitaire/types"
 import { scoreSession, difficultyLabel, type MoveResult } from "@/lib/solitaire-scoring"
-import { getCutoffPly, fenAfter, winnerOf, moveFactAt } from "@/lib/solitaire/engine"
+import {
+  getCutoffPly,
+  fenAfter,
+  winnerOf,
+  moveFactAt,
+  sideAtPly,
+  moveNumberAtPly,
+  moveAt,
+} from "@/lib/solitaire/engine"
 import { saveScore, getScoreRecord, type StoredScore } from "@/lib/solitaire/storage"
 import { persistScoreToSupabase, type PersistResult } from "@/lib/solitaire/supabase-scores"
 import { Confetti, Stars, useCountUp } from "@/components/lesson/RewardFx"
+import { SanNotation } from "@/components/chess/SanNotation"
+import { buildLastMoveStyles, composeSquareStyles } from "@/lib/legal-move-highlights"
+import type { SolitaireGame, Side } from "@/lib/solitaire/types"
 import { DifficultyPips } from "./DifficultyPips"
+import { FlipBoardButton } from "./FlipBoardButton"
 
 interface Props {
   setup: SolitaireSetup
@@ -150,13 +163,16 @@ export function SolitaireResults({ setup, results, onPlayAgain, onNewGame }: Pro
           </div>
         </div>
 
+        {/* Step through the whole game */}
+        <GameStepper game={game} side={side} cutoff={cutoff} />
+
         {/* About this game (verifiable note) + auto-generated final-move fact */}
         <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex flex-col gap-2">
           <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">{game.note}</p>
           {finalSan && (
-            <p className="text-xs text-gray-500 dark:text-slate-400">
+            <p className="text-sm text-gray-500 dark:text-slate-400">
               <span className="font-semibold text-gray-700 dark:text-slate-200">Final move:</span>{" "}
-              <span className="font-mono">{finalSan.replace(/[+#]/g, "")}</span>
+              <SanNotation san={finalSan.replace(/[+#]/g, "")} color={sideAtPly(game, cutoff - 1)} />
               {finalFact ? ` — ${finalFact}` : ""}
             </p>
           )}
@@ -190,6 +206,160 @@ export function SolitaireResults({ setup, results, onPlayAgain, onNewGame }: Pro
         </div>
       </div>
     </div>
+  )
+}
+
+/**
+ * Interactive move-by-move replay of the completed game. `viewPly` is the number
+ * of half-moves played from the start (0 = starting position, `cutoff` = final
+ * position); it defaults to the end. Positions are derived with the startFen-aware
+ * helpers, so it works for standard, opening, and custom-FEN games, and whether
+ * the user finished normally or used "Skip to end". Shown for all games — by the
+ * time results render the game is complete, so revealing the moves is intended.
+ */
+function GameStepper({ game, side, cutoff }: { game: SolitaireGame; side: Side; cutoff: number }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  const [viewPly, setViewPly] = useState(cutoff)
+  const [flipped, setFlipped] = useState(false)
+  const orientation = flipped ? (side === "white" ? "black" : "white") : side
+
+  const clamped = Math.min(Math.max(viewPly, 0), cutoff)
+  const fen = useMemo(() => fenAfter(game, clamped), [game, clamped])
+  // Highlight the move that produced the current position (the one just played).
+  const lastMove = useMemo(() => (clamped > 0 ? moveAt(game, clamped - 1) : null), [game, clamped])
+  const squareStyles = composeSquareStyles(buildLastMoveStyles(lastMove?.from, lastMove?.to))
+
+  const atStart = clamped <= 0
+  const atEnd = clamped >= cutoff
+
+  function go(ply: number) {
+    setViewPly(Math.min(Math.max(ply, 0), cutoff))
+  }
+
+  // ← / → step through the game (ignored while typing in an input).
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+      if (e.key === "ArrowLeft") {
+        e.preventDefault()
+        setViewPly((p) => Math.max(0, p - 1))
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault()
+        setViewPly((p) => Math.min(cutoff, p + 1))
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [cutoff])
+
+  const moves = game.moves.slice(0, cutoff)
+
+  return (
+    <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-display font-extrabold text-gray-900 dark:text-slate-100">Replay the game</h2>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 tabular-nums">
+            {atStart
+              ? "Start"
+              : `Move ${moveNumberAtPly(game, clamped - 1)} · ${sideAtPly(game, clamped - 1) === "white" ? "White" : "Black"}`}
+          </span>
+          <FlipBoardButton onClick={() => setFlipped((f) => !f)} />
+        </div>
+      </div>
+
+      <div className="grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-4 items-start">
+        <div className="rounded-xl overflow-hidden shadow-md" onContextMenu={(e) => e.preventDefault()}>
+          {mounted ? (
+            <Chessboard
+              options={{
+                position: fen,
+                boardOrientation: orientation,
+                allowDragging: false,
+                squareStyles,
+                darkSquareStyle: { backgroundColor: BOARD_DARK },
+                lightSquareStyle: { backgroundColor: BOARD_LIGHT },
+                showNotation: true,
+                id: "solitaire-replay",
+              }}
+            />
+          ) : (
+            <div className="aspect-square w-full bg-slate-200 dark:bg-slate-700 animate-pulse" />
+          )}
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {/* Move list */}
+          {moves.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5 max-h-44 overflow-y-auto rounded-xl bg-gray-50 dark:bg-slate-900/50 p-2.5">
+              {moves.map((san, ply) => {
+                const isCurrent = ply === clamped - 1
+                const showWhiteNo = sideAtPly(game, ply) === "white"
+                const leadingBlack = ply === 0 && sideAtPly(game, ply) === "black"
+                return (
+                  <button
+                    key={ply}
+                    onClick={() => go(ply + 1)}
+                    className={clsx(
+                      "text-sm rounded-lg px-2 py-1 font-mono transition",
+                      isCurrent
+                        ? "bg-indigo-600 text-white"
+                        : "text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700",
+                    )}
+                  >
+                    {showWhiteNo
+                      ? `${moveNumberAtPly(game, ply)}. `
+                      : leadingBlack
+                        ? `${moveNumberAtPly(game, ply)}… `
+                        : ""}
+                    <SanNotation san={san} color={sideAtPly(game, ply)} />
+                  </button>
+                )
+              })}
+            </div>
+          ) : (
+            <p className="text-xs text-gray-400 dark:text-slate-500 italic">No moves to replay.</p>
+          )}
+
+          {/* Controls */}
+          <div className="grid grid-cols-4 gap-1.5">
+            <StepButton label="⏮" title="First" onClick={() => go(0)} disabled={atStart} />
+            <StepButton label="◀" title="Previous" onClick={() => go(clamped - 1)} disabled={atStart} />
+            <StepButton label="▶" title="Next" onClick={() => go(clamped + 1)} disabled={atEnd} />
+            <StepButton label="⏭" title="Last" onClick={() => go(cutoff)} disabled={atEnd} />
+          </div>
+          <p className="text-[11px] text-gray-400 dark:text-slate-500 text-center">
+            Use ← → or tap a move to jump. Ply {clamped} of {cutoff}.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function StepButton({
+  label,
+  title,
+  onClick,
+  disabled,
+}: {
+  label: string
+  title: string
+  onClick: () => void
+  disabled: boolean
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+      aria-label={title}
+      className="font-display font-bold text-lg py-2 rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:border-indigo-300 transition disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-200 dark:disabled:hover:border-slate-700"
+    >
+      {label}
+    </button>
   )
 }
 

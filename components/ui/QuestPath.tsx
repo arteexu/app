@@ -1,6 +1,7 @@
 // components/ui/QuestPath.tsx — winding adventure-map of the course
 import Link from "next/link"
 import type { Course } from "@/lib/types"
+import { getChapterLessons, getCourseLessons } from "@/lib/courses"
 import { isLessonUnlocked } from "@/lib/progress"
 import { getLessonIcon } from "@/lib/lesson-icons"
 import { clsx } from "clsx"
@@ -13,14 +14,14 @@ interface Props {
 }
 
 export function QuestPath({ course, completedLessonIds, inProgressMap, activeLessonId }: Props) {
-  const flat = course.chapters.flatMap(ch => ch.lessons)
+  const flat = getCourseLessons(course)
   const allComplete = flat.length > 0 && completedLessonIds.length >= flat.length
   let lessonIdx = -1
 
   return (
     <div className="flex flex-col items-center py-2">
       <h2 className="font-display text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 mb-1">
-        Your quest
+        Course path
       </h2>
       <p className="text-sm text-gray-500 dark:text-slate-400 mb-4 text-center max-w-xs">
         Each piece marks a lesson you can master
@@ -33,7 +34,7 @@ export function QuestPath({ course, completedLessonIds, inProgressMap, activeLes
             {chapter.title}
           </div>
 
-          {chapter.lessons.map((lesson) => {
+          {getChapterLessons(chapter).map((lesson) => {
             lessonIdx++
             const prev = flat[lessonIdx - 1]
             const isCompleted  = completedLessonIds.includes(lesson.id)

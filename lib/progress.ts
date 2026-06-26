@@ -1,9 +1,10 @@
 import type { Course, Chapter, Lesson } from "./types"
+import { getChapterLessons } from "./courses"
 
 // Returns the first lesson ID in a course that the user has NOT completed.
 export function getNextLesson(course: Course, completedLessonIds: string[]): Lesson | null {
   for (const chapter of course.chapters) {
-    for (const lesson of chapter.lessons) {
+    for (const lesson of getChapterLessons(chapter)) {
       if (!completedLessonIds.includes(lesson.id)) return lesson
     }
   }
@@ -39,13 +40,13 @@ export function isLessonUnlocked(
 // Counts completed lessons that belong to this course.
 export function getCompletedLessonCount(course: Course, completedLessonIds: string[]): number {
   return completedLessonIds.filter(id =>
-    course.chapters.some(ch => ch.lessons.some(l => l.id === id))
+    course.chapters.some(ch => getChapterLessons(ch).some(l => l.id === id))
   ).length
 }
 
 // Calculates course completion percentage (0–100).
 export function getCourseProgress(course: Course, completedLessonIds: string[]): number {
-  const total = course.chapters.reduce((sum, ch) => sum + ch.lessons.length, 0)
+  const total = course.chapters.reduce((sum, ch) => sum + getChapterLessons(ch).length, 0)
   if (total === 0) return 0
   return Math.round((getCompletedLessonCount(course, completedLessonIds) / total) * 100)
 }
@@ -80,7 +81,7 @@ export function calculateStreak(lastActivityDate: string | null, currentStreak: 
 // Finds a lesson by ID across all chapters of a course.
 export function findLesson(course: Course, lessonId: string): Lesson | null {
   for (const chapter of course.chapters) {
-    for (const lesson of chapter.lessons) {
+    for (const lesson of getChapterLessons(chapter)) {
       if (lesson.id === lessonId) return lesson
     }
   }
@@ -90,7 +91,7 @@ export function findLesson(course: Course, lessonId: string): Lesson | null {
 // Finds which chapter a lesson belongs to.
 export function findChapterForLesson(course: Course, lessonId: string): Chapter | null {
   for (const chapter of course.chapters) {
-    if (chapter.lessons.some(l => l.id === lessonId)) return chapter
+    if (getChapterLessons(chapter).some(l => l.id === lessonId)) return chapter
   }
   return null
 }

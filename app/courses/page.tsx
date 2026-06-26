@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { getAllCourses } from "@/lib/courses"
+import { getAllCourses, getCourseLessons } from "@/lib/courses"
 import { getCourseProgress } from "@/lib/progress"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
@@ -27,7 +27,7 @@ export default async function CoursesPage() {
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Quest" }}
+          back={{ href: "/dashboard", label: "Courses" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
         />
       }
@@ -44,10 +44,9 @@ export default async function CoursesPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           {courses.map((course) => {
-            const totalLessons = course.chapters.reduce((n, ch) => n + ch.lessons.length, 0)
+            const totalLessons = getCourseLessons(course).length
             const progress = getCourseProgress(course, completedIds)
-            const totalMinutes = course.chapters
-              .flatMap((ch) => ch.lessons)
+            const totalMinutes = getCourseLessons(course)
               .reduce((sum, l) => sum + (l.estimatedMinutes ?? 0), 0)
 
             return (

@@ -3,6 +3,7 @@
 // (completed steps/lessons, streak, lesson attempts). No schema changes required.
 
 import type { Course } from "./types"
+import { getChapterLessons } from "./courses"
 import { getCourseProgress } from "./progress"
 
 // ── XP model ───────────────────────────────────────────────────────────────
@@ -179,7 +180,7 @@ export function getTrophies(input: TrophyInput): Trophy[] {
   const { course, completedLessonIds, currentStreak, longestStreak, masteryRate, weeklyHours, weeklyGoal } = input
   const progress = getCourseProgress(course, completedLessonIds)
   const chaptersDone = course.chapters.filter(ch =>
-    ch.lessons.every(l => completedLessonIds.includes(l.id))
+    getChapterLessons(ch).every(l => completedLessonIds.includes(l.id))
   ).length
 
   return [

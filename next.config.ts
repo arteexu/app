@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: appRoot,
   },
+  // Run the Stockfish WASM engine in the Node server route without bundling it
+  // (it loads its own .wasm via fs at runtime). Keeps it external + server-only.
+  serverExternalPackages: ["stockfish"],
 };
 
 export default nextConfig;

@@ -18,6 +18,12 @@ import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHa
 import { annotationsToProps } from "./ChessBoard"
 import { clsx } from "clsx"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { MoveQualityMoveLabel } from "./MoveQualityMoveLabel"
+import { SanNotation } from "@/components/chess/SanNotation"
+import { sideToMove } from "@/lib/engine/format"
+import { useMoveQualityPieceBadge } from "@/hooks/useMoveQualityPieceBadge"
+import { TacticalPatternUnlockCard } from "@/components/tactical-patterns/TacticalPatternUnlockCard"
+import { unlockTacticalPattern } from "@/lib/tactical-patterns-storage"
 
 interface Props {
   step: PuzzleStepType
@@ -52,6 +58,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   const [refutationIndex, setRefIdx]        = useState(-1)
   const [lastMove, setLastMove]             = useState<{ from: string; to: string } | null>(null)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
+  const [midPatternUnlock, setMidPatternUnlock] = useState<{ id: string; celebrate: boolean } | null>(null)
 
   const { showLegalMoves } = useBoardPreferences()
 
@@ -74,6 +81,11 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     : null
 
   const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
+  const canAttemptSolve =
+    (state === "idle" || state === "wrong" || state === "alternative") &&
+    !showingPrev &&
+    blunderPlayed &&
+    !analysisMode
   const solveInteractive = state === "idle" && !showingPrev && blunderPlayed && !analysisMode
   const userHighlightHandlers = useUserSquareHighlightHandlers(
     setUserHighlights,
@@ -89,7 +101,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     onDragEnd: onPuzzleDragEnd,
   } = useLegalMoveHighlights({
     game,
-    enabled: showLegalMoves && solveInteractive,
+    enabled: showLegalMoves && canAttemptSolve,
     isSelectable: (_square, piece) => !!piece && piece.color === learnerColor,
   })
   const {
@@ -173,6 +185,14 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   }, [state, play])
 
   // ── Puzzle-solve helpers ──────────────────────────────────────────────────
+  function dismissRetryState() {
+    if (state !== "wrong" && state !== "alternative") return
+    setState("idle")
+    setWrong("")
+    setAltFeedback("")
+    clearHighlights()
+  }
+
   function resetPuzzle() {
     setGame(new Chess(step.fen))
     setMoveHistory([])
@@ -184,6 +204,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     setLastMove(null)
     setUserHighlights([])
     clearHighlights()
+    setMidPatternUnlock(null)
   }
 
   function attemptMove(from: string, to: string): boolean {
@@ -221,6 +242,19 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     playBoardMoveSound(result, game)
     setLastMove({ from: result.from, to: result.to })
 
+    const midUnlockPatternId =
+      step.tacticalPatternUnlocks?.[learnerMoveIndex] ??
+      (step.tacticalPatternId &&
+      step.tacticalPatternUnlockMoveIndex === learnerMoveIndex
+        ? step.tacticalPatternId
+        : undefined)
+    if (midUnlockPatternId) {
+      setMidPatternUnlock({
+        id: midUnlockPatternId,
+        celebrate: unlockTacticalPattern(midUnlockPatternId),
+      })
+    }
+
     const newHistory = [...moveHistory, san]
     setMoveHistory(newHistory)
     setGame(new Chess(game.fen()))
@@ -243,24 +277,27 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
         if (updated.length === step.solution.moves.length) setState("solved")
         return updated
       })
-    }, 400)
+    }, step.responseDelayMs?.[newHistory.length - 1] ?? 400)
     return true
   }
 
   function handleDrop({ sourceSquare, targetSquare }: PieceDropHandlerArgs): boolean {
-    if (state !== "idle" || !targetSquare) return false
+    if (!canAttemptSolve || !targetSquare) return false
+    if (state === "wrong" || state === "alternative") dismissRetryState()
     const moved = attemptMove(sourceSquare, targetSquare)
     onPuzzleDragEnd()
     return moved
   }
 
   function handlePuzzlePieceDrag(args: PieceHandlerArgs) {
+    if (state === "wrong" || state === "alternative") dismissRetryState()
     setUserHighlights([])
     onPuzzlePieceDrag(args)
   }
 
   function handleSquareClick({ square }: SquareHandlerArgs) {
-    if (state !== "idle") return
+    if (!canAttemptSolve) return
+    if (state === "wrong" || state === "alternative") dismissRetryState()
     setUserHighlights([])
     if (selectedSquare) {
       if (square === selectedSquare) { clearHighlights(); return }
@@ -373,13 +410,13 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
     if (state === "refuting") {
       return buildLastMoveStyles(refutationLastMove?.from, refutationLastMove?.to)
     }
-    if (state === "idle") {
+    if (state === "idle" || state === "wrong" || state === "alternative") {
       return composeSquareStyles(
         annotationSquares,
         buildLastMoveStyles(lastMove?.from, lastMove?.to),
         buildUserHighlightStyles(userHighlights),
         legalMoveSquares,
-        solveInteractive ? buildSelectionStyles(selectedSquare) : {},
+        canAttemptSolve ? buildSelectionStyles(selectedSquare) : {},
       )
     }
     // wrong / solved — keep the most recent move highlighted
@@ -395,23 +432,33 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
   const showModeToggle   = blunderPlayed && !showingPrev && state !== "solved"
 
+  const activeQualityBadge = (() => {
+    if (analysisMode || showingPrev || state === "refuting" || !lastMove) return null
+    const lastIdx = moveHistory.length - 1
+    const quality = step.moveQualities?.[lastIdx]
+    if (!quality) return null
+    return { square: lastMove.to, quality }
+  })()
+
+  useMoveQualityPieceBadge(boardRef, activeQualityBadge)
+
   const board = (
     <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
       <Chessboard
         options={{
           position: displayFen,
           boardOrientation,
-          allowDragging: analysisMode || solveInteractive,
+          allowDragging: analysisMode || canAttemptSolve,
           dragActivationDistance: DRAG_ACTIVATION_DISTANCE,
           squareStyles: activeSquareStyles,
           arrows: activeArrows,
           darkSquareStyle: { backgroundColor: "#769656" },
           lightSquareStyle: { backgroundColor: "#eeeed2" },
           animationDurationInMs: !blunderPlayed ? 650 : 200,
-          onPieceDrop: analysisMode ? handleAnalysisDrop : (solveInteractive ? handleDrop : undefined),
-          onPieceDrag: analysisMode ? handleAnalysisPieceDrag : (solveInteractive ? handlePuzzlePieceDrag : undefined),
-          onSquareClick: analysisMode ? handleAnalysisClick : (solveInteractive ? handleSquareClick : undefined),
-          ...(analysisMode || solveInteractive ? userHighlightHandlers : {}),
+          onPieceDrop: analysisMode ? handleAnalysisDrop : (canAttemptSolve ? handleDrop : undefined),
+          onPieceDrag: analysisMode ? handleAnalysisPieceDrag : (canAttemptSolve ? handlePuzzlePieceDrag : undefined),
+          onSquareClick: analysisMode ? handleAnalysisClick : (canAttemptSolve ? handleSquareClick : undefined),
+          ...(analysisMode || canAttemptSolve ? userHighlightHandlers : {}),
         }}
       />
     </div>
@@ -498,7 +545,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
               <button
                 onClick={() => analysisJumpTo(-1)}
                 className={clsx(
-                  "text-xs rounded-lg px-2 py-1 font-mono transition-colors",
+                  "text-sm rounded-lg px-2 py-1 font-mono transition-colors",
                   analysisIndex === -1
                     ? "bg-indigo-600 text-white"
                     : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60",
@@ -511,7 +558,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                   key={i}
                   onClick={() => analysisJumpTo(i)}
                   className={clsx(
-                    "text-xs rounded-lg px-2 py-1 font-mono transition-colors",
+                    "text-sm rounded-lg px-2 py-1 font-mono transition-colors",
                     i === analysisIndex
                       ? "bg-indigo-600 text-white"
                       : i < analysisIndex
@@ -519,7 +566,8 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                         : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600",
                   )}
                 >
-                  {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m.san}
+                  {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}
+                  <SanNotation san={m.san} fen={analysisStartFen} moveIndex={i} />
                 </button>
               ))}
             </div>
@@ -537,7 +585,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
           {!blunderPlayed ? (
             <div className="flex items-center gap-2 self-start text-sm font-medium px-3.5 py-2 rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-              Black plays {step.preMovePosition.san}…
+              Black plays <SanNotation san={step.preMovePosition.san} side={sideToMove(step.preMovePosition.fen)} />…
             </div>
           ) : (
             <button
@@ -549,7 +597,11 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                   : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-400 hover:border-indigo-300 dark:hover:border-indigo-700 hover:text-indigo-600 dark:hover:text-indigo-400"
               )}
             >
-              {showingPrev ? "→ Return to puzzle" : `← Black played ${step.preMovePosition.san}`}
+              {showingPrev ? "→ Return to puzzle" : (
+                <>
+                  ← Black played <SanNotation san={step.preMovePosition.san} side={sideToMove(step.preMovePosition.fen)} />
+                </>
+              )}
               <span className="text-xs opacity-50 font-normal ml-1">{showingPrev ? "(→)" : "(←)"}</span>
             </button>
           )}
@@ -571,13 +623,21 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
             <div className="flex flex-wrap gap-1.5">
               {moveHistory.map((m, i) => (
                 <span key={i} className={clsx(
-                  "text-xs rounded-lg px-2 py-1 font-mono",
+                  "text-sm rounded-lg px-2 py-1 font-mono",
                   i % 2 === 0 ? "bg-gray-800 text-white" : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300"
                 )}>
-                  {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m}
+                  {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}
+                  <MoveQualityMoveLabel san={m} quality={step.moveQualities?.[i]} fen={step.fen} moveIndex={i} />
                 </span>
               ))}
             </div>
+          )}
+
+          {midPatternUnlock && state !== "solved" && (
+            <TacticalPatternUnlockCard
+              patternId={midPatternUnlock.id}
+              celebrate={midPatternUnlock.celebrate}
+            />
           )}
 
           {state === "idle" && moveHistory.length === 0 && blunderPlayed && !showingPrev && (
@@ -593,8 +653,9 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                   <MarkdownText>{wrongMoveExplanation}</MarkdownText>
                 </p>
               )}
+              <p className="text-xs text-red-700/80 dark:text-red-400/80">Make another move on the board to try again.</p>
               <div className="flex gap-2 flex-wrap">
-                <Button onClick={resetPuzzle} variant="primary" size="sm">Try again</Button>
+                <Button onClick={resetPuzzle} variant="secondary" size="sm">Reset board</Button>
                 {refutationLine.length > 0 && (
                   <Button onClick={() => { setState("refuting"); setRefIdx(0) }} variant="secondary" size="sm">
                     Show why it fails
@@ -611,9 +672,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
               <p className="text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">
                 <MarkdownText>{alternativeFeedback}</MarkdownText>
               </p>
-              <Button onClick={resetPuzzle} variant="primary" size="sm" className="self-start">
-                Keep looking
-              </Button>
+              <p className="text-xs text-indigo-700/80 dark:text-indigo-300/80">Make another move on the board to keep looking.</p>
             </div>
           )}
 
@@ -624,10 +683,11 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
               <div className="flex flex-wrap gap-1.5">
                 {refutationLine.map((m, i) => (
                   <button key={i} onClick={() => setRefIdx(i)} className={clsx(
-                    "text-xs rounded-lg px-2 py-1 font-mono transition",
+                    "text-sm rounded-lg px-2 py-1 font-mono transition",
                     i === refutationIndex ? "bg-amber-600 text-white" : "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 hover:bg-amber-200"
                   )}>
-                    {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m}
+                    {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}
+                    <SanNotation san={m} fen={step.fen} moveIndex={moveHistory.length + i} />
                   </button>
                 ))}
               </div>
@@ -651,7 +711,23 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                 onNext={() => onComplete(true)}
                 isLastStep={isLastStep}
                 sound="celebration"
+                coachContext={
+                  step.solution.moves[0]
+                    ? { fenBefore: step.fen, moveSan: step.solution.moves[0] }
+                    : undefined
+                }
                 keyConceptId={step.keyConceptId}
+                keyConceptIds={step.keyConceptIds}
+                tacticalPatternId={
+                  step.tacticalPatternUnlockMoveIndex != null || step.tacticalPatternUnlocks
+                    ? undefined
+                    : step.tacticalPatternId
+                }
+                tacticalPatternIds={
+                  step.tacticalPatternUnlockMoveIndex != null || step.tacticalPatternUnlocks
+                    ? undefined
+                    : step.tacticalPatternIds
+                }
               />
             </>
           )}

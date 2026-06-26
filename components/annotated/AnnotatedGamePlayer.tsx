@@ -23,6 +23,7 @@ import { playBoardMoveSound } from "@/lib/ui-sounds"
 import { Confetti } from "@/components/lesson/RewardFx"
 import { VariationLine } from "./VariationLine"
 import { ConceptCheckCard } from "./ConceptCheckCard"
+import { SanNotation } from "@/components/chess/SanNotation"
 
 const BOARD_DARK = "#769656"
 const BOARD_LIGHT = "#eeeed2"
@@ -395,7 +396,7 @@ function PlayerInner({ game }: { game: AnnotatedGame }) {
                     disabled={locked}
                     aria-current={isCurrent ? "true" : undefined}
                     className={clsx(
-                      "text-xs rounded-md px-1.5 py-0.5 font-mono transition-colors mr-1 motion-reduce:transition-none",
+                      "text-xs sm:text-sm rounded-md px-1.5 py-0.5 font-mono transition-colors mr-1 motion-reduce:transition-none",
                       isCurrent
                         ? "bg-indigo-600 text-white"
                         : locked
@@ -405,7 +406,7 @@ function PlayerInner({ game }: { game: AnnotatedGame }) {
                     )}
                     title={checksByPly.has(p.ply) ? "Concept check here" : undefined}
                   >
-                    {p.san}
+                    <SanNotation san={p.san} color={p.side} size="inherit" />
                     {primaryGlyph(p.nags) ?? ""}
                   </button>
                 </span>

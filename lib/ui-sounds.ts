@@ -8,8 +8,15 @@
 
 import type { Chess, Move } from "chess.js"
 import { getBoardSoundsEnabled } from "@/lib/board-preferences"
-
-const STORAGE_KEY = "chessmind-sound-enabled"
+import {
+  getLessonSoundPreference,
+  getNextStepPreset,
+  getPuzzleSolvedPreset,
+  setLessonSoundPreference,
+  type LessonSoundCategory,
+  type NextStepPresetId,
+  type PuzzleSolvedPresetId,
+} from "@/lib/lesson-sound-preferences"
 
 let audioCtx: AudioContext | null = null
 
@@ -27,12 +34,11 @@ function getAudioContext(): AudioContext | null {
 export function isLessonSoundEnabled(): boolean {
   if (typeof window === "undefined") return false
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false
-  return localStorage.getItem(STORAGE_KEY) !== "false"
+  return getLessonSoundPreference()
 }
 
 export function setLessonSoundEnabled(enabled: boolean) {
-  if (typeof window === "undefined") return
-  localStorage.setItem(STORAGE_KEY, enabled ? "true" : "false")
+  setLessonSoundPreference(enabled)
 }
 
 function canPlay(): boolean {
@@ -117,30 +123,278 @@ export function playWrong() {
   })
 }
 
-/** Triumphant three-note fanfare — puzzle solved / SolveReward. */
-export function playStepComplete() {
-  playIfEnabled(() => {
-    const ctx = getAudioContext()!
-    const now = ctx.currentTime
-    const freqs = [523, 659, 784]
-    const noteDuration = 0.11
-    const gap = 0.05
-    const volume = 0.24
+// ── Puzzle solved presets (stepComplete) ───────────────────────────────────
 
-    freqs.forEach((freq, i) => {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      const start = now + i * (noteDuration + gap)
-      osc.type = "sine"
-      osc.frequency.value = freq
-      gain.gain.setValueAtTime(volume, start)
-      gain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.04)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start(start)
-      osc.stop(start + noteDuration + 0.06)
-    })
+function playPuzzleSolvedClassic(ctx: AudioContext, now: number) {
+  const freqs = [523, 659, 784]
+  const noteDuration = 0.11
+  const gap = 0.05
+  const volume = 0.24
+
+  freqs.forEach((freq, i) => {
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    const start = now + i * (noteDuration + gap)
+    osc.type = "sine"
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(volume, start)
+    gain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.04)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(start)
+    osc.stop(start + noteDuration + 0.06)
   })
+}
+
+function playPuzzleSolvedTriumph(ctx: AudioContext, now: number) {
+  const freqs = [392, 494, 587, 784]
+  const noteDuration = 0.12
+  const gap = 0.04
+  const volume = 0.18
+
+  freqs.forEach((freq, i) => {
+    const start = now + i * (noteDuration + gap)
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = "sine"
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(volume, start)
+    gain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.05)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(start)
+    osc.stop(start + noteDuration + 0.08)
+
+    const harmonic = ctx.createOscillator()
+    const hGain = ctx.createGain()
+    harmonic.type = "triangle"
+    harmonic.frequency.value = freq * 2
+    hGain.gain.setValueAtTime(volume * 0.35, start)
+    hGain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.03)
+    harmonic.connect(hGain)
+    hGain.connect(ctx.destination)
+    harmonic.start(start)
+    harmonic.stop(start + noteDuration + 0.05)
+  })
+}
+
+function playPuzzleSolvedChime(ctx: AudioContext, now: number) {
+  const frequency = 660
+  const modRatio = 2.5
+  const modDepth = 800
+  const duration = 0.4
+  const volume = 0.22
+
+  const mod = ctx.createOscillator()
+  const modGain = ctx.createGain()
+  mod.frequency.value = frequency * modRatio
+  modGain.gain.setValueAtTime(modDepth, now)
+  modGain.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.7)
+
+  const carrier = ctx.createOscillator()
+  const cGain = ctx.createGain()
+  carrier.frequency.value = frequency
+  cGain.gain.setValueAtTime(volume, now)
+  cGain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+
+  mod.connect(modGain)
+  modGain.connect(carrier.frequency)
+  carrier.connect(cGain)
+  cGain.connect(ctx.destination)
+  mod.start(now)
+  carrier.start(now)
+  mod.stop(now + duration + 0.01)
+  carrier.stop(now + duration + 0.01)
+}
+
+function playPuzzleSolvedSparkle(ctx: AudioContext, now: number) {
+  const freqs = [880, 1047, 1319, 1568]
+  const noteDuration = 0.06
+  const gap = 0.02
+  const volume = 0.15
+
+  freqs.forEach((freq, i) => {
+    const start = now + i * (noteDuration + gap)
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = "sine"
+    osc.frequency.setValueAtTime(freq, start)
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.1, start + noteDuration)
+    gain.gain.setValueAtTime(volume, start)
+    gain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.02)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(start)
+    osc.stop(start + noteDuration + 0.04)
+  })
+}
+
+function playPuzzleSolvedRoyal(ctx: AudioContext, now: number) {
+  const freqs = [262, 330, 392, 523]
+  const noteDuration = 0.14
+  const gap = 0.06
+  const volume = 0.26
+
+  freqs.forEach((freq, i) => {
+    const start = now + i * (noteDuration + gap)
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = "triangle"
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(volume, start)
+    gain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.08)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(start)
+    osc.stop(start + noteDuration + 0.1)
+  })
+}
+
+function playPuzzleSolvedPreset(presetId: PuzzleSolvedPresetId) {
+  const ctx = getAudioContext()
+  if (!ctx) return
+  const now = ctx.currentTime
+  switch (presetId) {
+    case "classic": playPuzzleSolvedClassic(ctx, now); break
+    case "triumph": playPuzzleSolvedTriumph(ctx, now); break
+    case "chime": playPuzzleSolvedChime(ctx, now); break
+    case "sparkle": playPuzzleSolvedSparkle(ctx, now); break
+    case "royal": playPuzzleSolvedRoyal(ctx, now); break
+  }
+}
+
+/** Triumphant fanfare — puzzle solved / SolveReward (preset from preferences). */
+export function playStepComplete() {
+  playIfEnabled(() => playPuzzleSolvedPreset(getPuzzleSolvedPreset()))
+}
+
+// ── Next step presets (stepAdvance) ─────────────────────────────────────────
+
+function playNextStepWhoosh(ctx: AudioContext, now: number) {
+  const duration = 0.18
+  const bufferSize = Math.floor(ctx.sampleRate * duration)
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+  const data = buffer.getChannelData(0)
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.4))
+  }
+  const src = ctx.createBufferSource()
+  src.buffer = buffer
+  const filter = ctx.createBiquadFilter()
+  filter.type = "bandpass"
+  filter.frequency.setValueAtTime(1200, now)
+  filter.frequency.exponentialRampToValueAtTime(300, now + duration)
+  filter.Q.value = 0.8
+  const gain = ctx.createGain()
+  gain.gain.setValueAtTime(0.12, now)
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+  src.connect(filter)
+  filter.connect(gain)
+  gain.connect(ctx.destination)
+  src.start(now)
+  src.stop(now + duration + 0.01)
+}
+
+function playNextStepSlide(ctx: AudioContext, now: number) {
+  const duration = 0.12
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  osc.type = "sine"
+  osc.frequency.setValueAtTime(400, now)
+  osc.frequency.exponentialRampToValueAtTime(280, now + duration)
+  gain.gain.setValueAtTime(0.1, now)
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration + 0.02)
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  osc.start(now)
+  osc.stop(now + duration + 0.03)
+
+  const bufferSize = Math.floor(ctx.sampleRate * duration * 0.8)
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+  const data = buffer.getChannelData(0)
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3)) * 0.3
+  }
+  const src = ctx.createBufferSource()
+  src.buffer = buffer
+  const filter = ctx.createBiquadFilter()
+  filter.type = "highpass"
+  filter.frequency.value = 2000
+  const nGain = ctx.createGain()
+  nGain.gain.setValueAtTime(0.06, now)
+  nGain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+  src.connect(filter)
+  filter.connect(nGain)
+  nGain.connect(ctx.destination)
+  src.start(now)
+  src.stop(now + duration + 0.01)
+}
+
+function playNextStepPop(ctx: AudioContext, now: number) {
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  osc.type = "sine"
+  osc.frequency.setValueAtTime(600, now)
+  osc.frequency.exponentialRampToValueAtTime(400, now + 0.04)
+  gain.gain.setValueAtTime(0.14, now)
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06)
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  osc.start(now)
+  osc.stop(now + 0.07)
+}
+
+function playNextStepForward(ctx: AudioContext, now: number) {
+  const freqs = [440, 554]
+  const noteDuration = 0.07
+  const gap = 0.03
+  const volume = 0.12
+
+  freqs.forEach((freq, i) => {
+    const start = now + i * (noteDuration + gap)
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = "sine"
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(volume, start)
+    gain.gain.exponentialRampToValueAtTime(0.001, start + noteDuration + 0.02)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(start)
+    osc.stop(start + noteDuration + 0.04)
+  })
+}
+
+function playNextStepPreset(presetId: NextStepPresetId) {
+  if (presetId === "none") return
+  const ctx = getAudioContext()
+  if (!ctx) return
+  const now = ctx.currentTime
+  switch (presetId) {
+    case "whoosh": playNextStepWhoosh(ctx, now); break
+    case "slide": playNextStepSlide(ctx, now); break
+    case "pop": playNextStepPop(ctx, now); break
+    case "forward": playNextStepForward(ctx, now); break
+  }
+}
+
+/** Transition sound when advancing to the next step (preset from preferences). */
+export function playStepAdvance() {
+  const preset = getNextStepPreset()
+  if (preset === "none") return
+  playIfEnabled(() => playNextStepPreset(preset))
+}
+
+/** Preview a lesson sound preset in settings — always plays on button click. */
+export function previewLessonSound(category: LessonSoundCategory, presetId: string) {
+  unlockLessonSounds()
+  try {
+    if (category === "puzzleSolved") {
+      playPuzzleSolvedPreset(presetId as PuzzleSolvedPresetId)
+    } else {
+      playNextStepPreset(presetId as NextStepPresetId)
+    }
+  } catch { /* ignore autoplay / context errors */ }
 }
 
 /** Bell + ascending finish — lesson complete screen. */
@@ -175,8 +429,11 @@ export function playLessonComplete() {
     mod.stop(now + duration + 0.01)
     carrier.stop(now + duration + 0.01)
 
-    // Short victory tag after bell
-    setTimeout(() => playStepComplete(), 280)
+    // Short victory tag after bell — uses current puzzle-solved preset
+    setTimeout(() => {
+      if (!canPlay()) return
+      playPuzzleSolvedPreset(getPuzzleSolvedPreset())
+    }, 280)
   })
 }
 
@@ -204,6 +461,7 @@ export type LessonSoundName =
   | "correct"
   | "wrong"
   | "stepComplete"
+  | "stepAdvance"
   | "lessonComplete"
   | "combo"
 
@@ -213,6 +471,7 @@ export function playLessonSound(name: LessonSoundName) {
     case "correct": playCorrect(); break
     case "wrong": playWrong(); break
     case "stepComplete": playStepComplete(); break
+    case "stepAdvance": playStepAdvance(); break
     case "lessonComplete": playLessonComplete(); break
     case "combo": playCombo(); break
   }

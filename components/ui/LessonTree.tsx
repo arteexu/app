@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import type { Course } from "@/lib/types"
+import { getChapterLessons, getCourseLessons } from "@/lib/courses"
 import { isLessonUnlocked } from "@/lib/progress"
 import { getLessonIcon } from "@/lib/lesson-icons"
 import { clsx } from "clsx"
@@ -14,7 +15,7 @@ interface Props {
 }
 
 export function LessonTree({ course, completedLessonIds, inProgressMap, activeLessonId, compact = false }: Props) {
-  const flatLessons = course.chapters.flatMap(ch => ch.lessons)
+  const flatLessons = getCourseLessons(course)
   const totalLessons = flatLessons.length
   const allComplete = totalLessons > 0 && completedLessonIds.length >= totalLessons
 
@@ -25,7 +26,7 @@ export function LessonTree({ course, completedLessonIds, inProgressMap, activeLe
   return (
     <div className="flex flex-col items-center">
       {course.chapters.map((chapter, chapterIdx) => {
-        const chapterStartIdx = flatLessons.findIndex(l => l.id === chapter.lessons[0]?.id)
+        const chapterStartIdx = flatLessons.findIndex(l => l.id === getChapterLessons(chapter)[0]?.id)
 
         return (
           <div key={chapter.id} className="flex flex-col items-center w-full">
@@ -50,7 +51,7 @@ export function LessonTree({ course, completedLessonIds, inProgressMap, activeLe
               )}
             </div>
 
-            {chapter.lessons.map((lesson, lessonIdx) => {
+            {getChapterLessons(chapter).map((lesson, lessonIdx) => {
               const globalIdx = chapterStartIdx + lessonIdx
               const prevLesson = globalIdx > 0 ? flatLessons[globalIdx - 1] : null
 

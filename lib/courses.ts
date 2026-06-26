@@ -7,6 +7,15 @@ const COURSES: Course[] = [
   attackingChess as Course,
 ]
 
+export function getChapterLessons(chapter: Chapter): Lesson[] {
+  const sectionLessons = chapter.sections?.flatMap((s) => s.lessons) ?? []
+  return [...sectionLessons, ...chapter.lessons]
+}
+
+export function getCourseLessons(course: Course): Lesson[] {
+  return course.chapters.flatMap(getChapterLessons)
+}
+
 export function getAllCourses(): Course[] {
   return COURSES
 }
@@ -20,7 +29,7 @@ export function findLessonInCourses(
 ): { course: Course; lesson: Lesson; chapter: Chapter } | null {
   for (const course of COURSES) {
     for (const chapter of course.chapters) {
-      for (const lesson of chapter.lessons) {
+      for (const lesson of getChapterLessons(chapter)) {
         if (lesson.id === lessonId) {
           return { course, lesson, chapter }
         }

@@ -12,6 +12,7 @@ import { buildUserHighlightStyles, composeSquareStyles } from "@/lib/legal-move-
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { clsx } from "clsx"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { useLessonSounds } from "@/hooks/useLessonSounds"
 
 interface Props {
   step: ConceptStep
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function ConceptCard({ step, onContinue }: Props) {
+  const { play } = useLessonSounds()
   const boardOrientation = useLessonBoardOrientation("white")
   const stages = step.stages?.length ? step.stages : null
   const [stageIndex, setStageIndex] = useState(0)
@@ -62,6 +64,7 @@ export function ConceptCard({ step, onContinue }: Props) {
   ) : undefined
 
   function handleAdvance() {
+    play("stepAdvance")
     if (stages && stageIndex < stages.length - 1) {
       setStageIndex(i => i + 1)
       return

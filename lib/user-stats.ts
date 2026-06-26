@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { getXp, getLevel, getWeekActivity, getTrophies } from "@/lib/gamification"
-import { getAllCourses, getCourse } from "@/lib/courses"
+import { getAllCourses, getCourse, getCourseLessons } from "@/lib/courses"
 import type { Course } from "@/lib/types"
 import { getCourseProgress } from "@/lib/progress"
 
@@ -73,10 +73,7 @@ export async function fetchUserStats(userId: string, heroCourse?: Course): Promi
   })
 
   const allCourses = getAllCourses()
-  const totalLessons = allCourses.reduce(
-    (n, c) => n + c.chapters.reduce((m, ch) => m + ch.lessons.length, 0),
-    0,
-  )
+  const totalLessons = allCourses.reduce((n, c) => n + getCourseLessons(c).length, 0)
 
   const courseProgress = allCourses.map(c => ({
     courseId: c.id,

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useSoundOnActive } from "@/hooks/useLessonSounds"
 import type { Course, Lesson } from "@/lib/types"
+import { getChapterLessons, getCourseLessons } from "@/lib/courses"
 import { isLessonUnlocked } from "@/lib/progress"
 import { getLessonIcon } from "@/lib/lesson-icons"
 import { clsx } from "clsx"
@@ -39,9 +40,9 @@ export function LessonCompleteScreen({
   useSoundOnActive(true, "lessonComplete")
   const icon = getLessonIcon(lesson.id)
   const courseComplete = !nextLesson
-  const totalLessons = course.chapters.reduce((n, ch) => n + ch.lessons.length, 0)
+  const totalLessons = getCourseLessons(course).length
   const lessonsDone = completedLessonIds.filter(id =>
-    course.chapters.some(ch => ch.lessons.some(l => l.id === id))
+    course.chapters.some(ch => getChapterLessons(ch).some(l => l.id === id))
   ).length
 
   return (
@@ -162,7 +163,7 @@ export function LessonCompleteScreen({
               </div>
 
               <div className="flex flex-col gap-3">
-                {chapter.lessons.map(l => {
+                {getChapterLessons(chapter).map(l => {
                   const isDone = completedLessonIds.includes(l.id)
                   const isCurrent = l.id === lesson.id
                   const isNext = nextLesson?.id === l.id

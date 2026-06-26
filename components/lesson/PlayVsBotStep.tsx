@@ -4,8 +4,10 @@ import { Chess, type Square } from "chess.js"
 import type { PlayVsBotStep as PlayVsBotStepType } from "@/lib/types"
 import { Chessboard } from "react-chessboard"
 import type { PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from "react-chessboard"
+import { CheckmateBadgeUnlockCard } from "@/components/checkmate-badges/CheckmateBadgeUnlockCard"
 import { FeedbackPanel } from "./FeedbackPanel"
 import { LessonLayout } from "./LessonLayout"
+import { SanNotation } from "@/components/chess/SanNotation"
 import { useBoardPreferences } from "@/components/BoardPreferencesProvider"
 import { useLessonBoardOrientation } from "@/hooks/useLessonBoardOrientation"
 import { useLegalMoveHighlights } from "@/hooks/useLegalMoveHighlights"
@@ -13,6 +15,8 @@ import { usePieceLatchRef } from "@/hooks/usePieceLatchRef"
 import { buildLastMoveStyles, buildSelectionStyles, buildUserHighlightStyles, composeSquareStyles, DRAG_ACTIVATION_DISTANCE } from "@/lib/legal-move-highlights"
 import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHandlers"
 import { playBoardMoveSound } from "@/lib/ui-sounds"
+import { getCheckmateBadgeForStep } from "@/lib/checkmate-badges"
+import { recordCheckmateBadge, type CheckmateBadgeRecord } from "@/lib/checkmate-badges-storage"
 import { clsx } from "clsx"
 import { MarkdownText } from "@/components/ui/MarkdownText"
 
@@ -31,6 +35,11 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
   const [moveHistory, setMoveHistory] = useState<string[]>([])
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
+  const [badgeUnlock, setBadgeUnlock] = useState<{
+    badgeId: string
+    record: CheckmateBadgeRecord
+    celebrate: boolean
+  } | null>(null)
   const userHighlightHandlers = useUserSquareHighlightHandlers(setUserHighlights)
 
   const learnerColor = (step.orientation ?? "white") === "white" ? "w" : "b"
@@ -52,10 +61,26 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
 
   const boardRef = usePieceLatchRef(latchAnimSquare)
 
+  function tryRecordBadge(learnerMoveCount: number) {
+    const badge = getCheckmateBadgeForStep(step.id)
+    if (!badge || step.successCondition !== "checkmate") return
+    const result = recordCheckmateBadge(badge.id, learnerMoveCount)
+    if (result) {
+      setBadgeUnlock({ badgeId: badge.id, record: result.record, celebrate: result.isNew })
+    }
+  }
+
   function checkOutcome(g: Chess, history: string[]): boolean {
     if (g.isCheckmate()) {
       const winner = g.turn() === "w" ? "b" : "w"
-      setOutcome(winner === learnerColor ? "won" : "lost")
+      const won = winner === learnerColor
+      if (won) {
+        const learnerMoves = history.filter((_, i) => i % 2 === 0).length
+        tryRecordBadge(learnerMoves)
+        setOutcome("won")
+      } else {
+        setOutcome("lost")
+      }
       return true
     }
     if (g.isDraw() || g.isStalemate()) { setOutcome("draw"); return true }
@@ -137,6 +162,7 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
     setMoveHistory([])
     setLastMove(null)
     setUserHighlights([])
+    setBadgeUnlock(null)
   }
 
   const squareStyles = composeSquareStyles(
@@ -169,7 +195,7 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
   return (
     <LessonLayout board={board}>
       <div>
-        <p className="text-lg font-semibold text-gray-900 leading-snug">{step.question}</p>
+        <p className="text-lg font-semibold text-gray-900 dark:text-slate-100 leading-snug">{step.question}</p>
         <div className="mt-2 flex items-center gap-3 flex-wrap">
           <span className="inline-flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full">
             🎯 {step.objective}
@@ -193,8 +219,9 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
       {moveHistory.length > 0 && !outcome && (
         <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
           {moveHistory.map((m, i) => (
-            <span key={i} className={clsx("text-xs rounded px-1.5 py-0.5 font-mono", i % 2 === 0 ? "bg-gray-800 text-white" : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300")}>
-              {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}{m}
+            <span key={i} className={clsx("text-sm rounded px-1.5 py-0.5 font-mono", i % 2 === 0 ? "bg-gray-800 text-white" : "bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-300")}>
+              {i % 2 === 0 ? `${Math.floor(i / 2) + 1}. ` : ""}
+              <SanNotation san={m} fen={step.fen} moveIndex={i} />
             </span>
           ))}
         </div>
@@ -207,6 +234,13 @@ export function PlayVsBotStep({ step, onComplete, isLastStep }: Props) {
       {/* Win screen — prominent move counter */}
       {outcome === "won" && (
         <div className="flex flex-col gap-4">
+          {badgeUnlock && (
+            <CheckmateBadgeUnlockCard
+              badgeId={badgeUnlock.badgeId}
+              record={badgeUnlock.record}
+              celebrate={badgeUnlock.celebrate}
+            />
+          )}
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl px-5 py-4 flex flex-col gap-1">
             <p className="text-2xl font-extrabold text-green-700 dark:text-green-400">
               ♟ Checkmate in {moveCount} {moveCount === 1 ? "move" : "moves"}!

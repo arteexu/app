@@ -9,6 +9,7 @@ import { unlockKeyConcept } from "@/lib/key-concepts-storage"
 import { unlockTacticalPattern } from "@/lib/tactical-patterns-storage"
 import { clsx } from "clsx"
 import { MarkdownText } from "@/components/ui/MarkdownText"
+import { Disclosure } from "@/components/ui/Disclosure"
 import { COMMENTARY_FEATURE_ENABLED } from "@/lib/commentary/config"
 import { generateCoachComment, type CoachContext } from "@/lib/commentary/client"
 import type { CommentaryResponse } from "@/lib/commentary/types"
@@ -33,6 +34,12 @@ interface Props {
    * a grounded explanation. Supplementary — never replaces `explanation`.
    */
   coachContext?: CoachContext
+  /**
+   * When true, the explanation now lives ON the board (square popovers), so the
+   * side panel declutters: the prose is collapsed behind a reveal toggle and the
+   * concept/pattern cards reveal on demand. Default false → classic always-on.
+   */
+  boardReveal?: boolean
 }
 
 export function FeedbackPanel({
@@ -47,6 +54,7 @@ export function FeedbackPanel({
   tacticalPatternId,
   tacticalPatternIds,
   coachContext,
+  boardReveal = false,
 }: Props) {
   const conceptIds = [...new Set([...(keyConceptIds ?? []), ...(keyConceptId ? [keyConceptId] : [])])]
   const patternIds = [...new Set([...(tacticalPatternIds ?? []), ...(tacticalPatternId ? [tacticalPatternId] : [])])]
@@ -65,14 +73,41 @@ export function FeedbackPanel({
   // eslint-disable-next-line react-hooks/exhaustive-deps -- play once when panel appears
   }, [])
 
-  return (
-    <div className="flex flex-col gap-3 mt-2">
+  const hasUnlocks = conceptUnlocks.length > 0 || patternUnlocks.length > 0
+  const unlockCards = (
+    <>
       {conceptUnlocks.map(({ id, celebrate }) => (
         <KeyConceptUnlockCard key={id} conceptId={id} celebrate={celebrate} />
       ))}
       {patternUnlocks.map(({ id, celebrate }) => (
         <TacticalPatternUnlockCard key={id} patternId={id} celebrate={celebrate} />
       ))}
+    </>
+  )
+
+  const explanationBody = (
+    <>
+      <p className={clsx("text-sm leading-relaxed", isCorrect ? "text-green-900/90 dark:text-green-200/90" : "text-red-900/90 dark:text-red-200/90")}>
+        <MarkdownText>{explanation}</MarkdownText>
+      </p>
+      {COMMENTARY_FEATURE_ENABLED && coachContext && <CoachsTake context={coachContext} />}
+    </>
+  )
+
+  return (
+    <div className="flex flex-col gap-3 mt-2">
+      {/* Concept/pattern unlocks: always-on classically, reveal-on-demand when
+          the board is carrying the explanation. */}
+      {hasUnlocks && (boardReveal ? (
+        <Disclosure
+          label={unlockSummaryLabel(conceptUnlocks.length, patternUnlocks.length)}
+          openLabel="Hide unlocks"
+          buttonClassName="border-2 border-amber-200 dark:border-amber-800 bg-amber-50/60 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300"
+        >
+          {unlockCards}
+        </Disclosure>
+      ) : unlockCards)}
+
       <div
         className={clsx(
           "rounded-2xl border-2 px-5 py-4 flex flex-col gap-3 transition-all",
@@ -85,10 +120,25 @@ export function FeedbackPanel({
           isCorrect ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400")}>
           {isCorrect ? "✓ Correct!" : "✗ Not quite."}
         </div>
-        <p className={clsx("text-sm leading-relaxed", isCorrect ? "text-green-900/90 dark:text-green-200/90" : "text-red-900/90 dark:text-red-200/90")}>
-          <MarkdownText>{explanation}</MarkdownText>
-        </p>
-        {COMMENTARY_FEATURE_ENABLED && coachContext && <CoachsTake context={coachContext} />}
+
+        {boardReveal && isCorrect ? (
+          <>
+            <p className="text-sm text-green-900/80 dark:text-green-200/80 leading-relaxed">
+              The explanation is on the board — hover or tap the marked square{" "}
+              <span aria-hidden>✦</span> to see why this move works.
+            </p>
+            <Disclosure
+              label="Show explanation here instead"
+              openLabel="Hide explanation"
+              buttonClassName="text-green-800 dark:text-green-300 hover:bg-green-100/60 dark:hover:bg-green-900/30"
+            >
+              {explanationBody}
+            </Disclosure>
+          </>
+        ) : (
+          explanationBody
+        )}
+
         <Button
           onClick={() => {
             play("stepAdvance")
@@ -103,6 +153,13 @@ export function FeedbackPanel({
       </div>
     </div>
   )
+}
+
+function unlockSummaryLabel(concepts: number, patterns: number): string {
+  const parts: string[] = []
+  if (concepts > 0) parts.push(`${concepts} Key Concept${concepts === 1 ? "" : "s"}`)
+  if (patterns > 0) parts.push(`${patterns} Tactical Pattern${patterns === 1 ? "" : "s"}`)
+  return `🎁 Reveal ${parts.join(" · ")}`
 }
 
 /**

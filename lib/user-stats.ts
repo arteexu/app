@@ -3,6 +3,7 @@ import { getXp, getLevel, getWeekActivity, getTrophies } from "@/lib/gamificatio
 import { getAllCourses, getCourse, getCourseLessons } from "@/lib/courses"
 import type { Course } from "@/lib/types"
 import { getCourseProgress } from "@/lib/progress"
+import { recordVisit } from "@/lib/streak"
 
 export const WEEKLY_GOAL_HRS = 5
 
@@ -56,8 +57,9 @@ export async function fetchUserStats(userId: string, heroCourse?: Course): Promi
   const correct = attemptRows.filter(a => a.is_correct).length
   const masteryRate = totalAttempts > 0 ? Math.round((correct / totalAttempts) * 100) : null
 
-  const currentStreak = streak?.current_streak ?? 0
-  const longestStreak = streak?.longest_streak ?? 0
+  // Recording the visit makes today count toward the streak even when the user
+  // hasn't completed a lesson today (it used to update only on lesson completion).
+  const { currentStreak, longestStreak } = await recordVisit(userId, streak)
   const xp = getXp(totalCompletedSteps, completedLessonIds.length)
   const level = getLevel(xp)
   const { days, totalHours } = getWeekActivity(attemptRows.map(a => a.attempted_at))

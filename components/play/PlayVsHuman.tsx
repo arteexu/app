@@ -266,7 +266,7 @@ export function PlayVsHuman({ playerName }: { playerName: string }) {
     // Ignore my own move echoed back (already applied optimistically).
     if (r.ply !== cur.length + 1) {
       // Out of order (missed a move) — reconcile from the DB.
-      void reconcile()
+      void syncFromServer()
       return
     }
     const pm = rowToPlayed(r)
@@ -292,22 +292,59 @@ export function PlayVsHuman({ playerName }: { playerName: string }) {
 
   function handleGameUpdate(g: PlayGameRow) {
     setDrawOfferBy(g.draw_offer_by)
+    // Backup move path: play_games carries fen/turn/ply on every move via the
+    // persistMove mirror update. The play_games UPDATE channel is column-only RLS
+    // and always delivers, so if its ply is ahead of our local move list we pull
+    // the authoritative moves from the DB — guaranteeing a move never gets stuck
+    // even if the play_moves INSERT event is missed. syncFromServer() is guarded
+    // so it no-ops when we're already in sync (no double-apply).
+    if (g.ply > movesRef.current.length && !resultRef.current) {
+      void syncFromServer()
+    }
     if (g.status === "complete" && g.winner && !resultRef.current) {
       applyRowEnd(g)
     }
   }
 
-  async function reconcile() {
+  /**
+   * Pull the authoritative move list from the DB and apply anything newer than
+   * our local state. Guarded by ply count so it never re-applies a move we
+   * already have (prevents double-apply when both the play_moves INSERT and the
+   * play_games UPDATE arrive for the same move). `force` re-syncs even at equal
+   * length to recover from a divergence (e.g. a rejected optimistic move).
+   */
+  async function syncFromServer(opts?: { force?: boolean }) {
     const id = gameIdRef.current
     if (!id) return
     const moveRows = await loadMoves(id)
+    const prevLen = movesRef.current.length
+    if (moveRows.length < prevLen) return
+    if (moveRows.length === prevLen && !opts?.force) return
+
     const played = moveRows.map(rowToPlayed)
     setMoves(played)
+    setDrawOfferBy(null)
+
     const last = moveRows[moveRows.length - 1]
-    if (last) {
-      const liveChess = replayMoves(played)
-      setClock(last.white_clock_ms, last.black_clock_ms, colorFromChar(liveChess.turn()), !resultRef.current)
+    if (!last) return
+
+    if (moveRows.length > prevLen) {
+      try {
+        const before = new Chess(
+          moveRows.length > 1 ? moveRows[moveRows.length - 2].fen_after : undefined,
+        )
+        const mv = before.move(last.san)
+        if (mv) playBoardMoveSound(mv, new Chess(last.fen_after))
+      } catch {
+        /* sound best-effort */
+      }
     }
+
+    const afterChess = new Chess(last.fen_after)
+    const nextTurn = other(last.color)
+    const natural = detectResult(afterChess)
+    setClock(last.white_clock_ms, last.black_clock_ms, nextTurn, !natural)
+    if (natural) endLocally(natural)
   }
 
   // ── Local move application ───────────────────────────────────────────────────
@@ -362,7 +399,7 @@ export function PlayVsHuman({ playerName }: { playerName: string }) {
       void p.then(() => endLocally(natural))
     } else {
       void p.then((r) => {
-        if (!r.ok) void reconcile()
+        if (!r.ok) void syncFromServer({ force: true })
       })
     }
     return true

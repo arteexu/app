@@ -13,6 +13,33 @@ export interface BoardAnnotations {
   highlightSquares?: Record<string, string> // square → css color
 }
 
+// ─── On-Board Square Explanations ─────────────────────────────────────────────
+// Optional, author-supplied explanations anchored to a specific square. Surfaced
+// as a subtle marker on the board that reveals a small popover on hover/focus/
+// click — moving the "why" of a move onto the board instead of the side panel.
+//
+// `kind` drives the marker color/icon:
+//   good    — a strong/correct idea (emerald, ✓)
+//   bad     — a mistake/refuted idea (red, ✗)
+//   concept — a strategic key-concept note (amber, 💡)
+//   pattern — a tactical pattern note (rose, 🎯)
+//   info    — neutral note (indigo, •)
+
+export type BoardAnnotationKind = "good" | "bad" | "concept" | "pattern" | "info"
+
+export interface BoardSquareAnnotation {
+  square: string                 // e.g. "h4"
+  label: string                  // short headline shown bold in the popover
+  detail?: string                // longer explanation (supports **bold**)
+  kind?: BoardAnnotationKind     // defaults to "info"
+  keyConceptId?: string          // optional link surfaced as a chip in the popover
+  tacticalPatternId?: string     // optional link surfaced as a chip in the popover
+  /** Squares to highlight on the board while this marker is active (hover/focus/pinned). Author only — never inferred. */
+  highlightSquares?: string[]
+  /** Arrows to draw while this marker is active. Author only — never inferred. */
+  arrows?: BoardArrow[]
+}
+
 // ─── Step Types ───────────────────────────────────────────────────────────────
 
 export type StepType =
@@ -87,6 +114,12 @@ export interface PuzzleStep {
   orientation?: "white" | "black"  // whose perspective (default: white)
   solution: PuzzleLine
   annotations?: BoardAnnotations   // shown before the learner starts
+  /**
+   * Optional on-board square explanations revealed after the puzzle is solved.
+   * When omitted, the player derives a sensible fallback marker from the solved
+   * line (the last move's destination square carries `explanation`).
+   */
+  boardAnnotations?: BoardSquareAnnotation[]
   successMessage?: string          // shown on completion
   explanation: string              // shown after solving (or after all retries)
   preMovePosition?: PuzzlePreMove  // optional: opponent's previous move, for context
@@ -118,6 +151,13 @@ export interface ContinuationStep {
   moveAnnotations?: Record<number, string>  // move index → explanation shown at that move
   /** move index → board arrows/highlights shown while stepping at that move. */
   moveBoardAnnotations?: Record<number, BoardAnnotations>
+  /**
+   * Optional on-board square explanations per move index, revealed via subtle
+   * board markers (hover/focus/click popovers). When omitted for a move, the
+   * player derives a fallback marker from that move's destination square carrying
+   * the existing `moveAnnotations` text.
+   */
+  moveSquareAnnotations?: Record<number, BoardSquareAnnotation[]>
   /** move index → quality marker (notation color + piece badge when that move is shown). */
   moveQualities?: Record<number, MoveQuality>
   annotations?: BoardAnnotations

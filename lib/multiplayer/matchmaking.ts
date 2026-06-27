@@ -2,12 +2,13 @@
 // Ranked head-to-head matchmaking for Solitaire Chess.
 //
 // TWO EXPLICIT PATHS (the user always picks; we never silently drop them on a bot):
-//   • REAL player (searchRealMatch): RESUME an unfinished match, else join
-//     `match_queue` and keep polling — claiming another searching user via the
-//     mm_find_live_opponent() RPC, or detecting being claimed — until a LIVE
-//     opponent is found or the user cancels. This path is LIVE-ONLY: it never
-//     falls back to a ghost or bot. The UI drives the polling interval and shows
-//     a persistent "searching" state; cancelling removes the queue row.
+//   • REAL player (searchRealMatch): RESUME a pending LIVE head-to-head (only —
+//     never an abandoned bot/ghost match), else join `match_queue` and keep
+//     polling — claiming another searching user via the mm_find_live_opponent()
+//     RPC, or detecting being claimed — until a LIVE opponent is found or the
+//     user cancels. This path is LIVE-ONLY: it never falls back to a ghost or
+//     bot. The UI drives the polling interval and shows a persistent "searching"
+//     state; cancelling removes the queue row.
 //   • BOT (findBotMatch): RESUME an unfinished match, else immediately create a
 //     par/baseline bot match on a random ranked game.
 //
@@ -215,15 +216,21 @@ async function buildMatchAndGame(
   }
 }
 
-/** An unfinished match assigned to me (I created it and haven't played, or I was claimed). */
+/**
+ * An unfinished match assigned to me (I created it and haven't played, or I was
+ * claimed). When `liveOnly` is true, only genuine head-to-head LIVE matches are
+ * considered — this is critical for the real-player search, which must NEVER be
+ * silently resumed onto an abandoned bot/ghost match (that looked like a "quick
+ * bot fallback"). Bot/ghost matches are solo-style and shouldn't be auto-revived.
+ */
 async function findResumable(
   supabase: ReturnType<typeof createClient>,
   userId: string,
+  opts: { liveOnly?: boolean } = {},
 ): Promise<{ row: MatchRow; role: "a" | "b" } | null> {
-  const { data, error } = await supabase
-    .from("matches")
-    .select(MATCH_COLUMNS)
-    .eq("status", "active")
+  let query = supabase.from("matches").select(MATCH_COLUMNS).eq("status", "active")
+  if (opts.liveOnly) query = query.eq("opponent_kind", "live")
+  const { data, error } = await query
     .or(
       `and(player_a.eq.${userId},player_a_score.is.null),and(player_b.eq.${userId},player_b_score.is.null)`,
     )
@@ -346,8 +353,10 @@ export async function searchRealMatch(opts: { firstTick: boolean }): Promise<Rea
     if (rating.missing) return { kind: "error", reason: "no-backend" }
 
     if (opts.firstTick) {
-      // Resume an unfinished match before queuing.
-      const resumable = await findResumable(supabase, user.id)
+      // Resume only an unfinished LIVE match (e.g. a pending head-to-head you were
+      // claimed into). Bot/ghost matches are NOT auto-resumed here, so "real" mode
+      // never short-circuits onto a bot — it keeps searching the live queue.
+      const resumable = await findResumable(supabase, user.id, { liveOnly: true })
       if (resumable) {
         const built = await buildMatchAndGame(supabase, resumable.row, resumable.role, rating.elo)
         if (built) return { kind: "match", match: built }

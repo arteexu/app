@@ -67,6 +67,18 @@
                 "8": "Ne5 attacks the f7 pawn and forces Black to block with …Nbd7.",
                 "14": "White completes development and connects the rooks. A common Caro-Kann setup has been reached.",
                 "21": "We have arrived at a common Caro-Kann opening setup."
+              },
+              "moveSquareAnnotations": {
+                "8": [
+                  {
+                    "square": "e5",
+                    "label": "Ne5 — hits f7",
+                    "detail": "The knight attacks the **f7** pawn and forces Black to block with …Nbd7.",
+                    "kind": "good",
+                    "arrows": [{ "from": "e5", "to": "f7" }],
+                    "highlightSquares": ["f7"]
+                  }
+                ]
               }
             },
             {
@@ -118,6 +130,29 @@
                   }
                 }
               },
+              "boardAnnotations": [
+                {
+                  "square": "h4",
+                  "label": "h4 — the spearhead",
+                  "detail": "The h-pawn lunges forward, threatening **h5** to crack open the black king's cover. Speed matters more than the pawn.",
+                  "kind": "good",
+                  "keyConceptId": "kc-open-kingside-pawns"
+                },
+                {
+                  "square": "g6",
+                  "label": "g6 is the hook",
+                  "detail": "After **h5**, the h-pawn strikes g6. Black can't hold the kingside closed — lines open straight toward the king.",
+                  "kind": "concept"
+                },
+                {
+                  "square": "d3",
+                  "label": "Bishop already aimed",
+                  "detail": "The d3 bishop sits on the **b1–h7 diagonal**. The moment the kingside opens, it points right at h7.",
+                  "kind": "info",
+                  "arrows": [{ "from": "d3", "to": "h7" }],
+                  "highlightSquares": ["h7"]
+                }
+              ],
               "explanation": "h4! A great move. White pushes the h-pawn to hook the g-pawn and rip open the b1–h7 diagonal for the light-squared bishop.",
               "successMessage": "h4 — start the kingside pawn storm!"
             },
@@ -484,7 +519,18 @@
                     }
                   },
                   "explanation": "Ng5 attacks f7 — the weakest point in Black's position, defended only by the king. Losing it would lead to an unstoppable double threat: Nxf7 winning the rook. The candidate move check reveals it immediately.",
-                  "successMessage": "Nice eye! Ng5 exploits the weakest square in Black's position."
+                  "successMessage": "Nice eye! Ng5 exploits the weakest square in Black's position.",
+                  "boardAnnotations": [
+                    {
+                      "square": "g5",
+                      "label": "Ng5 — attacks f7",
+                      "detail": "The knight jumps to g5, attacking **f7** — defended only by the king. If Black loses f7, **Nxf7** wins the rook.",
+                      "kind": "good",
+                      "keyConceptId": "kc-see-the-whole-board",
+                      "arrows": [{ "from": "g5", "to": "f7" }],
+                      "highlightSquares": ["f7"]
+                    }
+                  ]
                 },
                 {
                   "type": "concept",
@@ -518,6 +564,18 @@
                     "2": "exd5 — White captures. Black now has several ways to recapture.",
                     "3": "…Nxd5 — Black grabs the pawn. If you calculated deeply enough, you have a thunderous reply."
                   },
+                  "moveSquareAnnotations": {
+                    "0": [
+                      {
+                        "square": "g5",
+                        "label": "Ng5 — attacks f7",
+                        "detail": "The knight attacks **f7** and the pawn on e5. Aggressive, but now Black has a say.",
+                        "kind": "good",
+                        "arrows": [{ "from": "g5", "to": "f7" }],
+                        "highlightSquares": ["f7"]
+                      }
+                    ]
+                  },
                   "moveQualities": {
                     "3": "dubious"
                   }
@@ -546,6 +604,17 @@
                   },
                   "explanation": "Nxf7! White sacrifices the knight to rip open the f7 square. After …Kxf7 Qf3+ the king is driven out and White's attack crashes through. One forcing move often has a thunderous follow-up you only see if you keep calculating.",
                   "successMessage": "Nxf7! — you calculated the crash-through line!",
+                  "boardAnnotations": [
+                    {
+                      "square": "f7",
+                      "label": "Nxf7! — rip open f7",
+                      "detail": "White sacrifices on **f7**, tearing open the king's cover. After …Kxf7 **Qf3+** drives the king out.",
+                      "kind": "good",
+                      "keyConceptId": "kc-calculate-deeper",
+                      "arrows": [{ "from": "g5", "to": "f7" }],
+                      "highlightSquares": ["f7"]
+                    }
+                  ],
                   "moveQualities": {
                     "0": "brilliant"
                   }
@@ -743,7 +812,22 @@
                   },
                   "keyConceptId": "kc-the-initiative",
                   "explanation": "Good move! Qb3 forks the bishop on c3 and the pawn on f7. White has sacrificed two pawns, but Black will quickly find out that material-oriented chess is poor chess. White's speedy development and Black's vulnerable king make for a very deadly combo.",
-                  "successMessage": "Strong attacking move! Material is less important than king safety and development."
+                  "successMessage": "Strong attacking move! Material is less important than king safety and development.",
+                  "boardAnnotations": [
+                    {
+                      "square": "b3",
+                      "label": "Qb3 — double attack",
+                      "detail": "The queen forks the bishop on **c3** and the pawn on **f7**.",
+                      "kind": "good",
+                      "tacticalPatternId": "tp-fork",
+                      "keyConceptId": "kc-the-initiative",
+                      "arrows": [
+                        { "from": "b3", "to": "c3" },
+                        { "from": "b3", "to": "f7" }
+                      ],
+                      "highlightSquares": ["c3", "f7"]
+                    }
+                  ]
                 },
                 {
                   "type": "puzzle",
@@ -765,7 +849,17 @@
                     }
                   },
                   "explanation": "Bxf7+! White captures f7 to expose Black's king. After …Kf8 the attack continues with devastating effect — White's pieces swarm the exposed king while Black's extra rook is useless.",
-                  "successMessage": "Attack the king!"
+                  "successMessage": "Attack the king!",
+                  "boardAnnotations": [
+                    {
+                      "square": "f7",
+                      "label": "Bxf7+ — king exposed",
+                      "detail": "The bishop captures on **f7**, ripping open the king's cover.",
+                      "kind": "good",
+                      "arrows": [{ "from": "c4", "to": "f7" }],
+                      "highlightSquares": ["f7"]
+                    }
+                  ]
                 },
                 {
                   "type": "puzzle",
@@ -806,6 +900,21 @@
                     "0": "Black tries to block the e5 square, but White's attack is far from over.",
                     "1": "Ne5! The knight joins the attack, eyeing c6 and f7. Black's position is crumbling.",
                     "2": "Black blocks the knight — but White has a stunning resource ready."
+                  },
+                  "moveSquareAnnotations": {
+                    "1": [
+                      {
+                        "square": "e5",
+                        "label": "Ne5 — joins the attack",
+                        "detail": "The knight eyes **c6** and **f7**. Black's position is crumbling.",
+                        "kind": "good",
+                        "arrows": [
+                          { "from": "e5", "to": "c6" },
+                          { "from": "e5", "to": "f7" }
+                        ],
+                        "highlightSquares": ["c6", "f7"]
+                      }
+                    ]
                   }
                 },
                 {

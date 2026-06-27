@@ -16,6 +16,11 @@ import { useMoveQualityPieceBadge } from "@/hooks/useMoveQualityPieceBadge"
 import { destinationSquareForMove } from "@/lib/move-quality"
 import { TacticalPatternUnlockCard } from "@/components/tactical-patterns/TacticalPatternUnlockCard"
 import { unlockTacticalPattern } from "@/lib/tactical-patterns-storage"
+import { BoardSquareOverlay } from "./BoardSquareOverlay"
+import { Disclosure } from "@/components/ui/Disclosure"
+import { resolveBoardAnnotations } from "@/lib/board-explanations/derive"
+import { BOARD_EXPLANATIONS_ENABLED, BOARD_EXPLANATIONS_FALLBACK } from "@/lib/board-explanations/config"
+import type { AnnotationVisualHints } from "@/lib/board-explanations/visual-hints"
 
 interface Props {
   step: ContinuationStepType
@@ -28,6 +33,7 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
   const [moveIndex, setMoveIndex] = useState(-1)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
   const [patternUnlocks, setPatternUnlocks] = useState<Array<{ id: string; celebrate: boolean }>>([])
+  const [markerVisuals, setMarkerVisuals] = useState<AnnotationVisualHints | null>(null)
   const userHighlightHandlers = useUserSquareHighlightHandlers(setUserHighlights)
   const prevMoveIndex = useRef(-1)
   const moveIndexRef = useRef(-1)
@@ -112,7 +118,13 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
     moveIndex === -1 ? resetBoardAnnotations.squareStyles : moveBoardAnnotations.squareStyles,
     moveIndex >= 0 ? buildLastMoveStyles(lastMove?.from, lastMove?.to) : {},
     buildUserHighlightStyles(userHighlights),
+    markerVisuals?.squareStyles,
   )
+
+  const composedArrows = [
+    ...activeArrows,
+    ...(markerVisuals?.arrows ?? []),
+  ]
 
   const activeQuality =
     moveIndex >= 0 && step.moveQualities?.[moveIndex]
@@ -127,14 +139,33 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
     activeQuality?.square ? activeQuality : null,
   )
 
+  // ── On-board explanation markers for the current move ─────────────────────
+  // Explicit `moveSquareAnnotations` win; otherwise anchor the existing
+  // `moveAnnotations` prose to the move's destination square as a fallback.
+  const moveAnnotationsList = useMemo(() => {
+    if (!BOARD_EXPLANATIONS_ENABLED || moveIndex < 0) return []
+    return resolveBoardAnnotations(
+      step.moveSquareAnnotations?.[moveIndex],
+      {
+        lastMove,
+        explanation: step.moveAnnotations?.[moveIndex],
+        label: step.moves[moveIndex] ?? "This move",
+        quality: step.moveQualities?.[moveIndex],
+      },
+      BOARD_EXPLANATIONS_FALLBACK,
+    )
+  }, [moveIndex, lastMove, step])
+
+  const overlayActive = BOARD_EXPLANATIONS_ENABLED && moveAnnotationsList.length > 0
+
   const board = (
-    <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
+    <div ref={boardRef} className="relative w-full h-full" onContextMenu={(e) => e.preventDefault()}>
       <Chessboard
         options={{
           position: currentFen,
           boardOrientation,
           allowDragging: false,
-          arrows: activeArrows,
+          arrows: composedArrows,
           squareStyles: composedSquareStyles,
           darkSquareStyle: { backgroundColor: "#769656" },
           lightSquareStyle: { backgroundColor: "#eeeed2" },
@@ -142,6 +173,13 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
           ...userHighlightHandlers,
         }}
       />
+      {overlayActive && (
+        <BoardSquareOverlay
+          annotations={moveAnnotationsList}
+          orientation={boardOrientation}
+          onActiveVisualsChange={setMarkerVisuals}
+        />
+      )}
     </div>
   )
 
@@ -190,11 +228,26 @@ export function ContinuationStep({ step, onComplete, isLastStep }: Props) {
         </p>
       </div>
 
-      {annotation && (
+      {annotation && (overlayActive ? (
+        <div className="bg-indigo-50/60 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-xl px-3 py-2.5">
+          <p className="text-xs text-indigo-700/80 dark:text-indigo-300/80 mb-1">
+            Hover or tap the marked square <span aria-hidden>✦</span> on the board for this move&apos;s note.
+          </p>
+          <Disclosure
+            label="Show note here instead"
+            openLabel="Hide note"
+            buttonClassName="text-indigo-800 dark:text-indigo-300 hover:bg-indigo-100/60 dark:hover:bg-indigo-900/40"
+          >
+            <div className="text-indigo-900 dark:text-indigo-200 text-sm">
+              <MarkdownText>{annotation}</MarkdownText>
+            </div>
+          </Disclosure>
+        </div>
+      ) : (
         <div className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 rounded-xl px-4 py-3 text-indigo-900 dark:text-indigo-200 text-sm">
           <MarkdownText>{annotation}</MarkdownText>
         </div>
-      )}
+      ))}
 
       {/* Move list */}
       <div className="flex flex-wrap gap-1.5">

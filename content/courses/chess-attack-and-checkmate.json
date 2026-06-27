@@ -577,6 +577,28 @@
                 "4": "3. Bc4 — The bishop aims at f7. Now the queen on h5 and bishop on c4 both target f7. The trap is fully set.",
                 "5": "3...Nf6?? — A natural-looking developing move, but a fatal blunder. Black tries to attack the queen without realising White has checkmate in one. The only defence was 3...g6.",
                 "6": "4. Qxf7# — Checkmate! The queen lands on f7, protected by the bishop on c4. The king cannot escape: d7 and e7 are controlled by the queen along rank 7, f8 is on the f-file, and d8 is blocked by Black's own queen. The bishop prevents capturing the queen."
+              },
+              "moveSquareAnnotations": {
+                "2": [
+                  {
+                    "square": "h5",
+                    "label": "Qh5 — eyes f7",
+                    "detail": "The queen on h5 immediately eyes **f7**, defended only by Black's king.",
+                    "kind": "concept",
+                    "arrows": [{ "from": "h5", "to": "f7" }],
+                    "highlightSquares": ["f7"]
+                  }
+                ],
+                "4": [
+                  {
+                    "square": "c4",
+                    "label": "Bc4 — aims at f7",
+                    "detail": "The bishop on c4 and queen on h5 both target **f7**.",
+                    "kind": "concept",
+                    "arrows": [{ "from": "c4", "to": "f7" }],
+                    "highlightSquares": ["f7"]
+                  }
+                ]
               }
             },
             {

@@ -24,6 +24,10 @@ import { sideToMove } from "@/lib/engine/format"
 import { useMoveQualityPieceBadge } from "@/hooks/useMoveQualityPieceBadge"
 import { TacticalPatternUnlockCard } from "@/components/tactical-patterns/TacticalPatternUnlockCard"
 import { unlockTacticalPattern } from "@/lib/tactical-patterns-storage"
+import { BoardSquareOverlay } from "./BoardSquareOverlay"
+import { resolveBoardAnnotations } from "@/lib/board-explanations/derive"
+import { BOARD_EXPLANATIONS_ENABLED, BOARD_EXPLANATIONS_FALLBACK } from "@/lib/board-explanations/config"
+import type { AnnotationVisualHints } from "@/lib/board-explanations/visual-hints"
 
 interface Props {
   step: PuzzleStepType
@@ -59,6 +63,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
   const [lastMove, setLastMove]             = useState<{ from: string; to: string } | null>(null)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
   const [midPatternUnlock, setMidPatternUnlock] = useState<{ id: string; celebrate: boolean } | null>(null)
+  const [markerVisuals, setMarkerVisuals] = useState<AnnotationVisualHints | null>(null)
 
   const { showLegalMoves } = useBoardPreferences()
 
@@ -419,15 +424,22 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
         canAttemptSolve ? buildSelectionStyles(selectedSquare) : {},
       )
     }
-    // wrong / solved — keep the most recent move highlighted
-    return buildLastMoveStyles(lastMove?.from, lastMove?.to)
+    // solved — keep the most recent move highlighted; merge marker hover highlights
+    return composeSquareStyles(
+      buildLastMoveStyles(lastMove?.from, lastMove?.to),
+      markerVisuals?.squareStyles,
+    )
   })()
 
   const activeArrows: Arrow[] = (() => {
     if (analysisMode) return []
     if (showingPrev && step.preMovePosition?.arrows)
       return step.preMovePosition.arrows.map(a => ({ startSquare: a.from as any, endSquare: a.to as any, color: a.color ?? "#ef4444" }))
-    return (state === "idle" && moveHistory.length === 0) ? annotationArrows : []
+    const base = (state === "idle" && moveHistory.length === 0) ? annotationArrows : []
+    if (state === "solved" && markerVisuals?.arrows?.length) {
+      return [...base, ...markerVisuals.arrows]
+    }
+    return base
   })()
 
   const showModeToggle   = blunderPlayed && !showingPrev && state !== "solved"
@@ -442,8 +454,41 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
 
   useMoveQualityPieceBadge(boardRef, activeQualityBadge)
 
+  // ── On-board explanation markers (revealed once solved) ───────────────────
+  // Anchor to the learner's key move (solution move 0): its destination square
+  // carries the existing prose explanation as the fallback when a step has no
+  // explicit `boardAnnotations`.
+  const keyMove = useMemo(() => {
+    if (!step.solution.moves[0]) return null
+    try {
+      const g = new Chess(step.fen)
+      const mv = g.move(step.solution.moves[0])
+      return mv ? { from: mv.from, to: mv.to } : null
+    } catch { return null }
+  }, [step.fen, step.solution.moves])
+
+  const solvedAnnotations = useMemo(() => {
+    if (!BOARD_EXPLANATIONS_ENABLED) return []
+    return resolveBoardAnnotations(
+      step.boardAnnotations,
+      {
+        lastMove: keyMove,
+        explanation: step.explanation,
+        label: step.solution.moves[0]
+          ? `${step.solution.moves[0]} — the key move`
+          : "Why this move",
+        quality: step.moveQualities?.[0],
+        keyConceptId: step.keyConceptId ?? step.keyConceptIds?.[0],
+        tacticalPatternId: step.tacticalPatternId ?? step.tacticalPatternIds?.[0],
+      },
+      BOARD_EXPLANATIONS_FALLBACK,
+    )
+  }, [step, keyMove])
+
+  const overlayActive = BOARD_EXPLANATIONS_ENABLED && state === "solved" && solvedAnnotations.length > 0
+
   const board = (
-    <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
+    <div ref={boardRef} className="relative w-full h-full" onContextMenu={(e) => e.preventDefault()}>
       <Chessboard
         options={{
           position: displayFen,
@@ -461,6 +506,13 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
           ...(analysisMode || canAttemptSolve ? userHighlightHandlers : {}),
         }}
       />
+      {overlayActive && (
+        <BoardSquareOverlay
+          annotations={solvedAnnotations}
+          orientation={boardOrientation}
+          onActiveVisualsChange={setMarkerVisuals}
+        />
+      )}
     </div>
   )
 
@@ -711,6 +763,7 @@ export function PuzzleStep({ step, onComplete, isLastStep }: Props) {
                 onNext={() => onComplete(true)}
                 isLastStep={isLastStep}
                 sound="celebration"
+                boardReveal={overlayActive}
                 coachContext={
                   step.solution.moves[0]
                     ? { fenBefore: step.fen, moveSan: step.solution.moves[0] }

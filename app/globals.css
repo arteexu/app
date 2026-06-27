@@ -196,6 +196,42 @@ body {
   letter-spacing: -0.06em;
 }
 
+/* ── On-board explanation markers (BoardSquareOverlay) ───────────────────────
+   A subtle ring outlines the relevant square with a soft, slow pulse so the
+   learner knows what to hover/tap. The active (open) ring brightens and stops
+   pulsing. The corner badge gives a quieter idle breathe. */
+.board-marker-ring {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+  animation: boardMarkerPulse 2.4s ease-in-out infinite;
+}
+.board-marker-ring-active,
+.group:hover .board-marker-ring,
+.group:focus-visible .board-marker-ring {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  animation: none;
+}
+.board-marker-dot {
+  animation: boardMarkerDot 2.4s ease-in-out infinite;
+}
+.board-marker-popover {
+  /* Opacity-only fade so the inline centering transform is never overridden. */
+  animation: boardMarkerPopIn 120ms ease-out;
+}
+
+@keyframes boardMarkerPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+@keyframes boardMarkerDot {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes boardMarkerPopIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* ── ChessMind branded loader ───────────────────────────────────────────────
    The knight mark (the brand glyph from the nav) hops with a knight's-move
    lilt while a soft violet glow breathes and three pips ripple beneath it. */
@@ -236,6 +272,10 @@ body {
   .chessmind-tile,
   .chessmind-pip { animation: none !important; }
   .chessmind-tile { box-shadow: 0 6px 18px -5px rgba(99, 102, 241, 0.5); }
+  .board-marker-ring,
+  .board-marker-dot,
+  .board-marker-popover { animation: none !important; }
+  .board-marker-ring { opacity: 0.9 !important; }
 }
 .mastery-stair-step,
 .mastery-stair-landing,

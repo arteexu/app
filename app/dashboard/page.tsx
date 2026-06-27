@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { getCourseProgress, getNextLesson, findLesson } from "@/lib/progress"
+import { recordVisit } from "@/lib/streak"
 import { getXp, getLevel, getWeekActivity } from "@/lib/gamification"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
@@ -56,7 +57,9 @@ export default async function Dashboard() {
   const heroInProgress = heroInProgressId ? findLesson(heroCourse, heroInProgressId) : null
 
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
-  const currentStreak = streak?.current_streak ?? 0
+  // Count the user's presence today (visiting counts, not only finishing a lesson),
+  // so the streak includes today instead of lagging a day behind.
+  const { currentStreak } = await recordVisit(user.id, streak)
   const xp = getXp(totalCompletedSteps, completedIds.length)
   const level = getLevel(xp)
   const { days, totalHours } = getWeekActivity((attempts ?? []).map(a => a.attempted_at))

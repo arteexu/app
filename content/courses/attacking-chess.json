@@ -192,7 +192,7 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "h5": "h5 is coming — but first drive the knight from h5 with a pawn break on the kingside.",
+                    "h5": "Too early — drive the knight from h5 with a pawn break on the kingside first.",
                     "Qe3": "The queen will join later. A pawn break on the kingside is the forcing move.",
                     "Nf3": "Too passive. Rip open the kingside with a pawn break first."
                   }
@@ -217,9 +217,9 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "g5": "g5 is premature — break open the kingside pawn cover with the h-pawn first.",
-                    "Qe3": "Bring the queen in later. The h-pawn break rips open the black kingside now.",
-                    "Bf4": "Too slow. Push the h-pawn to open the king."
+                    "g5": "g5 is premature — open the kingside pawn cover before pushing further.",
+                    "Qe3": "Bring the queen in later. Open the kingside pawn cover first.",
+                    "Bf4": "Too slow. Open the kingside pawn cover first."
                   }
                 }
               },
@@ -241,7 +241,7 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Nd4": "Nd4 is strong next — but first retreat the bishop to save it from …Ba6 and keep the attack going.",
+                    "Nd4": "Black threatens …Ba6 — save the attacked bishop before continuing the attack.",
                     "Qe3": "The queen will join the attack, but retreat the bishop first — Black threatens …Ba6.",
                     "b4": "Too slow. Black threatens …Ba6 — retreat the bishop before it gets trapped."
                   }
@@ -265,7 +265,7 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Nb5": "Nb5 is the idea — but first block Black's potential …d4 break and prepare the infiltration from d4.",
+                    "Nb5": "Black may break with …d4 — block that idea and improve the knight first.",
                     "Qe3": "The queen belongs in the attack, but the knight has a precise jump that blocks Black's plans.",
                     "f3": "Too early — improve the knight and block Black's plans on d4 first."
                   }
@@ -319,7 +319,7 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Rh1": "Doubling on the h-file is the follow-up — but tuck the king first so the rook lift is safe.",
+                    "Rh1": "Too early — tuck the king first so the rook lift on the h-file is safe.",
                     "Qh3": "Too direct. Tuck the king first so you can lift the rook with safety.",
                     "Re3": "Re3 is passive. Get the king out of the way before the h-file assault."
                   }
@@ -343,7 +343,7 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Qh3": "Qh3 is strong but doubling on the h-file first opens it with maximum force.",
+                    "Qh3": "Qh3 is strong but bring the heavy piece onto the h-file first — that opens it with maximum force.",
                     "Nf5": "Nf5 is interesting but doubling rooks on the h-file is the direct way to crash through.",
                     "Re3": "Too slow. Bring the heavy piece onto the h-file immediately."
                   }
@@ -370,16 +370,16 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "gxf5": "gxf5 opens the g-file but there's a forcing pawn capture on f6 that wins material.",
-                    "Nxf5": "Nxf5 is not as strong as the pawn sacrifice on f6.",
-                    "Qh3": "Qh3 misses the tactical shot. Calculate the pawn sacrifice on f6."
+                    "gxf5": "gxf5 opens the g-file but there's a forcing pawn capture that wins material first.",
+                    "Nxf5": "Nxf5 is not as strong — look for a pawn capture that wins material by force.",
+                    "Qh3": "Qh3 misses the tactical shot. Look for a forcing pawn capture that wins material."
                   },
                   "2": {
-                    "Qh3": "A pawn capture on g6 is forcing — open the h-file before bringing the queen in.",
+                    "Qh3": "A forcing pawn capture opens the h-file — do that before bringing the queen in.",
                     "Nf5": "Keep calculating — ripping open the kingside with a pawn capture is next."
                   },
                   "4": {
-                    "Qh3": "The bishop sacrifice on g7 wins the exchange with tempo — that's the point.",
+                    "Qh3": "Win material on g7 with tempo before bringing the queen in.",
                     "Rh6": "Not yet — win material on g7 first."
                   }
                 }
@@ -408,7 +408,7 @@
                 ],
                 "wrongMoveExplanations": {
                   "0": {
-                    "Qh3": "Qh3 is strong but lifting the rook to the 6th rank crashes through immediately.",
+                    "Qh3": "Qh3 is strong but the rook has a lift on the kingside that crashes through immediately.",
                     "Bxg7": "The bishop is already gone. Lift the rook into the attack on the kingside.",
                     "Nf5": "Too slow. The rook lift wins by force."
                   }
@@ -673,7 +673,7 @@
                     },
                     "alternatives": {
                       "2": {
-                        "Nc6": "Nc6 works too, but the pawn strike on c6 is the cleaner refutation — it damages White's structure and opens lines."
+                        "Nc6": "Nc6 works too, but a pawn thrust in the center is the cleaner refutation — it damages White's structure and opens lines."
                       }
                     }
                   },
@@ -776,7 +776,7 @@
                       "0": {
                         "Qd3": "Too slow. The queen is hanging, but this move is not forcing enough.",
                         "Nd5": "The knight has nowhere useful to go. There are no immediate threats.",
-                        "Re1": "Passive. Black is threatening …Nxc3 and …Nxe4 ideas — recapture on c3 immediately."
+                        "Re1": "Passive. Black is threatening …Nxc3 and …Nxe4 ideas — deal with the hanging queen first."
                       }
                     }
                   },

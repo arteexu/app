@@ -573,15 +573,15 @@
         "alternatives": [
           {
             "san": "Bc4",
-            "note": "Bc4 develops toward f7, but Morphy plays d4 first — opening the center is the priority when Black's structure is already loose."
+            "note": "Bc4 develops toward f7, but Morphy prioritizes opening the center when Black's …d6 has already loosened the pawn chain."
           },
           {
             "san": "Nc3",
-            "note": "Nc3 is natural development, but d4 challenges the center right away and sets up the dxe5 tactic on the next move."
+            "note": "Nc3 is natural development, but the center deserves immediate attention — Black's e5 pawn is under pressure."
           },
           {
             "san": "Be2",
-            "note": "Be2 is too passive. Morphy's whole plan is rapid, open play — strike in the center with d4."
+            "note": "Be2 is too passive for Morphy's style. Rapid, open play starts with a central challenge."
           }
         ]
       },
@@ -590,19 +590,19 @@
         "alternatives": [
           {
             "san": "Bc4",
-            "note": "Bc4 is a good developing move, but there is something more forcing — capture on e5 first to win material and open lines."
+            "note": "Bc4 develops toward f7, but Black's e5 pawn can be exploited first — look for something more forcing that wins material and opens the position."
           },
           {
             "san": "Nc3",
-            "note": "Nc3 develops, but dxe5 is more urgent. You win a pawn and open the position while the bishop on g4 is still pinned to the queen."
+            "note": "Nc3 develops, but the e5 pawn is hanging and the bishop on g4 is still tied to the queen. Find a more forcing capture that wins material."
           },
           {
             "san": "h3",
-            "note": "h3 challenges the bishop, but after …Bxf3 your pawn structure is damaged. Take on e5 first — it's more forcing and wins a pawn."
+            "note": "h3 challenges the bishop, but after …Bxf3 your pawn structure is damaged. There is a capture that wins a pawn and keeps your structure intact."
           },
           {
             "san": "Be2",
-            "note": "Be2 is passive. Morphy strikes in the center with dxe5, grabbing material and opening the game."
+            "note": "Be2 is passive. Morphy seizes material in the center while the bishop on g4 remains pinned."
           }
         ]
       },
@@ -611,11 +611,11 @@
         "alternatives": [
           {
             "san": "gxf3",
-            "note": "gxf3 recaptures but leaves doubled, isolated f-pawns. The queen recapture keeps your structure intact and eyes the weak f7 square."
+            "note": "gxf3 recaptures but leaves doubled, isolated f-pawns. Recapture with a piece that keeps your structure intact and eyes the weak f7 square."
           },
           {
             "san": "Bc4",
-            "note": "Bc4 develops, but you must recapture on f3 first. The queen on f3 is a powerful attacking piece — don't leave it behind."
+            "note": "Bc4 develops, but you must recapture on f3 first. Don't leave a powerful attacking piece behind."
           }
         ]
       },
@@ -624,11 +624,11 @@
         "alternatives": [
           {
             "san": "Be2",
-            "note": "Be2 is safe but slow. Bc4 adds immediate pressure on f7 and prepares the queen to jump to b3."
+            "note": "Be2 is safe but slow. Develop the bishop with immediate pressure on f7 — Morphy's pieces always have a target."
           },
           {
             "san": "Nc3",
-            "note": "Nc3 develops, but Bc4 first creates an immediate threat on f7 — development with a purpose beats plain development."
+            "note": "Nc3 develops, but there is a bishop move that creates an immediate threat on f7 before plain development."
           }
         ]
       },
@@ -637,11 +637,11 @@
         "alternatives": [
           {
             "san": "Qd3",
-            "note": "Qd3 is less active. Qb3 hits b7 and f7 simultaneously — Morphy always chooses the move that creates the most threats."
+            "note": "Qd3 is less active. Morphy always chooses the square that creates the most threats against b7 and f7 at once."
           },
           {
             "san": "O-O",
-            "note": "Castling is normally sound, but Qb3 creates immediate threats before Black can finish developing."
+            "note": "Castling is normally sound, but Black is far from developed — create immediate threats first."
           }
         ]
       },
@@ -650,15 +650,15 @@
         "alternatives": [
           {
             "san": "Bxf6",
-            "note": "Bxf6 damages Black's pawn structure but misses the point. The knight sacrifice on b5 opens lines and wins back material with interest."
+            "note": "Bxf6 damages Black's pawn structure but misses the point. A piece sacrifice on the queenside opens lines and wins back material with interest."
           },
           {
             "san": "Qxb5",
-            "note": "Qxb5 takes the pawn, but after …Qxb5 you've traded queens and lost the attack. The knight sacrifice keeps the initiative."
+            "note": "Qxb5 takes the pawn, but after …Qxb5 you've traded queens and lost the attack. A sacrifice keeps the initiative."
           },
           {
             "san": "Bxb5",
-            "note": "Bxb5 wins a pawn safely, but Morphy's knight sacrifice is more forcing — it opens the position and keeps every piece in the attack."
+            "note": "Bxb5 wins a pawn safely, but Morphy's piece sacrifice is more forcing — it opens the position and keeps every piece in the attack."
           }
         ]
       },
@@ -668,7 +668,7 @@
           {
             "san": "Bxd7+",
             "label": "Also winning",
-            "note": "Bxd7+ wins the exchange, but Morphy's rook sacrifice is cleaner — it removes the defender and keeps the attack rolling toward mate."
+            "note": "Bxd7+ wins the exchange, but removing the defender with a rook is cleaner — it keeps the attack rolling toward mate."
           }
         ]
       }
@@ -2194,7 +2194,7 @@
         "alternatives": [
           {
             "san": "d4",
-            "note": "Now c4 would make a lot more sense. Carlsen played this against Anand in their second match."
+            "note": "d4 commits to a different structure too early. In this move order, the pawn belongs on the c-file before challenging the center."
           }
         ]
       },

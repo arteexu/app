@@ -12,6 +12,7 @@ import { CoursePreviewCard } from "@/components/ui/CoursePreviewCard"
 import { getCourse, getCourseLessons } from "@/lib/courses"
 import { COURSE_PREVIEWS } from "@/lib/course-previews"
 import { WEEKLY_GOAL_HRS } from "@/lib/user-stats"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 type ProgressRow = {
   lesson_id: string
@@ -30,7 +31,7 @@ export default async function Dashboard() {
     { data: streak },
     { data: attempts },
   ] = await Promise.all([
-    supabase.from("profiles").select("display_name").eq("id", user.id).single(),
+    supabase.from("profiles").select("display_name, avatar_icon").eq("id", user.id).single(),
     supabase.from("user_progress").select("lesson_id, completed_step_ids, is_lesson_complete").eq("user_id", user.id),
     supabase.from("user_streaks").select("*").eq("user_id", user.id).single(),
     supabase.from("lesson_attempts").select("attempted_at, is_correct").eq("user_id", user.id),
@@ -91,7 +92,7 @@ export default async function Dashboard() {
   }).filter((c): c is NonNullable<typeof c> => c !== null)
 
   return (
-    <AppPageShell nav={<QuestNav active="dashboard" avatarInitial={name[0]?.toUpperCase() ?? "?"} />}>
+    <AppPageShell nav={<QuestNav active="dashboard" avatarInitial={name[0]?.toUpperCase() ?? "?"} avatarIcon={resolveProfileIcon(profile?.avatar_icon)} />}>
       <main className="flex-1 w-full max-w-6xl mx-auto px-5 sm:px-8 py-7 flex flex-col gap-7">
         <div className="grid lg:grid-cols-[1.5fr_1fr] gap-5">
           <QuestHero
@@ -208,6 +209,29 @@ export default async function Dashboard() {
             </p>
           </div>
           <span className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/30 group-hover:scale-[1.03] transition-transform">
+            ▶ Play
+          </span>
+        </Link>
+
+        <Link
+          href="/play"
+          className="group relative overflow-hidden rounded-3xl border border-emerald-200/60 dark:border-emerald-800/60 bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 dark:from-emerald-950/40 dark:via-teal-950/40 dark:to-sky-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-emerald-500/10 transition-shadow"
+        >
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white grid place-items-center text-3xl shadow-md shadow-emerald-500/30">
+            ♟
+          </span>
+          <div className="min-w-0 flex-1">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              New mode
+            </span>
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+              Play Chess
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+              Play complete games against the engine at any strength, or a live opponent in real time — with a clock and a separate Play rating.
+            </p>
+          </div>
+          <span className="shrink-0 inline-flex items-center gap-2 bg-emerald-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-emerald-500/30 group-hover:scale-[1.03] transition-transform">
             ▶ Play
           </span>
         </Link>

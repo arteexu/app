@@ -14,9 +14,27 @@ import type { SolitaireSetup } from "@/lib/solitaire/types"
 import { difficultyLabel } from "@/lib/solitaire-scoring"
 import { fetchSharedPool } from "@/lib/multiplayer/engine-games"
 import { fetchMyRating, fetchAllGameStats, type GameStat } from "@/lib/multiplayer/scores"
-import { findMatch, cancelSearch, applyPendingMatchRatings } from "@/lib/multiplayer/matchmaking"
+import {
+  findBotMatch,
+  searchRealMatch,
+  cancelSearch,
+  applyPendingMatchRatings,
+  RANKED_START_FULL_MOVE,
+  type OpponentChoice,
+} from "@/lib/multiplayer/matchmaking"
 import type { SharedGame, UserRating, MatchAndGame } from "@/lib/multiplayer/types"
 import { DifficultyPips } from "./DifficultyPips"
+import { ChessMindLoader } from "@/components/ui/ChessMindLoader"
+
+// How often the real-player search polls the queue while waiting (ms).
+const REAL_POLL_INTERVAL_MS = 1800
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+function formatElapsed(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${m}:${s.toString().padStart(2, "0")}`
+}
 
 interface Props {
   /** Start a RANKED head-to-head match (matchmaking). */
@@ -36,42 +54,122 @@ export function SolitaireMultiplayer({ onStartMatch, onCompete, autoFind = false
 
   // Matchmaking (ranked) state.
   const [searching, setSearching] = useState(false)
+  const [searchKind, setSearchKind] = useState<OpponentChoice>("real")
+  const [searchElapsed, setSearchElapsed] = useState(0)
   const [searchError, setSearchError] = useState<string | null>(null)
+  // The opponent the user wants to face when they tap Find (real ↔ bot).
+  const [oppMode, setOppMode] = useState<OpponentChoice>("real")
   const startedRef = useRef(false)
-  const searchActiveRef = useRef(false)
+  // Monotonic search id: each new search/cancel bumps it, invalidating any
+  // still-running poll loop so stale ticks can't navigate or keep polling.
+  const searchGenRef = useRef(0)
+  const elapsedTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const refreshRating = useCallback(() => {
     fetchMyRating().then(setRating)
   }, [])
 
-  const find = useCallback(async () => {
-    if (searchActiveRef.current) return
-    searchActiveRef.current = true
+  const reasonMessage = (reason: "signed-out" | "no-backend" | "error") =>
+    reason === "signed-out"
+      ? "Sign in to play ranked matches."
+      : reason === "no-backend"
+        ? "Matchmaking backend isn't available yet."
+        : "Couldn't find a match. Try again."
+
+  const stopElapsed = useCallback(() => {
+    if (elapsedTimerRef.current) {
+      clearInterval(elapsedTimerRef.current)
+      elapsedTimerRef.current = null
+    }
+  }, [])
+
+  const beginMatch = useCallback(
+    (match: MatchAndGame) => {
+      searchGenRef.current++ // invalidate any loop
+      stopElapsed()
+      // startPly comes from the match (engine games skip the opening, same for both).
+      onStartMatch({ game: match.game, side: match.side, startPly: match.startPly }, match)
+    },
+    [onStartMatch, stopElapsed],
+  )
+
+  // Continuous real-player search: stays in the queue and keeps polling every
+  // REAL_POLL_INTERVAL_MS until a live opponent is found or the user cancels.
+  const runRealSearch = useCallback(async () => {
+    const gen = ++searchGenRef.current
     setSearchError(null)
+    setSearchKind("real")
+    setSearchElapsed(0)
     setSearching(true)
-    const res = await findMatch()
-    if (!searchActiveRef.current) return // cancelled while searching
-    searchActiveRef.current = false
+    const startedAt = Date.now()
+    stopElapsed()
+    elapsedTimerRef.current = setInterval(
+      () => setSearchElapsed(Math.floor((Date.now() - startedAt) / 1000)),
+      1000,
+    )
+
+    let first = true
+    while (searchGenRef.current === gen) {
+      const res = await searchRealMatch({ firstTick: first })
+      first = false
+      if (searchGenRef.current !== gen) return // cancelled / superseded
+      if (res.kind === "match") {
+        beginMatch(res.match)
+        return
+      }
+      if (res.kind === "error") {
+        searchGenRef.current++ // stop the loop
+        stopElapsed()
+        setSearching(false)
+        setSearchError(reasonMessage(res.reason))
+        void cancelSearch()
+        return
+      }
+      // res.kind === "searching" → wait, then poll again.
+      await sleep(REAL_POLL_INTERVAL_MS)
+    }
+  }, [beginMatch, stopElapsed])
+
+  // Immediate bot match (explicit choice or the "play a bot instead" escape hatch).
+  const runBotSearch = useCallback(async () => {
+    const gen = ++searchGenRef.current
+    setSearchError(null)
+    setSearchKind("bot")
+    setSearching(true)
+    const res = await findBotMatch()
+    if (searchGenRef.current !== gen) return
     if (res.ok) {
-      // Navigate into play; keep "searching" true until this screen unmounts.
-      onStartMatch({ game: res.match.game, side: res.match.side, startPly: 0 }, res.match)
+      beginMatch(res.match)
       return
     }
+    searchGenRef.current++
     setSearching(false)
-    setSearchError(
-      res.reason === "signed-out"
-        ? "Sign in to play ranked matches."
-        : res.reason === "no-backend"
-          ? "Matchmaking backend isn't available yet."
-          : "Couldn't find a match. Try again.",
-    )
-  }, [onStartMatch])
+    setSearchError(reasonMessage(res.reason))
+  }, [beginMatch])
 
-  function stopSearch() {
-    searchActiveRef.current = false
+  const find = useCallback(
+    (mode: OpponentChoice) => {
+      if (mode === "bot") void runBotSearch()
+      else void runRealSearch()
+    },
+    [runBotSearch, runRealSearch],
+  )
+
+  // Cancel: stop the loop, leave the queue (so we aren't a stale queued entry).
+  const stopSearch = useCallback(() => {
+    searchGenRef.current++
+    stopElapsed()
     setSearching(false)
     void cancelSearch()
-  }
+  }, [stopElapsed])
+
+  // Opt-in escape hatch from a real-player search → leave the queue, play a bot.
+  const playBotInstead = useCallback(async () => {
+    searchGenRef.current++ // stop the real loop
+    stopElapsed()
+    await cancelSearch() // leave the queue before creating the bot match
+    void runBotSearch()
+  }, [runBotSearch, stopElapsed])
 
   useEffect(() => {
     let alive = true
@@ -84,12 +182,22 @@ export function SolitaireMultiplayer({ onStartMatch, onCompete, autoFind = false
     }
   }, [refreshRating])
 
+  // Clean up on unmount: stop any loop, clear the timer, and leave the queue so
+  // we never linger as a stale searcher.
+  useEffect(() => {
+    return () => {
+      searchGenRef.current++
+      stopElapsed()
+      void cancelSearch()
+    }
+  }, [stopElapsed])
+
   useEffect(() => {
     if (autoFind && !startedRef.current) {
       startedRef.current = true
-      void find()
+      void runRealSearch()
     }
-  }, [autoFind, find])
+  }, [autoFind, runRealSearch])
 
   const filtered = useMemo(() => {
     if (!pool) return null
@@ -151,26 +259,51 @@ export function SolitaireMultiplayer({ onStartMatch, onCompete, autoFind = false
         </header>
 
         {/* ── Ranked matchmaking ── */}
-        <div className="rounded-3xl border-2 border-rose-200 dark:border-rose-800/60 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-950/30 dark:to-fuchsia-950/20 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="min-w-0 flex-1">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
-              🎯 Ranked
-            </span>
-            <h2 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight mt-0.5">
-              Find a match
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 max-w-md">
-              Head-to-head Elo on a random ranked game. Resolves instantly against a ghost if
-              no live opponent is searching.
-            </p>
+        <div className="rounded-3xl border-2 border-rose-200 dark:border-rose-800/60 bg-gradient-to-br from-rose-50 to-fuchsia-50 dark:from-rose-950/30 dark:to-fuchsia-950/20 p-5 sm:p-6 flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="min-w-0 flex-1">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
+                🎯 Ranked
+              </span>
+              <h2 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight mt-0.5">
+                Find a match
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 max-w-md">
+                Head-to-head Elo on a random ranked engine game (starts around move{" "}
+                {RANKED_START_FULL_MOVE}). {oppMode === "real"
+                  ? "Keeps searching the live queue for a real opponent until one joins (or you cancel)."
+                  : "Plays immediately against a par bot."}
+              </p>
+            </div>
+            <button
+              onClick={() => void find(oppMode)}
+              disabled={searching}
+              className="shrink-0 inline-flex items-center justify-center gap-2 bg-rose-600 text-white font-display font-extrabold text-lg px-7 py-3.5 rounded-2xl shadow-[0_5px_0_#9f1239,0_8px_20px_rgba(225,29,72,0.35)] hover:bg-rose-700 hover:translate-y-[2px] hover:shadow-[0_3px_0_#9f1239] active:translate-y-[4px] active:shadow-none transition-all disabled:opacity-60 disabled:cursor-wait disabled:translate-y-0"
+            >
+              {searching ? "Searching…" : oppMode === "bot" ? "🤖 Play bot" : "⚔️ Find opponent"}
+            </button>
           </div>
-          <button
-            onClick={() => void find()}
-            disabled={searching}
-            className="shrink-0 inline-flex items-center justify-center gap-2 bg-rose-600 text-white font-display font-extrabold text-lg px-7 py-3.5 rounded-2xl shadow-[0_5px_0_#9f1239,0_8px_20px_rgba(225,29,72,0.35)] hover:bg-rose-700 hover:translate-y-[2px] hover:shadow-[0_3px_0_#9f1239] active:translate-y-[4px] active:shadow-none transition-all disabled:opacity-60 disabled:cursor-wait disabled:translate-y-0"
-          >
-            {searching ? "Searching…" : "⚔️ Find opponent"}
-          </button>
+
+          {/* Opponent choice: real player vs bot */}
+          <div>
+            <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+              Opponent
+            </span>
+            <div className="mt-1 grid grid-cols-2 gap-1 rounded-2xl bg-white/70 dark:bg-slate-900/40 p-1 max-w-sm">
+              <OppModeTab
+                label="🧑 Real player"
+                active={oppMode === "real"}
+                disabled={searching}
+                onClick={() => setOppMode("real")}
+              />
+              <OppModeTab
+                label="🤖 Bot"
+                active={oppMode === "bot"}
+                disabled={searching}
+                onClick={() => setOppMode("bot")}
+              />
+            </div>
+          </div>
         </div>
 
         {searchError && (
@@ -243,21 +376,47 @@ export function SolitaireMultiplayer({ onStartMatch, onCompete, autoFind = false
       {searching && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-slate-900/60 backdrop-blur-sm p-6">
           <div className="w-full max-w-sm rounded-3xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-2xl p-7 flex flex-col items-center gap-4 text-center">
-            <SearchSpinner />
-            <div>
-              <p className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
-                Finding an opponent…
-              </p>
-              <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
-                Looking for a live player, then a ghost. This is quick.
-              </p>
+            <ChessMindLoader size="md" label="Setting up your match" hideLabel />
+            {searchKind === "bot" ? (
+              <div>
+                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
+                  Setting up your bot match…
+                </p>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                  Loading a ranked game against the par bot.
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
+                  Searching for a player…
+                </p>
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                  Waiting in the live queue for a real opponent. This stays open until
+                  someone joins — hang tight or pick an option below.
+                </p>
+                <p className="mt-3 font-mono text-2xl font-extrabold tabular-nums text-rose-600 dark:text-rose-400">
+                  {formatElapsed(searchElapsed)}
+                </p>
+              </div>
+            )}
+
+            <div className="flex flex-col w-full gap-2">
+              {searchKind === "real" && (
+                <button
+                  onClick={() => void playBotInstead()}
+                  className="font-display font-bold text-sm px-5 py-2.5 rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition"
+                >
+                  🤖 Play a bot instead
+                </button>
+              )}
+              <button
+                onClick={stopSearch}
+                className="font-display font-bold text-sm px-5 py-2.5 rounded-xl border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-rose-300 transition"
+              >
+                Cancel
+              </button>
             </div>
-            <button
-              onClick={stopSearch}
-              className="mt-1 font-display font-bold text-sm px-5 py-2.5 rounded-xl border-2 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-rose-300 transition"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
@@ -265,12 +424,31 @@ export function SolitaireMultiplayer({ onStartMatch, onCompete, autoFind = false
   )
 }
 
-function SearchSpinner() {
+function OppModeTab({
+  label,
+  active,
+  disabled,
+  onClick,
+}: {
+  label: string
+  active: boolean
+  disabled?: boolean
+  onClick: () => void
+}) {
   return (
-    <svg className="animate-spin h-10 w-10 text-rose-600 dark:text-rose-400" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-    </svg>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      aria-pressed={active}
+      className={clsx(
+        "rounded-xl py-2 text-sm font-bold transition disabled:opacity-50 disabled:cursor-not-allowed",
+        active
+          ? "bg-rose-600 text-white shadow-sm"
+          : "text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200",
+      )}
+    >
+      {label}
+    </button>
   )
 }
 

@@ -1,34 +1,38 @@
 // lib/multiplayer/matchmaking.ts
 // Ranked head-to-head matchmaking for Solitaire Chess.
 //
-// PAIRING ORDER (findMatch):
-//   (a) RESUME — if you already have an unfinished match assigned to you (you
-//       created one and haven't played, or a live opponent claimed you), resume it.
-//   (b) LIVE   — join `match_queue` and, for a short window, try to atomically
-//       claim another searching user via the mm_find_live_opponent() RPC (and
-//       detect being claimed by someone else). Both get the SAME random ranked game.
-//   (c) GHOST  — nobody queued: pick a random ranked game that another user has a
-//       recorded `solitaire_scores` attempt on, and use that attempt as the opponent.
-//   (d) BOT    — no ghosts anywhere: a par/baseline bot on a random ranked game.
+// TWO EXPLICIT PATHS (the user always picks; we never silently drop them on a bot):
+//   • REAL player (searchRealMatch): RESUME an unfinished match, else join
+//     `match_queue` and keep polling — claiming another searching user via the
+//     mm_find_live_opponent() RPC, or detecting being claimed — until a LIVE
+//     opponent is found or the user cancels. This path is LIVE-ONLY: it never
+//     falls back to a ghost or bot. The UI drives the polling interval and shows
+//     a persistent "searching" state; cancelling removes the queue row.
+//   • BOT (findBotMatch): RESUME an unfinished match, else immediately create a
+//     par/baseline bot match on a random ranked game.
+//
+// GHOST DECISION: ghosts (a real user's *recorded* attempt) are intentionally NOT
+// used in the real-player path. "Real player" means a live human only, so the
+// searcher is never quietly matched against a recording or a bot. (Recorded
+// attempts still feed casual solo compete; they're just not a matchmaking opponent.)
 //
 // RESULTS (submitMatchResult): the higher solitaire-scoring score wins (tie =
-// draw); Elo is awarded HEAD-TO-HEAD (see ./elo.ts computeHeadToHead). For
-// ghost/bot, only the live player's rating changes (vs the opponent's stored Elo).
-// For live, BOTH players are rated, but because RLS only lets a user write their
-// OWN user_ratings row, each side applies its own delta: the resolver writes its
+// draw); Elo is awarded HEAD-TO-HEAD (see ./elo.ts computeHeadToHead). For a bot,
+// only the live player's rating changes (vs the bot's baseline Elo). For live,
+// BOTH players are rated, but because RLS only lets a user write their OWN
+// user_ratings row, each side applies its own delta: the resolver writes its
 // rating immediately; the other side applies theirs via applyPendingMatchRatings()
 // the next time they open matchmaking (a_applied / b_applied track this).
 //
 // HONESTY: this is asynchronous (no websockets). A live pairing's two players
-// solve on their own time and the match settles when both have submitted. The
-// ghost/bot paths resolve instantly so the searcher is never stuck.
+// solve on their own time and the match settles when both have submitted.
 //
 // Anti-cheat: scores are client-trusted via RLS (same caveat as solo compete). A
 // SECURITY DEFINER replay RPC is the recommended future hardening.
 
 import { createClient } from "@/lib/supabase/client"
-import type { Side } from "@/lib/solitaire/types"
-import { playableSide, userPlies } from "@/lib/solitaire/engine"
+import type { Side, SolitaireGame } from "@/lib/solitaire/types"
+import { playableSide, userPlies, moveNumberAtPly } from "@/lib/solitaire/engine"
 import { DEFAULT_SCORE_CONFIG } from "@/lib/solitaire-scoring"
 import { BASELINE_RATING, baselinePar, computeHeadToHead, outcomeFor } from "./elo"
 import { fetchEngineGameById, fetchRankedGames } from "./engine-games"
@@ -37,6 +41,35 @@ import type { MatchAndGame, MatchResultOutcome, OpponentKind, SharedGame } from 
 type FindMatchResult =
   | { ok: true; match: MatchAndGame }
   | { ok: false; reason: "signed-out" | "no-backend" | "error" }
+
+/** Who the searcher wants to face. */
+export type OpponentChoice = "real" | "bot"
+
+// Ranked engine games skip the opening: the player begins solving at this full
+// move instead of move 1 (the prior moves are already on the board — effectively
+// auto-revealed). Derived purely from the game + side so BOTH matched players
+// compute the SAME start and scoring stays fair.
+export const RANKED_START_FULL_MOVE = 7
+// Never start so deep that fewer than this many of the player's moves remain
+// (so short games "fall back gracefully" rather than starting past the end).
+const RANKED_MIN_REMAINING_GUESSES = 2
+
+/**
+ * The ply a ranked match begins solving from. Only engine games skip the opening
+ * (master games keep their normal start); games shorter than move 7 start from
+ * the top; the result is clamped to leave at least RANKED_MIN_REMAINING_GUESSES
+ * of the player's own moves. Deterministic, so both players get the same value.
+ */
+export function rankedStartPly(game: SolitaireGame, side: Side): number {
+  if (!game.isGenerated) return 0
+  const plies = userPlies(game, side, 0)
+  if (plies.length <= RANKED_MIN_REMAINING_GUESSES) return 0
+  const target = plies.find((p) => moveNumberAtPly(game, p) >= RANKED_START_FULL_MOVE)
+  if (target == null) return 0
+  const idx = plies.indexOf(target)
+  const maxIdx = plies.length - RANKED_MIN_REMAINING_GUESSES
+  return plies[Math.min(idx, maxIdx)]
+}
 
 interface MatchRow {
   id: string
@@ -61,9 +94,6 @@ interface MatchRow {
 const MATCH_COLUMNS =
   "id, game_id, player_a, player_b, is_ghost, opponent_kind, opponent_label, player_a_score, player_b_score, player_a_elo_before, player_a_elo_after, player_b_elo_before, player_b_elo_after, a_applied, b_applied, winner, status"
 
-const LIVE_POLL_ATTEMPTS = 5
-const LIVE_POLL_INTERVAL_MS = 750
-
 function looksLikeMissingTable(error: { code?: string; message?: string } | null): boolean {
   if (!error) return false
   const code = error.code ?? ""
@@ -80,16 +110,26 @@ function looksLikeMissingTable(error: { code?: string; message?: string } | null
   )
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
-
 function randomOf<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-/** A flawless-run score for a game+side — the ceiling used to derive a bot par. */
+// The ranked-game pool is stable for a session; cache it so a long real-player
+// search doesn't re-query engine_games on every poll tick.
+let rankedCache: SharedGame[] | null = null
+async function getRankedGames(): Promise<SharedGame[]> {
+  if (rankedCache && rankedCache.length > 0) return rankedCache
+  rankedCache = await fetchRankedGames()
+  return rankedCache
+}
+
+/** A flawless-run score for a game+side — the ceiling used to derive a bot par.
+ *  Counts only the guesses the player actually makes (from the ranked start ply)
+ *  so the bot's par matches the shortened, opening-skipped ranked game. */
 function maxScoreFor(game: SharedGame): number {
   const side = game.side
-  const guesses = userPlies(game.game, side, 0).length
+  const start = rankedStartPly(game.game, side)
+  const guesses = userPlies(game.game, side, start).length
   const mult = DEFAULT_SCORE_CONFIG.difficultyMultiplier(game.game.difficulty)
   return Math.round(guesses * DEFAULT_SCORE_CONFIG.basePerMove * mult)
 }
@@ -143,6 +183,7 @@ async function buildMatchAndGame(
   const shared = await fetchEngineGameById(row.game_id)
   if (!shared) return null
   const side: Side = playableSide(shared.game)
+  const startPly = rankedStartPly(shared.game, side)
 
   const opponentScore = role === "a" ? row.player_b_score : row.player_a_score
   const opponentEloBefore =
@@ -164,6 +205,7 @@ async function buildMatchAndGame(
     matchId: row.id,
     game: shared.game,
     side,
+    startPly,
     role,
     opponentKind: row.opponent_kind,
     opponentLabel,
@@ -211,52 +253,6 @@ async function leaveQueue(supabase: ReturnType<typeof createClient>, userId: str
   await supabase.from("match_queue").delete().eq("user_id", userId)
 }
 
-/** Try to create a ghost match from another user's recorded ranked attempt. */
-async function createGhostMatch(
-  supabase: ReturnType<typeof createClient>,
-  userId: string,
-  myElo: number,
-  ranked: SharedGame[],
-): Promise<MatchAndGame | null> {
-  const rankedIds = ranked.map((s) => s.game.id)
-  if (rankedIds.length === 0) return null
-
-  const { data, error } = await supabase
-    .from("solitaire_scores")
-    .select("user_id, game_id, score")
-    .in("game_id", rankedIds)
-    .neq("user_id", userId)
-    .limit(200)
-  if (error || !data || data.length === 0) return null
-
-  const ghost = randomOf(data as { user_id: string; game_id: string; score: number }[])
-  const shared = ranked.find((s) => s.game.id === ghost.game_id)
-  if (!shared) return null
-
-  // Ghost's rating snapshot + display name.
-  const ghostRating = await readRating(supabase, ghost.user_id)
-  const ghostName = await displayNameFor(supabase, ghost.user_id, "Ghost")
-
-  const { data: inserted, error: insErr } = await supabase
-    .from("matches")
-    .insert({
-      game_id: ghost.game_id,
-      player_a: userId,
-      player_b: ghost.user_id,
-      is_ghost: true,
-      opponent_kind: "ghost",
-      opponent_label: ghostName,
-      player_b_score: ghost.score,
-      player_a_elo_before: myElo,
-      player_b_elo_before: ghostRating.elo,
-      status: "active",
-    })
-    .select(MATCH_COLUMNS)
-    .single()
-  if (insErr || !inserted) return null
-  return buildMatchAndGame(supabase, inserted as MatchRow, "a", myElo)
-}
-
 /** Create a bot match (par baseline) on a random ranked game. */
 async function createBotMatch(
   supabase: ReturnType<typeof createClient>,
@@ -289,11 +285,11 @@ async function createBotMatch(
 }
 
 /**
- * Find (or create) a ranked match for the signed-in user. Tries resume → live →
- * ghost → bot. Never blocks for long: the live window is a few short polls, then
- * it falls back to an instantly-resolvable ghost/bot match.
+ * BOT match: resume an unfinished match if any, else immediately create a par-bot
+ * match. Used by the explicit "Bot" choice and the "Play a bot instead" escape
+ * hatch in the searching overlay — a bot only ever happens by deliberate choice.
  */
-export async function findMatch(): Promise<FindMatchResult> {
+export async function findBotMatch(): Promise<FindMatchResult> {
   try {
     const supabase = createClient()
     const {
@@ -304,68 +300,102 @@ export async function findMatch(): Promise<FindMatchResult> {
     const rating = await readRating(supabase, user.id)
     if (rating.missing) return { ok: false, reason: "no-backend" }
 
-    // (a) Resume an unfinished match.
+    // Resume an unfinished match first (don't strand it).
     const resumable = await findResumable(supabase, user.id)
     if (resumable) {
       const built = await buildMatchAndGame(supabase, resumable.row, resumable.role, rating.elo)
       if (built) return { ok: true, match: built }
     }
 
-    const ranked = await fetchRankedGames()
-
-    // (b) Live: join the queue and try to pair for a short window.
-    await joinQueue(supabase, user.id, rating.elo)
-    for (let i = 0; i < LIVE_POLL_ATTEMPTS; i++) {
-      // Try to claim a waiting opponent (atomic, race-safe via RPC).
-      const liveGame = randomOf(ranked)
-      const { data: claimedId, error: rpcErr } = await supabase.rpc("mm_find_live_opponent", {
-        p_game_id: liveGame.game.id,
-        p_elo: rating.elo,
-      })
-      if (rpcErr && looksLikeMissingTable(rpcErr)) break // no RPC → skip live entirely
-      if (claimedId) {
-        const { data: row } = await supabase
-          .from("matches")
-          .select(MATCH_COLUMNS)
-          .eq("id", claimedId as string)
-          .single()
-        if (row) {
-          const built = await buildMatchAndGame(supabase, row as MatchRow, "a", rating.elo)
-          if (built) return { ok: true, match: built }
-        }
-      }
-
-      // Detect being claimed by someone else (I become player_b of a live match).
-      const { data: claimedRow } = await supabase
-        .from("matches")
-        .select(MATCH_COLUMNS)
-        .eq("player_b", user.id)
-        .eq("status", "active")
-        .is("player_b_score", null)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (claimedRow) {
-        await leaveQueue(supabase, user.id)
-        const built = await buildMatchAndGame(supabase, claimedRow as MatchRow, "b", rating.elo)
-        if (built) return { ok: true, match: built }
-      }
-
-      if (i < LIVE_POLL_ATTEMPTS - 1) await sleep(LIVE_POLL_INTERVAL_MS)
-    }
-    await leaveQueue(supabase, user.id)
-
-    // (c) Ghost.
-    const ghost = await createGhostMatch(supabase, user.id, rating.elo, ranked)
-    if (ghost) return { ok: true, match: ghost }
-
-    // (d) Bot.
+    const ranked = await getRankedGames()
     const bot = await createBotMatch(supabase, user.id, rating.elo, ranked)
-    if (bot) return { ok: true, match: bot }
-
-    return { ok: false, reason: "error" }
+    return bot ? { ok: true, match: bot } : { ok: false, reason: "error" }
   } catch {
     return { ok: false, reason: "error" }
+  }
+}
+
+/** One tick of a continuous real-player search (see RealSearchResult). */
+export type RealSearchResult =
+  | { kind: "match"; match: MatchAndGame }
+  | { kind: "searching" }
+  | { kind: "error"; reason: "signed-out" | "no-backend" | "error" }
+
+/**
+ * REAL-PLAYER search, driven tick-by-tick by the UI so it can keep searching
+ * indefinitely (until a live opponent is found or the user cancels).
+ *
+ *   • On the FIRST tick: resume an unfinished match (returns it immediately),
+ *     otherwise join `match_queue`.
+ *   • On EVERY tick: try to atomically claim another searching user via the
+ *     mm_find_live_opponent() RPC, and detect being claimed by someone else.
+ *
+ * Returns `{ kind: "searching" }` when nobody is available yet — the caller waits
+ * and calls again. NEVER falls back to a ghost or bot. The caller is responsible
+ * for the polling interval and for calling cancelSearch() to leave the queue.
+ */
+export async function searchRealMatch(opts: { firstTick: boolean }): Promise<RealSearchResult> {
+  try {
+    const supabase = createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return { kind: "error", reason: "signed-out" }
+
+    const rating = await readRating(supabase, user.id)
+    if (rating.missing) return { kind: "error", reason: "no-backend" }
+
+    if (opts.firstTick) {
+      // Resume an unfinished match before queuing.
+      const resumable = await findResumable(supabase, user.id)
+      if (resumable) {
+        const built = await buildMatchAndGame(supabase, resumable.row, resumable.role, rating.elo)
+        if (built) return { kind: "match", match: built }
+      }
+      await joinQueue(supabase, user.id, rating.elo)
+    }
+
+    const ranked = await getRankedGames()
+    if (ranked.length === 0) return { kind: "searching" }
+
+    // Try to claim a waiting opponent (atomic, race-safe via RPC).
+    const liveGame = randomOf(ranked)
+    const { data: claimedId, error: rpcErr } = await supabase.rpc("mm_find_live_opponent", {
+      p_game_id: liveGame.game.id,
+      p_elo: rating.elo,
+    })
+    if (rpcErr && looksLikeMissingTable(rpcErr)) return { kind: "error", reason: "no-backend" }
+    if (claimedId) {
+      const { data: row } = await supabase
+        .from("matches")
+        .select(MATCH_COLUMNS)
+        .eq("id", claimedId as string)
+        .single()
+      if (row) {
+        const built = await buildMatchAndGame(supabase, row as MatchRow, "a", rating.elo)
+        if (built) return { kind: "match", match: built }
+      }
+    }
+
+    // Detect being claimed by someone else (I become player_b of a live match).
+    const { data: claimedRow } = await supabase
+      .from("matches")
+      .select(MATCH_COLUMNS)
+      .eq("player_b", user.id)
+      .eq("status", "active")
+      .is("player_b_score", null)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (claimedRow) {
+      await leaveQueue(supabase, user.id)
+      const built = await buildMatchAndGame(supabase, claimedRow as MatchRow, "b", rating.elo)
+      if (built) return { kind: "match", match: built }
+    }
+
+    return { kind: "searching" }
+  } catch {
+    return { kind: "error", reason: "error" }
   }
 }
 
@@ -526,6 +556,107 @@ export async function submitMatchResult(input: SubmitMatchInput): Promise<MatchR
       myScore: input.score,
       opponentScore,
       outcome,
+      eloBefore: h2h.eloBefore,
+      eloAfter: h2h.eloAfter,
+      eloDelta: h2h.delta,
+    }
+  } catch {
+    return { ...offline, reason: "error" }
+  }
+}
+
+/**
+ * Resign (forfeit) the current match: records it as a LOSS for the user, awards
+ * the win to the opponent, and applies the head-to-head Elo loss immediately.
+ * Finalizes the match and returns a loss MatchResultOutcome for the result screen.
+ * (A live opponent who hadn't played yet wins by forfeit; their own rating, if
+ * any, isn't auto-credited since they have no score — a minor known limitation.)
+ */
+export async function resignMatch(matchId: string): Promise<MatchResultOutcome> {
+  const offline: MatchResultOutcome = {
+    status: "complete",
+    persisted: false,
+    opponentKind: "bot",
+    opponentLabel: "Opponent",
+    myScore: 0,
+    opponentScore: null,
+    outcome: "loss",
+    eloBefore: BASELINE_RATING,
+    eloAfter: BASELINE_RATING,
+    eloDelta: 0,
+  }
+  try {
+    const supabase = createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return { ...offline, reason: "signed-out" }
+
+    const { data: matchData, error: loadErr } = await supabase
+      .from("matches")
+      .select(MATCH_COLUMNS)
+      .eq("id", matchId)
+      .single()
+    if (loadErr || !matchData) {
+      return { ...offline, reason: looksLikeMissingTable(loadErr) ? "no-backend" : "error" }
+    }
+    const match = matchData as MatchRow
+    const role: "a" | "b" = match.player_a === user.id ? "a" : "b"
+
+    const rating = await readRating(supabase, user.id)
+    const myEloBefore =
+      (role === "a" ? match.player_a_elo_before : match.player_b_elo_before) ?? rating.elo
+    const oppEloBefore =
+      (role === "a" ? match.player_b_elo_before : match.player_a_elo_before) ?? BASELINE_RATING
+    const opponentScore = role === "a" ? match.player_b_score : match.player_a_score
+    const opponentLabel =
+      match.opponent_label ?? (match.opponent_kind === "bot" ? "Par Bot" : "Opponent")
+
+    // Forfeit = a loss for the resigner.
+    const h2h = computeHeadToHead({
+      playerElo: myEloBefore,
+      gamesPlayed: rating.gamesPlayed,
+      opponentElo: oppEloBefore,
+      outcome: "loss",
+    })
+
+    const myScoreCol = role === "a" ? "player_a_score" : "player_b_score"
+    const myEloAfterCol = role === "a" ? "player_a_elo_after" : "player_b_elo_after"
+    const myAppliedCol = role === "a" ? "a_applied" : "b_applied"
+    const winner: "a" | "b" = role === "a" ? "b" : "a"
+
+    const { error: upErr } = await supabase
+      .from("matches")
+      .update({
+        [myScoreCol]: 0,
+        [myEloAfterCol]: h2h.eloAfter,
+        [myAppliedCol]: true,
+        winner,
+        status: "complete",
+        completed_at: new Date().toISOString(),
+      })
+      .eq("id", match.id)
+    if (upErr) return { ...offline, reason: looksLikeMissingTable(upErr) ? "no-backend" : "error" }
+
+    await supabase.from("user_ratings").upsert(
+      {
+        user_id: user.id,
+        elo: h2h.eloAfter,
+        peak_elo: Math.max(rating.peakElo, h2h.eloAfter),
+        games_played: rating.gamesPlayed + 1,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" },
+    )
+
+    return {
+      status: "complete",
+      persisted: true,
+      opponentKind: match.opponent_kind,
+      opponentLabel,
+      myScore: 0,
+      opponentScore: opponentScore ?? null,
+      outcome: "loss",
       eloBefore: h2h.eloBefore,
       eloAfter: h2h.eloAfter,
       eloDelta: h2h.delta,

@@ -73,7 +73,7 @@ export function TacticalPatternsBrowser() {
                         )}
                         aria-hidden
                       >
-                        {unlocked ? "⚡" : "🔒"}
+                        {unlocked ? pattern.icon : "🔒"}
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="font-display font-extrabold text-gray-900 dark:text-slate-100">

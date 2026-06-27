@@ -29,7 +29,7 @@ export function KeyConceptUnlockCard({ conceptId, celebrate = false, className }
       >
         <div className="flex items-center gap-2">
           <span className="text-lg" aria-hidden>
-            🔑
+            {concept.icon}
           </span>
           <span className="font-display font-extrabold text-amber-900 dark:text-amber-200 text-sm uppercase tracking-wide">
             {celebrate ? "Key Concept unlocked" : "Key Concept"}

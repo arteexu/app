@@ -58,7 +58,7 @@ export function LeaderboardView() {
       <header className="relative overflow-hidden rounded-3xl p-7 text-white shadow-xl shadow-amber-600/25 bg-gradient-to-br from-amber-500 via-rose-500 to-fuchsia-600">
         <span className="pointer-events-none select-none absolute -right-5 -top-8 text-[150px] leading-none opacity-10">🏆</span>
         <p className="text-sm font-bold uppercase tracking-widest text-white/80">Compete</p>
-        <h1 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mt-1.5">Leaderboard</h1>
+        <h1 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight mt-1.5">Multiplayer Mode</h1>
         <p className="text-white/90 text-base font-semibold mt-1.5">
           Climb the global Elo ranking and top the charts on every shared game.
         </p>

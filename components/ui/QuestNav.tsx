@@ -5,18 +5,25 @@ import { clsx } from "clsx"
 interface Props {
   active?:
     | "dashboard"
+    | "courses"
+    | "learn"
     | "solitaire"
+    | "play"
     | "analysis"
     | "profile"
     | "key-concepts"
     | "tactical-patterns"
     | "leaderboard"
   avatarInitial?: string
+  /** Chosen chess-themed avatar glyph; falls back to the initial when absent. */
+  avatarIcon?: string | null
   /** optional left "back" link, e.g. on settings pages */
   back?: { href: string; label: string }
 }
 
-export function QuestNav({ active, avatarInitial = "?", back }: Props) {
+export function QuestNav({ active, avatarInitial = "?", avatarIcon, back }: Props) {
+  // "Learn" groups Key Concepts + Tactical Patterns, so highlight it on those views too.
+  const learnActive = active === "learn" || active === "key-concepts" || active === "tactical-patterns"
   return (
     <nav className="flex-shrink-0 flex items-center gap-2 sm:gap-4 px-3 sm:px-6 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-100 dark:border-slate-800 min-w-0 overflow-x-hidden">
       {back && (
@@ -38,12 +45,13 @@ export function QuestNav({ active, avatarInitial = "?", back }: Props) {
       </Link>
 
       <div className="ml-auto flex items-center gap-0.5 sm:gap-1.5 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <NavLink href="/dashboard" label="Courses" active={active === "dashboard"} />
+        <NavLink href="/dashboard" label="Home" longLabel="Dashboard" active={active === "dashboard"} />
+        <NavLink href="/courses" label="Courses" active={active === "courses"} />
+        <NavLink href="/learn" label="Learn" active={learnActive} />
         <NavLink href="/solitaire" label="Solitaire" longLabel="Solitaire Chess" active={active === "solitaire"} />
-        <NavLink href="/leaderboard" label="Ranks" longLabel="Leaderboard" active={active === "leaderboard"} />
+        <NavLink href="/play" label="Play" longLabel="Play Chess" active={active === "play"} />
+        <NavLink href="/leaderboard" label="Versus" longLabel="Multiplayer Mode" active={active === "leaderboard"} />
         <NavLink href="/analysis" label="Analysis" longLabel="Free Analysis" active={active === "analysis"} />
-        <NavLink href="/key-concepts" label="Concepts" longLabel="Key Concepts" active={active === "key-concepts"} />
-        <NavLink href="/tactical-patterns" label="Patterns" longLabel="Tactical Patterns" active={active === "tactical-patterns"} />
         <NavLink
           href="/settings/profile"
           label="Profile"
@@ -52,9 +60,12 @@ export function QuestNav({ active, avatarInitial = "?", back }: Props) {
         />
         <Link
           href="/settings/profile"
-          className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 dark:bg-slate-700 text-white grid place-items-center font-bold text-xs sm:text-sm select-none ml-0.5"
+          aria-label="Open your profile"
+          className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 dark:bg-slate-700 text-white grid place-items-center font-bold text-xs sm:text-sm select-none ml-0.5 transition hover:ring-2 hover:ring-indigo-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
         >
-          {avatarInitial}
+          <span aria-hidden className={avatarIcon ? "text-base sm:text-lg leading-none" : undefined}>
+            {avatarIcon ?? avatarInitial}
+          </span>
         </Link>
       </div>
     </nav>

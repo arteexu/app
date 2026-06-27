@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { SettingsSidebar } from "./SettingsSidebar"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -11,18 +12,19 @@ export default async function SettingsLayout({ children }: { children: React.Rea
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, avatar_icon")
     .eq("id", user.id)
     .single()
 
   const name = profile?.display_name ?? user.email?.split("@")[0] ?? "Learner"
   const email = user.email ?? ""
   const avatarInitial = name[0]?.toUpperCase() ?? "?"
+  const avatarIcon = resolveProfileIcon(profile?.avatar_icon)
 
   return (
     <AppPageShell
       nav={
-        <QuestNav active="profile" avatarInitial={avatarInitial} back={{ href: "/dashboard", label: "Dashboard" }} />
+        <QuestNav active="profile" avatarInitial={avatarInitial} avatarIcon={avatarIcon} back={{ href: "/dashboard", label: "Dashboard" }} />
       }
     >
       {/* Page title */}

@@ -49,6 +49,12 @@ interface Props {
   setup: SolitaireSetup
   onFinish: (results: MoveResult[]) => void
   onExit: () => void
+  /**
+   * Ranked-match mode. When provided, the play view is part of a head-to-head
+   * match: the "Skip to end" shortcut is hidden and a "Resign" button (with a
+   * confirm step) is shown instead, which forfeits the match.
+   */
+  onResign?: () => void
 }
 
 const BOARD_DARK = "#769656"
@@ -78,8 +84,10 @@ type Feedback =
   | { kind: "alternative"; tries: number; label?: string; note: string }
   | { kind: "revealed"; san: string; fact: string | null; comment?: string }
 
-export function SolitairePlay({ setup, onFinish, onExit }: Props) {
+export function SolitairePlay({ setup, onFinish, onExit, onResign }: Props) {
   const { game, side, startPly } = setup
+  const isMatch = !!onResign
+  const [confirmingResign, setConfirmingResign] = useState(false)
   const cutoff = useMemo(() => getCutoffPly(game), [game])
   const totalGuesses = useMemo(() => userPlies(game, side, startPly).length, [game, side, startPly])
   const learnerColor = side === "white" ? "w" : "b"
@@ -549,7 +557,9 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
             </p>
           </div>
           <div className="shrink-0 flex items-center gap-2">
-            {game.isGenerated && phase === "playing" && (
+            {/* Single-player generated games keep "Skip to end"; ranked matches
+                replace it with "Resign" (a forfeit loss). */}
+            {!isMatch && game.isGenerated && phase === "playing" && (
               <button
                 onClick={skipToEnd}
                 title="Reveal the full game and jump to the summary"
@@ -558,12 +568,41 @@ export function SolitairePlay({ setup, onFinish, onExit }: Props) {
                 Skip to end ⏭
               </button>
             )}
-            <button
-              onClick={onExit}
-              className="text-xs font-semibold text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 transition"
-            >
-              Exit
-            </button>
+            {isMatch && phase === "playing" && (
+              confirmingResign ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-gray-500 dark:text-slate-400">Resign?</span>
+                  <button
+                    onClick={() => onResign?.()}
+                    className="text-xs font-bold text-white bg-rose-600 px-2.5 py-1 rounded-full hover:bg-rose-700 transition"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={() => setConfirmingResign(false)}
+                    className="text-xs font-bold text-gray-500 dark:text-slate-400 border border-gray-200 dark:border-slate-700 px-2.5 py-1 rounded-full hover:border-gray-300 transition"
+                  >
+                    Cancel
+                  </button>
+                </span>
+              ) : (
+                <button
+                  onClick={() => setConfirmingResign(true)}
+                  title="Forfeit this match (counts as a loss)"
+                  className="text-xs font-bold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 px-2.5 py-1 rounded-full hover:bg-rose-100 dark:hover:bg-rose-900/40 transition"
+                >
+                  🏳 Resign
+                </button>
+              )
+            )}
+            {!isMatch && (
+              <button
+                onClick={onExit}
+                className="text-xs font-semibold text-gray-400 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-200 transition"
+              >
+                Exit
+              </button>
+            )}
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { MarkdownText } from "@/components/ui/MarkdownText"
 import { TacticalPatternsBrowser } from "@/components/tactical-patterns/TacticalPatternsBrowser"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export const metadata = {
   title: "Tactical Patterns — Micro-level Motifs | ChessMind",
@@ -18,7 +19,7 @@ export default async function TacticalPatternsPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, avatar_icon")
     .eq("id", user.id)
     .single()
 
@@ -28,8 +29,9 @@ export default async function TacticalPatternsPage() {
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Courses" }}
+          back={{ href: "/learn", label: "Learn" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
+          avatarIcon={resolveProfileIcon(profile?.avatar_icon)}
           active="tactical-patterns"
         />
       }

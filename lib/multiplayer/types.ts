@@ -58,13 +58,19 @@ export interface UserRating {
 
 export type OpponentKind = "live" | "ghost" | "bot"
 
-/** A paired match plus the game to play, returned by findMatch(). */
+/** A paired match plus the game to play (from searchRealMatch / findBotMatch). */
 export interface MatchAndGame {
   matchId: string
   /** The shared game both players solve (same id for both). */
   game: SolitaireGame
   /** The side to solve (the game's winning side), same for both players. */
   side: Side
+  /**
+   * Ply both players begin solving from (deterministic per game, so it's the
+   * SAME for both). Engine games skip the opening (~move 7); see
+   * matchmaking.rankedStartPly. 0 = from the start.
+   */
+  startPly: number
   /** Which side of the match the current user is (initiator = "a"). */
   role: "a" | "b"
   opponentKind: OpponentKind

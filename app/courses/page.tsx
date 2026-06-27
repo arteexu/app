@@ -5,6 +5,7 @@ import { getAllCourses, getCourseLessons } from "@/lib/courses"
 import { getCourseProgress } from "@/lib/progress"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export default async function CoursesPage() {
   const supabase = await createClient()
@@ -12,7 +13,7 @@ export default async function CoursesPage() {
   if (!user) redirect("/signin")
 
   const [{ data: profile }, { data: progressRows }] = await Promise.all([
-    supabase.from("profiles").select("display_name").eq("id", user.id).single(),
+    supabase.from("profiles").select("display_name, avatar_icon").eq("id", user.id).single(),
     supabase.from("user_progress").select("lesson_id, is_lesson_complete").eq("user_id", user.id),
   ])
 
@@ -27,8 +28,10 @@ export default async function CoursesPage() {
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Courses" }}
+          active="courses"
+          back={{ href: "/dashboard", label: "Dashboard" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
+          avatarIcon={resolveProfileIcon(profile?.avatar_icon)}
         />
       }
     >

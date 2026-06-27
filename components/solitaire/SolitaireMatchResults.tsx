@@ -12,7 +12,7 @@ import { Chessboard } from "react-chessboard"
 import type { SolitaireSetup } from "@/lib/solitaire/types"
 import { scoreSession, type MoveResult } from "@/lib/solitaire-scoring"
 import { getCutoffPly, fenAfter } from "@/lib/solitaire/engine"
-import { submitMatchResult } from "@/lib/multiplayer/matchmaking"
+import { submitMatchResult, resignMatch } from "@/lib/multiplayer/matchmaking"
 import type { MatchAndGame, MatchResultOutcome } from "@/lib/multiplayer/types"
 import { Confetti, useCountUp } from "@/components/lesson/RewardFx"
 
@@ -20,6 +20,8 @@ interface Props {
   setup: SolitaireSetup
   match: MatchAndGame
   results: MoveResult[]
+  /** True when the user resigned: record a forfeit loss instead of a score. */
+  forfeit?: boolean
   onFindAnother: () => void
   onExit: () => void
 }
@@ -33,7 +35,14 @@ const OPP_KIND_LABEL: Record<string, string> = {
   bot: "Par bot",
 }
 
-export function SolitaireMatchResults({ setup, match, results, onFindAnother, onExit }: Props) {
+export function SolitaireMatchResults({
+  setup,
+  match,
+  results,
+  forfeit = false,
+  onFindAnother,
+  onExit,
+}: Props) {
   const { game, side } = setup
   const summary = useMemo(() => scoreSession(results, game.difficulty), [results, game.difficulty])
   const cutoff = useMemo(() => getCutoffPly(game), [game])
@@ -45,6 +54,11 @@ export function SolitaireMatchResults({ setup, match, results, onFindAnother, on
   useEffect(() => {
     if (submittedRef.current) return
     submittedRef.current = true
+    if (forfeit) {
+      // Resigned mid-game: record the forfeit loss; no score is submitted.
+      resignMatch(match.matchId).then(setRes)
+      return
+    }
     submitMatchResult({
       matchId: match.matchId,
       score: summary.score,
@@ -56,7 +70,7 @@ export function SolitaireMatchResults({ setup, match, results, onFindAnother, on
       bestStreak: summary.bestStreak,
       difficulty: summary.difficulty,
     }).then(setRes)
-  }, [match, side, summary])
+  }, [match, side, summary, forfeit])
 
   const scoreShown = useCountUp(summary.score, true, 900)
   const outcome = res?.outcome ?? null
@@ -81,11 +95,15 @@ export function SolitaireMatchResults({ setup, match, results, onFindAnother, on
           {outcome === "win" && <Confetti run count={90} originY={0.14} />}
           <span className="pointer-events-none select-none absolute -right-6 -bottom-10 text-[200px] leading-none opacity-10">{theme.icon}</span>
           <div className="relative flex flex-col items-center gap-2 text-center">
-            <p className="text-sm font-bold uppercase tracking-widest text-white/80">Ranked match</p>
-            <div className="font-display text-5xl font-extrabold leading-none">{pending ? "Submitted" : theme.word}</div>
+            <p className="text-sm font-bold uppercase tracking-widest text-white/80">
+              {forfeit ? "Resigned" : "Ranked match"}
+            </p>
+            <div className="font-display text-5xl font-extrabold leading-none">
+              {pending ? "Submitted" : forfeit ? "Resigned" : theme.word}
+            </div>
             {/* Score vs score */}
             <div className="mt-3 flex items-center gap-4">
-              <ScorePill label="You" value={scoreShown} highlight={outcome === "win"} />
+              <ScorePill label="You" value={forfeit ? "—" : scoreShown} highlight={outcome === "win"} />
               <span className="font-display text-2xl font-extrabold text-white/70">vs</span>
               <ScorePill
                 label={match.opponentLabel}
@@ -94,7 +112,8 @@ export function SolitaireMatchResults({ setup, match, results, onFindAnother, on
               />
             </div>
             <p className="text-xs font-semibold text-white/70 mt-2">
-              {OPP_KIND_LABEL[match.opponentKind] ?? "Opponent"} · {summary.accuracy}% accuracy
+              {OPP_KIND_LABEL[match.opponentKind] ?? "Opponent"}
+              {forfeit ? " · you forfeited" : ` · ${summary.accuracy}% accuracy`}
             </p>
           </div>
         </div>
@@ -187,7 +206,9 @@ export function SolitaireMatchResults({ setup, match, results, onFindAnother, on
             </p>
             <p className="font-display font-extrabold text-gray-900 dark:text-slate-100 leading-tight">{game.title}</p>
             <p className="text-sm text-gray-600 dark:text-slate-300">
-              You played {side} · {summary.matched}/{summary.totalMoves} moves matched
+              {forfeit
+                ? `You resigned (playing ${side})`
+                : `You played ${side} · ${summary.matched}/${summary.totalMoves} moves matched`}
             </p>
             <p className="text-xs text-gray-400 dark:text-slate-500">
               Both players solved this same game — higher score wins.

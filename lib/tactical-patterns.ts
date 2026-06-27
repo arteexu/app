@@ -9,6 +9,8 @@ export interface TacticalPattern {
   id: string
   title: string
   description: string
+  /** Emoji shown next to the pattern once unlocked (distinct per pattern). */
+  icon: string
   category: TacticalPatternCategoryId
   lessonIds: string[]
 }
@@ -25,6 +27,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Back Rank Mate",
     description:
       "A rook or queen delivers mate on the first or eighth rank while the enemy king is trapped behind its own pawns.",
+    icon: "🏰",
     category: "checkmates",
     lessonIds: ["l-goal-of-chess", "l-back-rank-mate"],
   },
@@ -33,6 +36,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Smothered Mate",
     description:
       "A knight delivers checkmate to a king completely hemmed in by its own pieces.",
+    icon: "🐴",
     category: "checkmates",
     lessonIds: ["l-goal-of-chess"],
   },
@@ -41,6 +45,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Ladder Mate",
     description:
       "Two rooks cut off rank after rank, herding a lone king toward the edge until one rook delivers the final checkmate.",
+    icon: "🪜",
     category: "checkmates",
     lessonIds: ["l-mating-patterns"],
   },
@@ -48,6 +53,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     id: "tp-arabian-mate",
     title: "Arabian Mate",
     description: "The rook delivers checkmate to the corner.",
+    icon: "🕌",
     category: "checkmates",
     lessonIds: ["l-mating-patterns"],
   },
@@ -56,6 +62,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Morphy's Mate",
     description:
       "A rook checks on the back rank while a bishop covers the diagonal escape, exploiting the weak squares around the king.",
+    icon: "🎩",
     category: "checkmates",
     lessonIds: ["l-mating-patterns"],
   },
@@ -64,6 +71,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Swiss Cheese Mate",
     description:
       "A queen exploits holes in the pawn structure.",
+    icon: "🧀",
     category: "checkmates",
     lessonIds: ["l-mating-patterns"],
   },
@@ -72,6 +80,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Fork",
     description:
       "One piece attacks two enemy pieces at once, forcing your opponent to lose material.",
+    icon: "🍴",
     category: "forks",
     lessonIds: ["l-attacking-italian-trap"],
   },
@@ -80,6 +89,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Intermezzo Move",
     description:
       "Instead of recapturing or playing the obvious reply, insert an in-between move — a check, threat, or attack — that improves the outcome before returning to the main line.",
+    icon: "⏸️",
     category: "tactics",
     lessonIds: ["l-how-to-attack"],
   },
@@ -88,6 +98,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Clearance",
     description:
       "Move a piece off a line or square so another piece can use it — here the bishop steps aside so the queen can slide to f7 and deliver mate.",
+    icon: "🧹",
     category: "tactics",
     lessonIds: ["l-attacking-italian-trap"],
   },
@@ -96,6 +107,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Taking With Check",
     description:
       "Capture a piece and deliver check at the same time — your opponent must answer the check before recapturing.",
+    icon: "✅",
     category: "tactics",
     lessonIds: ["l-attacking-caro-kann"],
   },
@@ -104,6 +116,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
     title: "Danger Levels",
     description:
       "Capture or attack a higher-value target even though your piece is under threat — trading up in danger because the prize is worth more than what you might lose.",
+    icon: "☠️",
     category: "tactics",
     lessonIds: ["l-attacking-caro-kann"],
   },

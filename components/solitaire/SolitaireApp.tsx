@@ -41,6 +41,8 @@ export function SolitaireApp({
   // When set, the current run is a RANKED head-to-head match; results route to
   // the match screen (head-to-head Elo).
   const [matchCtx, setMatchCtx] = useState<MatchAndGame | null>(null)
+  // True when the user resigned the current match → result screen records a loss.
+  const [resigned, setResigned] = useState(false)
   // Remount key for the matchmaking screen; bumping it (with autoFind) re-runs a
   // search, e.g. after "Find another match".
   const [autoFindKey, setAutoFindKey] = useState(autoFindMatch ? 1 : 0)
@@ -48,6 +50,7 @@ export function SolitaireApp({
   function startGame(next: SolitaireSetup) {
     setCompeting(null)
     setMatchCtx(null)
+    setResigned(false)
     setSetup(next)
     setResults(null)
     setRunKey((k) => k + 1)
@@ -57,6 +60,7 @@ export function SolitaireApp({
   function startCompetitive(next: SolitaireSetup, shared: SharedGame) {
     setCompeting(shared)
     setMatchCtx(null)
+    setResigned(false)
     setSetup(next)
     setResults(null)
     setRunKey((k) => k + 1)
@@ -66,14 +70,24 @@ export function SolitaireApp({
   function startMatch(next: SolitaireSetup, ctx: MatchAndGame) {
     setMatchCtx(ctx)
     setCompeting(null)
+    setResigned(false)
     setSetup(next)
     setResults(null)
     setRunKey((k) => k + 1)
     setPhase("play")
   }
 
+  // Resign the in-progress ranked match → jump to the result screen, which
+  // records the forfeit loss + Elo. Results aren't needed (score is forfeited).
+  function resignMatchNow() {
+    setResigned(true)
+    setResults([])
+    setPhase("results")
+  }
+
   function findAnotherMatch() {
     setMatchCtx(null)
+    setResigned(false)
     setResults(null)
     setSetupTab("multiplayer")
     setAutoFindKey((k) => k + 1)
@@ -141,7 +155,13 @@ export function SolitaireApp({
         </div>
       )}
       {phase === "play" && setup && (
-        <SolitairePlay key={runKey} setup={setup} onFinish={finishGame} onExit={newGame} />
+        <SolitairePlay
+          key={runKey}
+          setup={setup}
+          onFinish={finishGame}
+          onExit={newGame}
+          onResign={matchCtx ? resignMatchNow : undefined}
+        />
       )}
       {phase === "results" && setup && results && (
         matchCtx ? (
@@ -149,6 +169,7 @@ export function SolitaireApp({
             setup={setup}
             match={matchCtx}
             results={results}
+            forfeit={resigned}
             onFindAnother={findAnotherMatch}
             onExit={newGame}
           />

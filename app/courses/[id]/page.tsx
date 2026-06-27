@@ -9,6 +9,7 @@ import { CourseMasteryHeader } from "@/components/ui/CourseMasteryHeader"
 import { MasteryStaircase } from "@/components/ui/MasteryStaircase"
 import { CourseKeyConceptsPanel } from "@/components/key-concepts/CourseKeyConceptsPanel"
 import { CourseTacticalPatternsPanel } from "@/components/tactical-patterns/CourseTacticalPatternsPanel"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -20,7 +21,7 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
   if (!user) redirect("/signin")
 
   const [{ data: profile }, { data: progressRows }] = await Promise.all([
-    supabase.from("profiles").select("display_name").eq("id", user.id).single(),
+    supabase.from("profiles").select("display_name, avatar_icon").eq("id", user.id).single(),
     supabase.from("user_progress").select("lesson_id, completed_step_ids, is_lesson_complete").eq("user_id", user.id),
   ])
 
@@ -46,8 +47,10 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Courses" }}
+          active="courses"
+          back={{ href: "/courses", label: "Courses" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
+          avatarIcon={resolveProfileIcon(profile?.avatar_icon)}
         />
       }
     >

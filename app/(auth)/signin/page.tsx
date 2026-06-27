@@ -5,6 +5,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { GoogleSignInButton } from "@/components/ui/GoogleSignInButton"
+import { ChessMindLoader } from "@/components/ui/ChessMindLoader"
 
 function SignInForm() {
   const router       = useRouter()
@@ -100,11 +101,7 @@ function SignInForm() {
 
 export default function SignIn() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <p className="text-gray-500">Loading…</p>
-      </div>
-    }>
+    <Suspense fallback={<ChessMindLoader fullScreen size="lg" />}>
       <SignInForm />
     </Suspense>
   )

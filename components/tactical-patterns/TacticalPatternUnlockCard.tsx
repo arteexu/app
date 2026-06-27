@@ -31,7 +31,7 @@ export function TacticalPatternUnlockCard({ patternId, celebrate = false, classN
       >
         <div className="flex items-center gap-2">
           <span className="text-lg" aria-hidden>
-            ⚡
+            {pattern.icon}
           </span>
           <span className="font-display font-extrabold text-rose-900 dark:text-rose-200 text-sm uppercase tracking-wide">
             {celebrate ? "Tactical Pattern unlocked" : "Tactical Pattern"}

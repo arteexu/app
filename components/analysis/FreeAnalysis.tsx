@@ -5,7 +5,7 @@
 // streams live evaluation, best move, and principal variation. Includes an eval
 // bar, variation tree with back/forward navigation, reset, flip, and FEN paste.
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { Chess, type Square } from "chess.js"
 import { Chessboard } from "react-chessboard"
 import type { Arrow, PieceDropHandlerArgs, PieceHandlerArgs, SquareHandlerArgs } from "react-chessboard"
@@ -19,6 +19,8 @@ import { useUserSquareHighlightHandlers } from "@/hooks/useUserSquareHighlightHa
 import { FlipBoardButton } from "@/components/solitaire/FlipBoardButton"
 import { EvalBar } from "./EvalBar"
 import { MoveTreeList } from "./MoveTreeList"
+import { VariationPicker } from "./VariationPicker"
+import { AnalysisSaved } from "./AnalysisSaved"
 import { SanNotation } from "@/components/chess/SanNotation"
 import { colorFromPly } from "@/lib/san-notation"
 import { playBoardMoveSound } from "@/lib/ui-sounds"
@@ -27,6 +29,8 @@ import {
   canBranchAt,
   countPlies,
   emptyMoveTree,
+  forwardChildIndex,
+  getChildrenAt,
   getFenAt,
   getLastMoveAt,
   pathsEqual,
@@ -36,6 +40,16 @@ import {
   type MoveTree,
   type PlayedMove,
 } from "@/lib/analysis/move-tree"
+import {
+  getEngineArrowEnabled,
+  getMultiPv,
+  MAX_MULTIPV,
+  MIN_MULTIPV,
+  setEngineArrowEnabled,
+  setMultiPv,
+  subscribeAnalysisPreferences,
+} from "@/lib/analysis/preferences"
+import { saveAnalysis, type SavedAnalysis } from "@/lib/analysis/saved-analyses"
 import {
   buildLastMoveStyles,
   buildSelectionStyles,
@@ -48,6 +62,15 @@ const BOARD_DARK = "#769656"
 const BOARD_LIGHT = "#eeeed2"
 const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 const DEPTH_OPTIONS = [12, 16, 20, 24]
+const MULTIPV_OPTIONS = Array.from(
+  { length: MAX_MULTIPV - MIN_MULTIPV + 1 },
+  (_, i) => MIN_MULTIPV + i,
+)
+// Board arrow colors by MultiPV rank: primary (best) is the strong indigo;
+// secondary lines are progressively lighter / distinct so they don't compete.
+const ARROW_COLORS = ["rgba(99,102,241,0.85)", "rgba(245,158,11,0.7)", "rgba(20,184,166,0.65)"]
+// Matching dots for the lines list, so panel lines correlate with board arrows.
+const RANK_DOT_COLORS = ["bg-indigo-500", "bg-amber-500", "bg-teal-500"]
 
 export function FreeAnalysis() {
   const { showLegalMoves } = useBoardPreferences()
@@ -64,6 +87,22 @@ export function FreeAnalysis() {
   const [fenError, setFenError] = useState<string | null>(null)
   const [userHighlights, setUserHighlights] = useState<string[]>([])
   const userHighlightHandlers = useUserSquareHighlightHandlers(setUserHighlights)
+  // Variation picker: opens when stepping forward (→) into a branch with >1 line.
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [pickerIndex, setPickerIndex] = useState(0)
+
+  // Persisted analysis preferences (engine-arrow toggle + MultiPV count).
+  const engineArrowEnabled = useSyncExternalStore(
+    subscribeAnalysisPreferences,
+    getEngineArrowEnabled,
+    () => true,
+  )
+  const multiPv = useSyncExternalStore(subscribeAnalysisPreferences, getMultiPv, () => MIN_MULTIPV)
+
+  // Panel tabs: live analysis vs the saved-studies collection.
+  const [view, setView] = useState<"analyze" | "saved">("analyze")
+  const [analysisName, setAnalysisName] = useState("")
+  const [saveFlash, setSaveFlash] = useState(false)
 
   const currentFen = getFenAt(moveTree, cursorPath)
   const lastMove = getLastMoveAt(moveTree, cursorPath)
@@ -82,15 +121,19 @@ export function FreeAnalysis() {
   const inCheck = chess.inCheck()
   const canInteract = !gameOver
 
-  const { analysis, ready, running, error } = useStockfish({
+  const { analysis, lines, ready, running, error, reconnecting, retry } = useStockfish({
     fen: currentFen,
     enabled: engineOn && !gameOver,
     depth,
+    multiPv,
   })
 
   const totalPlies = countPlies(moveTree)
   const canGoForward = stepForward(moveTree, cursorPath, forwardHintPath) != null
   const canBranchFromCursor = canBranchAt(moveTree, cursorPath)
+  // Continuations available from the current position (mainline first, then
+  // sibling variations). When more than one exists, → opens the picker.
+  const nextOptions = getChildrenAt(moveTree, cursorPath)
   const variationIntentActive =
     variationIntentPath != null && pathsEqual(variationIntentPath, cursorPath)
 
@@ -106,12 +149,14 @@ export function FreeAnalysis() {
     rememberPath(parentPath)
     setCursorPath(parentPath)
     setVariationIntentPath(parentPath)
+    setPickerOpen(false)
   }
 
   function navigateTo(path: MovePath) {
     rememberPath(path)
     setCursorPath(path)
     clearVariationIntent()
+    setPickerOpen(false)
   }
 
   // Reset transient highlights whenever the position changes.
@@ -163,6 +208,7 @@ export function FreeAnalysis() {
       clearVariationIntent()
       return tree
     })
+    setPickerOpen(false)
   }
 
   function attemptMove(from: string, to: string): boolean {
@@ -180,13 +226,13 @@ export function FreeAnalysis() {
     return true
   }
 
-  /** Play the engine PV up to (and including) ply `count` from the live position. */
-  function playPv(count: number) {
-    if (!analysis || analysis.pvUci.length === 0) return
+  /** Play a UCI PV up to (and including) ply `count` from the live position. */
+  function playPvLine(pvUci: string[], count: number) {
+    if (pvUci.length === 0) return
     const work = new Chess(currentFen)
     const newMoves: PlayedMove[] = []
-    for (let i = 0; i < count && i < analysis.pvUci.length; i++) {
-      const uci = analysis.pvUci[i]
+    for (let i = 0; i < count && i < pvUci.length; i++) {
+      const uci = pvUci[i]
       try {
         const mv = work.move({
           from: uci.slice(0, 2) as Square,
@@ -200,6 +246,11 @@ export function FreeAnalysis() {
       }
     }
     pushMoves(newMoves)
+  }
+
+  /** Play the best line (MultiPV rank 1) up to ply `count`. */
+  function playPv(count: number) {
+    if (analysis) playPvLine(analysis.pvUci, count)
   }
 
   // ── Board event handlers ──────────────────────────────────────────────────
@@ -240,12 +291,33 @@ export function FreeAnalysis() {
       return path.slice(0, -1)
     })
     clearVariationIntent()
+    setPickerOpen(false)
   }
   const goForward = () => {
     const next = stepForward(moveTree, cursorPath, forwardHintPath)
     if (next) navigateTo(next)
   }
   const goEnd = () => navigateTo(stepToLineEnd(moveTree, cursorPath, forwardHintPath))
+
+  // ── Variation picker (keyboard branch chooser) ────────────────────────────
+  function openPicker() {
+    const startIndex = forwardChildIndex(moveTree, cursorPath, forwardHintPath) ?? 0
+    setPickerIndex(startIndex)
+    setPickerOpen(true)
+  }
+  function choosePickerOption(index: number) {
+    setPickerOpen(false)
+    navigateTo([...cursorPath, index])
+  }
+  // Step forward: follow the only line, or open the picker when it branches.
+  function stepForwardOrPick() {
+    if (nextOptions.length === 0) return
+    if (nextOptions.length === 1) {
+      goForward()
+      return
+    }
+    openPicker()
+  }
 
   function resetBoard() {
     setMoveTree(emptyMoveTree(START_FEN))
@@ -254,6 +326,7 @@ export function FreeAnalysis() {
     clearVariationIntent()
     setFenError(null)
     clearHighlights()
+    setPickerOpen(false)
   }
 
   function loadFen(raw: string) {
@@ -268,6 +341,7 @@ export function FreeAnalysis() {
       setFenError(null)
       setFenInput("")
       clearHighlights()
+      setPickerOpen(false)
     } catch {
       setFenError("Invalid FEN — please check the position string.")
     }
@@ -279,18 +353,71 @@ export function FreeAnalysis() {
     }
   }
 
-  // Keyboard: ← → navigate; Space plays engine best move (when not typing / on a button).
+  // ── Saved analyses (localStorage collection) ──────────────────────────────
+  function saveCurrentAnalysis() {
+    const snapshotEval =
+      engineOn && !gameOver && analysis
+        ? formatEval(analysis.whiteCp, analysis.whiteMate)
+        : null
+    saveAnalysis({
+      name: analysisName,
+      tree: moveTree,
+      cursorPath,
+      evalText: snapshotEval,
+    })
+    setAnalysisName("")
+    setSaveFlash(true)
+    window.setTimeout(() => setSaveFlash(false), 1800)
+  }
+
+  function openSavedAnalysis(entry: SavedAnalysis) {
+    setMoveTree(entry.tree)
+    setCursorPath(entry.cursorPath ?? [])
+    setForwardHintPath(entry.cursorPath ?? [])
+    clearVariationIntent()
+    setPickerOpen(false)
+    setFenError(null)
+    clearHighlights()
+    setView("analyze")
+  }
+
+  // Keyboard: ← → step through moves; Space plays engine best move. When a
+  // position branches, → opens the variation picker where ↑ ↓ move the
+  // highlight, Enter selects, and Esc / ← dismiss. Never hijack typing in
+  // inputs, textareas, or contenteditable fields (e.g. the FEN box).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const target = e.target
       if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return
+      if (target instanceof HTMLElement && target.isContentEditable) return
+
+      // Picker open: ↑ ↓ change highlight, Enter selects, Esc / ← dismiss.
+      if (pickerOpen && nextOptions.length > 1) {
+        const count = nextOptions.length
+        if (e.key === "ArrowDown") {
+          e.preventDefault()
+          setPickerIndex((i) => (count ? (i + 1) % count : 0))
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault()
+          setPickerIndex((i) => (count ? (i - 1 + count) % count : 0))
+        } else if (e.key === "Enter") {
+          e.preventDefault()
+          choosePickerOption(pickerIndex)
+        } else if (e.key === "Escape" || e.key === "ArrowLeft") {
+          e.preventDefault()
+          setPickerOpen(false)
+        }
+        return
+      }
+
+      // Don't fight keyboard activation when a button (nav/controls) has focus.
       if (target instanceof HTMLButtonElement) return
       if (e.key === "ArrowLeft") {
         e.preventDefault()
         goBack()
       } else if (e.key === "ArrowRight") {
         e.preventDefault()
-        goForward()
+        stepForwardOrPick()
       } else if (e.key === " ") {
         if (!engineOn || !canInteract || !analysis?.bestMoveUci) return
         e.preventDefault()
@@ -300,7 +427,7 @@ export function FreeAnalysis() {
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moveTree, cursorPath, engineOn, canInteract, analysis])
+  }, [moveTree, cursorPath, engineOn, canInteract, analysis, pickerOpen, pickerIndex, nextOptions, forwardHintPath])
 
   const moveNumbering = useMemo(() => {
     const parts = moveTree.rootFen.split(/\s+/)
@@ -355,11 +482,21 @@ export function FreeAnalysis() {
     canInteract ? buildSelectionStyles(selectedSquare) : null,
   )
 
-  const bestMoveArrow: Arrow[] = useMemo(() => {
-    if (!engineOn || gameOver || !analysis?.bestMoveUci) return []
-    const uci = analysis.bestMoveUci
-    return [{ startSquare: uci.slice(0, 2), endSquare: uci.slice(2, 4), color: "rgba(99,102,241,0.85)" }]
-  }, [engineOn, gameOver, analysis])
+  const engineArrows: Arrow[] = useMemo(() => {
+    if (!engineOn || gameOver || !engineArrowEnabled) return []
+    return lines
+      .slice(0, multiPv)
+      .map((ln, i): Arrow | null => {
+        const uci = ln.bestMoveUci
+        if (!uci) return null
+        return {
+          startSquare: uci.slice(0, 2),
+          endSquare: uci.slice(2, 4),
+          color: ARROW_COLORS[i] ?? ARROW_COLORS[ARROW_COLORS.length - 1],
+        }
+      })
+      .filter((a): a is Arrow => a !== null)
+  }, [engineOn, gameOver, engineArrowEnabled, lines, multiPv])
 
   const board = (
     <div ref={boardRef} className="w-full h-full" onContextMenu={(e) => e.preventDefault()}>
@@ -370,7 +507,7 @@ export function FreeAnalysis() {
           allowDragging: canInteract,
           dragActivationDistance: DRAG_ACTIVATION_DISTANCE,
           squareStyles,
-          arrows: bestMoveArrow,
+          arrows: engineArrows,
           animationDurationInMs: 200,
           darkSquareStyle: { backgroundColor: BOARD_DARK },
           lightSquareStyle: { backgroundColor: BOARD_LIGHT },
@@ -419,6 +556,16 @@ export function FreeAnalysis() {
             <FlipBoardButton onClick={() => setOrientation((o) => (o === "white" ? "black" : "white"))} />
           </div>
 
+          {/* Tabs: live analysis vs the saved-studies collection */}
+          <div className="flex gap-1 p-1 rounded-xl bg-gray-100 dark:bg-slate-900/50">
+            <TabButton label="Analysis" active={view === "analyze"} onClick={() => setView("analyze")} />
+            <TabButton label="Saved" active={view === "saved"} onClick={() => setView("saved")} />
+          </div>
+
+          {view === "saved" ? (
+            <AnalysisSaved onOpen={openSavedAnalysis} />
+          ) : (
+          <>
           {/* Eval summary */}
           <div className="rounded-2xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between gap-3">
@@ -464,46 +611,62 @@ export function FreeAnalysis() {
 
             <p className="text-sm font-semibold text-gray-600 dark:text-slate-300">{statusText}</p>
 
-            {error && (
-              <p className="text-xs text-red-600 dark:text-red-400">Engine error: {error}</p>
-            )}
-            {!error && engineOn && !ready && (
+            {reconnecting ? (
+              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                <span className="animate-pulse" aria-hidden>●</span> Reconnecting to engine…
+              </p>
+            ) : error ? (
+              <div className="flex items-center justify-between gap-2 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200/70 dark:border-red-900/50 px-2.5 py-1.5">
+                <p className="min-w-0 text-xs text-red-600 dark:text-red-400">Engine error: {error}</p>
+                <button
+                  onClick={retry}
+                  className="shrink-0 text-[11px] font-bold px-2 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : engineOn && !ready ? (
               <p className="text-xs text-gray-400 dark:text-slate-500">Loading engine…</p>
-            )}
+            ) : null}
 
-            {/* Best move + PV */}
-            {engineOn && !gameOver && analysis && analysis.pvSan.length > 0 && (
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
-                    Best
-                  </span>
-                  <button
-                    onClick={() => playPv(1)}
-                    className="text-sm font-bold px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900 transition inline-flex items-baseline"
-                    title="Play best move (Space)"
-                  >
-                    <SanNotation
-                      san={analysis.bestMoveSan ?? ""}
-                      side={stm}
-                    />
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-x-1.5 gap-y-1 items-center">
-                  <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500 mr-1">
-                    Line
-                  </span>
-                  {analysis.pvSan.slice(0, 12).map((san, i) => (
-                    <button
-                      key={`${i}-${san}`}
-                      onClick={() => playPv(i + 1)}
-                      className="text-xs sm:text-sm text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline transition inline-flex items-baseline"
-                      title="Play this line up to here"
-                    >
-                      <SanNotation san={san} color={colorFromPly(i, stm === "w")} size="inherit" />
-                    </button>
-                  ))}
-                </div>
+            {/* Engine lines (MultiPV: top 1–3 principal variations) */}
+            {engineOn && !gameOver && lines.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                  {multiPv > 1 ? `Top ${Math.min(multiPv, lines.length)} lines` : "Best line"}
+                </span>
+                {lines.slice(0, multiPv).map((ln, rank) => (
+                  <div key={rank} className="flex items-start gap-2">
+                    {multiPv > 1 && (
+                      <span
+                        className={clsx(
+                          "mt-1.5 h-2 w-2 shrink-0 rounded-full",
+                          RANK_DOT_COLORS[rank] ?? RANK_DOT_COLORS[RANK_DOT_COLORS.length - 1],
+                        )}
+                        aria-hidden
+                      />
+                    )}
+                    <span className="shrink-0 w-12 text-sm font-bold tabular-nums text-gray-900 dark:text-slate-100">
+                      {formatEval(ln.whiteCp, ln.whiteMate)}
+                    </span>
+                    <div className="min-w-0 flex flex-wrap gap-x-1.5 gap-y-1 items-center">
+                      {ln.pvSan.slice(0, 12).map((san, i) => (
+                        <button
+                          key={`${rank}-${i}-${san}`}
+                          onClick={() => playPvLine(ln.pvUci, i + 1)}
+                          className="text-xs sm:text-sm text-gray-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline transition inline-flex items-baseline"
+                          title={
+                            rank === 0 && i === 0
+                              ? "Play best move (Space)"
+                              : "Play this line up to here"
+                          }
+                        >
+                          <SanNotation san={san} color={colorFromPly(i, stm === "w")} size="inherit" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -528,6 +691,55 @@ export function FreeAnalysis() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Lines (MultiPV) selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                Lines
+              </span>
+              <div className="flex gap-1">
+                {MULTIPV_OPTIONS.map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setMultiPv(n)}
+                    aria-pressed={multiPv === n}
+                    className={clsx(
+                      "text-xs font-bold px-2 py-1 rounded-lg transition",
+                      multiPv === n
+                        ? "bg-indigo-600 text-white"
+                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-600",
+                    )}
+                    title={`Show top ${n} engine ${n === 1 ? "move" : "moves"}`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Engine board-arrow toggle */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+                Board arrows
+              </span>
+              <button
+                onClick={() => setEngineArrowEnabled(!engineArrowEnabled)}
+                role="switch"
+                aria-checked={engineArrowEnabled}
+                className={clsx(
+                  "relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-400",
+                  engineArrowEnabled ? "bg-indigo-600" : "bg-gray-300 dark:bg-slate-600",
+                )}
+                title={engineArrowEnabled ? "Hide engine move arrows on the board" : "Show engine move arrows on the board"}
+              >
+                <span
+                  className={clsx(
+                    "inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform",
+                    engineArrowEnabled ? "translate-x-6" : "translate-x-1",
+                  )}
+                />
+              </button>
             </div>
           </div>
 
@@ -570,6 +782,18 @@ export function FreeAnalysis() {
               </p>
             )}
 
+            {pickerOpen && nextOptions.length > 1 && (
+              <VariationPicker
+                options={nextOptions}
+                ply={cursorPath.length}
+                numbering={moveNumbering}
+                activeIndex={pickerIndex}
+                onHover={setPickerIndex}
+                onSelect={choosePickerOption}
+                onClose={() => setPickerOpen(false)}
+              />
+            )}
+
             <MoveTreeList
               tree={moveTree}
               cursorPath={cursorPath}
@@ -581,7 +805,7 @@ export function FreeAnalysis() {
             <p className="text-xs text-gray-400 dark:text-slate-500 leading-relaxed">
               {moveTree.children.length === 0
                 ? "Make a move to start the main line."
-                : "Tip: go back (←), play a different move, or right-click any move → Add variation here. Engine lines branch too."}
+                : "Tip: ← → step through moves. At a branch, → opens a picker — use ↑ ↓ then Enter to choose a line (Esc cancels). Right-click any move to add a variation."}
             </p>
           </div>
 
@@ -589,7 +813,7 @@ export function FreeAnalysis() {
           <div className="grid grid-cols-4 gap-1.5">
             <NavButton label="⏮" title="Start" onClick={goStart} disabled={cursorPath.length === 0} />
             <NavButton label="◀" title="Back (←)" onClick={goBack} disabled={cursorPath.length === 0} />
-            <NavButton label="▶" title="Forward (→)" onClick={goForward} disabled={!canGoForward} />
+            <NavButton label="▶" title="Forward (→)" onClick={stepForwardOrPick} disabled={!canGoForward} />
             <NavButton
               label="⏭"
               title="End"
@@ -604,6 +828,35 @@ export function FreeAnalysis() {
           >
             ↺ Reset to start position
           </button>
+
+          {/* Save analysis (localStorage collection) */}
+          <div className="flex flex-col gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 dark:text-slate-500">
+              Save analysis
+            </span>
+            <div className="flex gap-2">
+              <input
+                value={analysisName}
+                onChange={(e) => setAnalysisName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveCurrentAnalysis()
+                }}
+                placeholder="Name this analysis…"
+                className="flex-1 min-w-0 text-xs px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-200 placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              />
+              <button
+                onClick={saveCurrentAnalysis}
+                className="shrink-0 text-xs font-bold px-3 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition"
+              >
+                💾 Save
+              </button>
+            </div>
+            {saveFlash && (
+              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                Saved — open it from the Saved tab.
+              </p>
+            )}
+          </div>
 
           {/* FEN */}
           <div className="flex flex-col gap-2 pt-1">
@@ -641,9 +894,37 @@ export function FreeAnalysis() {
               </button>
             </div>
           </div>
+          </>
+          )}
         </div>
       </div>
     </div>
+  )
+}
+
+function TabButton({
+  label,
+  active,
+  onClick,
+}: {
+  label: string
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={clsx(
+        "flex-1 text-xs font-display font-bold py-1.5 rounded-lg transition",
+        active
+          ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm"
+          : "text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100",
+      )}
+    >
+      {label}
+    </button>
   )
 }
 

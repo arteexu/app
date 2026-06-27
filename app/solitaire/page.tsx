@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { SolitaireApp } from "@/components/solitaire/SolitaireApp"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export const metadata = {
   title: "Solitaire Chess — Follow a Grandmaster's Game | ChessMind",
@@ -23,7 +24,7 @@ export default async function SolitairePage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, avatar_icon")
     .eq("id", user.id)
     .single()
 
@@ -36,7 +37,7 @@ export default async function SolitairePage({
   const autoFindMatch = mode === "match"
 
   return (
-    <AppPageShell nav={<QuestNav active="solitaire" avatarInitial={name[0]?.toUpperCase() ?? "?"} />}>
+    <AppPageShell nav={<QuestNav active="solitaire" avatarInitial={name[0]?.toUpperCase() ?? "?"} avatarIcon={resolveProfileIcon(profile?.avatar_icon)} />}>
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <SolitaireApp initialTab={initialTab} autoFindMatch={autoFindMatch} />
       </div>

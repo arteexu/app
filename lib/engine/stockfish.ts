@@ -186,6 +186,39 @@ export class StockfishEngine {
     })
   }
 
+  /**
+   * Set a UCI option (e.g. "Skill Level", "UCI_LimitStrength", "UCI_Elo").
+   * Used by Play vs Bot to weaken the engine to a chosen strength. Safe to call
+   * any time after the engine is ready; persists until changed.
+   */
+  setOption(name: string, value: string | number | boolean) {
+    this.send(`setoption name ${name} value ${value}`)
+  }
+
+  /**
+   * Search the given position and resolve with the engine's chosen move (UCI),
+   * or null if there is none (game over). Unlike analyze(), this is fire-and-get:
+   * it ignores the streaming info lines and just returns the final `bestmove`.
+   * Honors the engine's currently configured strength options.
+   */
+  async getBestMove(fen: string, opts: AnalyzeOptions = {}): Promise<string | null> {
+    await this.ready
+    if (this.destroyed) return null
+    return new Promise<string | null>((resolve) => {
+      this.handlers = {
+        onBestMove: (best) => resolve(best),
+      }
+      this.send("stop")
+      this.send("setoption name MultiPV value 1")
+      this.send(`position fen ${fen}`)
+      if (opts.movetime && opts.movetime > 0) {
+        this.send(`go movetime ${Math.round(opts.movetime)}`)
+      } else {
+        this.send(`go depth ${opts.depth ?? 12}`)
+      }
+    })
+  }
+
   /** Stop the current search (engine will still emit a final `bestmove`). */
   stop() {
     this.send("stop")

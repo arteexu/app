@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { FreeAnalysis } from "@/components/analysis/FreeAnalysis"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export const metadata = {
   title: "Free Analysis — Engine Board | ChessMind",
@@ -17,7 +18,7 @@ export default async function AnalysisPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, avatar_icon")
     .eq("id", user.id)
     .single()
 
@@ -25,7 +26,7 @@ export default async function AnalysisPage() {
 
   return (
     <AppPageShell
-      nav={<QuestNav active="analysis" avatarInitial={name[0]?.toUpperCase() ?? "?"} />}
+      nav={<QuestNav active="analysis" avatarInitial={name[0]?.toUpperCase() ?? "?"} avatarIcon={resolveProfileIcon(profile?.avatar_icon)} />}
       showFooter={false}
     >
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">

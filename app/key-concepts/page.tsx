@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { AppPageShell } from "@/components/ui/AppPageShell"
 import { QuestNav } from "@/components/ui/QuestNav"
 import { KeyConceptsBrowser } from "@/components/key-concepts/KeyConceptsBrowser"
+import { resolveProfileIcon } from "@/lib/profile-icons"
 
 export const metadata = {
   title: "Key Concepts — Attacking Principles | ChessMind",
@@ -17,7 +18,7 @@ export default async function KeyConceptsPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, avatar_icon")
     .eq("id", user.id)
     .single()
 
@@ -27,8 +28,9 @@ export default async function KeyConceptsPage() {
     <AppPageShell
       nav={
         <QuestNav
-          back={{ href: "/dashboard", label: "Courses" }}
+          back={{ href: "/learn", label: "Learn" }}
           avatarInitial={name[0]?.toUpperCase() ?? "?"}
+          avatarIcon={resolveProfileIcon(profile?.avatar_icon)}
           active="key-concepts"
         />
       }

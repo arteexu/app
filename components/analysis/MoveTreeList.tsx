@@ -329,7 +329,7 @@ export function MoveTreeList({
 
   return (
     <>
-      <div className="flex flex-wrap gap-1 max-h-48 sm:max-h-56 overflow-y-auto leading-relaxed">
+      <div className="flex flex-wrap gap-1 max-h-[min(38vh,22rem)] overflow-y-auto overscroll-contain pr-1 leading-relaxed [scrollbar-width:thin] [scrollbar-color:theme(colors.gray.300)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-track]:bg-transparent">
         <MoveLine
           nodes={tree.children}
           pathPrefix={[]}

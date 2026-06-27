@@ -19,6 +19,7 @@ import { promoteToPool } from "@/lib/multiplayer/engine-games"
 import { useGameGenerator } from "@/hooks/useGameGenerator"
 import { FlipBoardButton } from "./FlipBoardButton"
 import { SolitaireBoardEditor, type BoardEditorResult } from "./SolitaireBoardEditor"
+import { ChessMindLoader } from "@/components/ui/ChessMindLoader"
 
 interface Props {
   onStart: (setup: SolitaireSetup) => void
@@ -306,7 +307,7 @@ export function SolitaireGenerate({ onStart }: Props) {
               /* No board / move list while generating — that would reveal the
                  moves the user is about to solve. Show only non-spoiling progress. */
               <div className="flex flex-col items-center justify-center gap-3 aspect-square w-full rounded-2xl border-2 border-dashed border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10 px-6 text-center">
-                <Spinner large />
+                <ChessMindLoader size="lg" label="Generating game" hideLabel />
                 <p className="font-display text-2xl font-extrabold text-gray-900 dark:text-slate-100 tabular-nums">
                   {state.moveCount} {state.moveCount === 1 ? "move" : "moves"} played
                 </p>
@@ -480,19 +481,5 @@ function ModeTab({
     >
       {label}
     </button>
-  )
-}
-
-function Spinner({ large }: { large?: boolean }) {
-  return (
-    <svg
-      className={clsx("animate-spin text-emerald-600 dark:text-emerald-400", large ? "h-10 w-10" : "h-4 w-4")}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden
-    >
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-    </svg>
   )
 }

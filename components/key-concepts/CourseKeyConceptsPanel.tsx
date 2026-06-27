@@ -55,7 +55,7 @@ export function CourseKeyConceptsPanel({ lessonIds }: Props) {
               )}
             >
               <span className="text-base mt-0.5" aria-hidden>
-                {unlocked ? "🔑" : "🔒"}
+                {unlocked ? concept.icon : "🔒"}
               </span>
               <div>
                 <p className="font-display font-bold text-sm text-gray-900 dark:text-slate-100">

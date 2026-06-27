@@ -15,6 +15,7 @@ import { getCutoffPly, fenAfter } from "@/lib/solitaire/engine"
 import { submitMatchResult, resignMatch } from "@/lib/multiplayer/matchmaking"
 import type { MatchAndGame, MatchResultOutcome } from "@/lib/multiplayer/types"
 import { Confetti, useCountUp } from "@/components/lesson/RewardFx"
+import { SolitaireGameInsights } from "./SolitaireGameInsights"
 
 interface Props {
   setup: SolitaireSetup
@@ -184,6 +185,10 @@ export function SolitaireMatchResults({
             </p>
           )}
         </div>
+
+        {!forfeit && results.length > 0 && (
+          <SolitaireGameInsights game={game} side={side} results={results} />
+        )}
 
         {/* Game recap */}
         <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex flex-col sm:flex-row gap-4 items-center">

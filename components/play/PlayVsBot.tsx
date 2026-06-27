@@ -32,6 +32,8 @@ import { PlayerBar } from "./PlayerBar"
 import { MoveList } from "./MoveList"
 import { GameControls } from "./GameControls"
 import { GameOverCard, type GameOverInfo } from "./GameOverCard"
+import { SavePlayGamePanel } from "./SavePlayGamePanel"
+import { defaultPlayGameName } from "@/lib/play/saved-play-games"
 
 function otherColor(c: PieceColor): PieceColor {
   return c === "white" ? "black" : "white"
@@ -277,6 +279,24 @@ export function PlayVsBot({ playerName, playerRating }: { playerName: string; pl
               info={gameOverInfo}
               actions={
                 <>
+                  {result && (
+                    <SavePlayGamePanel
+                      defaultName={defaultPlayGameName({
+                        opponentType: "bot",
+                        opponentLabel: level.label,
+                        timeControlId: tc.id,
+                      })}
+                      payload={{
+                        opponentType: "bot",
+                        opponentLabel: `Bot · ${level.label}`,
+                        botLevelId: level.id,
+                        timeControlId: tc.id,
+                        userColor,
+                        result,
+                        moves,
+                      }}
+                    />
+                  )}
                   <button
                     onClick={() => start(opts)}
                     className="w-full font-display font-extrabold py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition"
@@ -289,6 +309,12 @@ export function PlayVsBot({ playerName, playerRating }: { playerName: string; pl
                   >
                     New game
                   </button>
+                  <Link
+                    href="/play/saved"
+                    className="w-full text-center font-display font-bold py-2.5 rounded-xl text-indigo-600 dark:text-indigo-400 hover:underline transition"
+                  >
+                    Saved games
+                  </Link>
                   <Link
                     href="/play"
                     className="w-full text-center font-display font-bold py-2.5 rounded-xl text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 transition"

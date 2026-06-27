@@ -42,14 +42,14 @@ export function matchTags(ctx: MatchContext): MatchResult {
   const tp = new Set<TacticalPatternId>()
   const kc = new Set<KeyConceptId>()
 
-  // FORK: the MOVED piece attacks 2+ valuable enemy targets (pieces ≥ knight, or the king).
+  // FORK: the MOVED piece attacks 2+ enemy pieces (any piece, or king via check).
   const fromMovedPiece = ctx.legalAttacks.filter((a) => a.bySquare === ctx.toSquare)
-  const valuableTargets = new Set(
+  const forkTargets = new Set(
     fromMovedPiece
-      .filter((a) => a.givesCheck || ["n", "b", "r", "q"].includes(a.targetPiece))
+      .filter((a) => a.givesCheck || ["p", "n", "b", "r", "q"].includes(a.targetPiece))
       .map((a) => a.targetSquare),
   )
-  if (valuableTargets.size >= 2) tp.add("tp-fork")
+  if (forkTargets.size >= 2) tp.add("tp-fork")
 
   // TAKING WITH CHECK: capture that also gives (non-mating) check.
   if (ctx.isCapture && ctx.isCheck && !ctx.isCheckmate) tp.add("tp-taking-with-check")

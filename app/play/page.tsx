@@ -52,7 +52,7 @@ export default async function PlayHubPage() {
 
         <PlayRatingCard initial={initialRating} />
 
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <Link
             href="/play/bot"
             className="group relative overflow-hidden rounded-3xl border border-indigo-200/60 dark:border-indigo-800/60 bg-gradient-to-br from-indigo-50 to-sky-50 dark:from-indigo-950/40 dark:to-sky-950/30 p-6 flex flex-col gap-3 hover:shadow-lg hover:shadow-indigo-500/10 transition-shadow"
@@ -90,6 +90,26 @@ export default async function PlayHubPage() {
             </div>
             <span className="mt-auto inline-flex items-center gap-2 font-display font-extrabold text-rose-600 dark:text-rose-400">
               Find opponent →
+            </span>
+          </Link>
+
+          <Link
+            href="/play/saved"
+            className="group relative overflow-hidden rounded-3xl border border-amber-200/60 dark:border-amber-800/60 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 p-6 flex flex-col gap-3 hover:shadow-lg hover:shadow-amber-500/10 transition-shadow sm:col-span-2 lg:col-span-1"
+          >
+            <span className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white grid place-items-center text-3xl shadow-md shadow-amber-500/30">
+              💾
+            </span>
+            <div>
+              <h2 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
+                Saved games
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+                Replay finished games and generate coach insights with detected tactical patterns.
+              </p>
+            </div>
+            <span className="mt-auto inline-flex items-center gap-2 font-display font-extrabold text-amber-600 dark:text-amber-400">
+              Review saved →
             </span>
           </Link>
         </div>

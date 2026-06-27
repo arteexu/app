@@ -27,6 +27,7 @@ import { buildLastMoveStyles, composeSquareStyles } from "@/lib/legal-move-highl
 import type { SolitaireGame, Side } from "@/lib/solitaire/types"
 import { DifficultyPips } from "./DifficultyPips"
 import { FlipBoardButton } from "./FlipBoardButton"
+import { SolitaireGameInsights } from "./SolitaireGameInsights"
 
 interface Props {
   setup: SolitaireSetup
@@ -127,6 +128,8 @@ export function SolitaireResults({ setup, results, onPlayAgain, onNewGame }: Pro
             </span>
           </div>
         </div>
+
+        <SolitaireGameInsights game={game} side={side} results={results} />
 
         {/* Game recap */}
         <div className="rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex flex-col sm:flex-row gap-4 sm:gap-5 items-center sm:items-center">

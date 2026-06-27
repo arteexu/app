@@ -53,6 +53,8 @@ import { PlayerBar } from "./PlayerBar"
 import { MoveList } from "./MoveList"
 import { GameControls } from "./GameControls"
 import { GameOverCard, type GameOverInfo } from "./GameOverCard"
+import { SavePlayGamePanel } from "./SavePlayGamePanel"
+import { defaultPlayGameName } from "@/lib/play/saved-play-games"
 
 const SEARCH_INTERVAL_MS = 2000
 
@@ -504,12 +506,36 @@ export function PlayVsHuman({ playerName }: { playerName: string }) {
               info={gameOverInfo}
               actions={
                 <>
+                  {result && (
+                    <SavePlayGamePanel
+                      defaultName={defaultPlayGameName({
+                        opponentType: "human",
+                        opponentLabel: oppName,
+                        timeControlId: timeControl.id,
+                      })}
+                      payload={{
+                        opponentType: "human",
+                        opponentLabel: oppName,
+                        timeControlId: timeControl.id,
+                        userColor: myColor,
+                        result,
+                        moves,
+                        supabaseGameId: gameId ?? undefined,
+                      }}
+                    />
+                  )}
                   <button
                     onClick={reset}
                     className="w-full font-display font-extrabold py-2.5 rounded-xl bg-rose-600 text-white hover:bg-rose-700 transition"
                   >
                     ⚔️ New game
                   </button>
+                  <Link
+                    href="/play/saved"
+                    className="w-full text-center font-display font-bold py-2.5 rounded-xl text-indigo-600 dark:text-indigo-400 hover:underline transition"
+                  >
+                    Saved games
+                  </Link>
                   <Link
                     href="/play"
                     className="w-full text-center font-display font-bold py-2.5 rounded-xl text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-200 transition"

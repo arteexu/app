@@ -2,7 +2,7 @@
 // components/play/PlayGameInsights.tsx
 // Post-game insights for saved Play games — pivotal plies + deterministic tags.
 
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { clsx } from "clsx"
 import type { GameResult, PieceColor, PlayedMove } from "@/lib/play/types"
@@ -11,7 +11,16 @@ import { getTacticalPattern } from "@/lib/tactical-patterns"
 import { keyConceptHref, tacticalPatternHref } from "@/lib/insights/learn-links"
 import { MotifPracticeSection } from "@/components/insights/MotifPracticeSection"
 import { RecommendedPuzzles } from "@/components/insights/RecommendedPuzzles"
+import { GameSummaryInsights } from "@/components/insights/GameSummaryInsights"
+import { SaveInsightsBar } from "@/components/insights/SaveInsightsBar"
 import { AnalysisModeToggle } from "@/components/insights/AnalysisModeToggle"
+import { buildGameSummary, sideFromColor } from "@/lib/insights/game-summary"
+import {
+  getSavedInsights,
+  saveInsights,
+  deleteSavedInsights,
+  gameKeyFromContent,
+} from "@/lib/insights/saved-insights"
 import { buildMotifPractice, type MotifPlySource } from "@/lib/insights/practice"
 import { COMMENTARY_FEATURE_ENABLED } from "@/lib/commentary/config"
 import {
@@ -39,14 +48,87 @@ interface Props {
   /** Start position when the game does not begin from the standard setup (uploads). */
   startFen?: string
   className?: string
+  /** Stable key to persist/restore insights. Defaults to a content hash. */
+  gameKey?: string
+  /** Namespace for the auto-derived content key when `gameKey` is absent. */
+  keyScope?: string
+  /** Human label stored with saved insights (e.g. the saved game's name). */
+  gameLabel?: string
 }
 
-export function PlayGameInsights({ moves, userColor, startFen, className }: Props) {
+export function PlayGameInsights({
+  moves,
+  userColor,
+  startFen,
+  className,
+  gameKey,
+  keyScope,
+  gameLabel,
+}: Props) {
   const [insights, setInsights] = useState<GameInsights | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [progress, setProgress] = useState<string | null>(null)
   const [mode, setMode] = useState<AnalysisDepthMode>("standard")
+  const [savedAt, setSavedAt] = useState<string | null>(null)
+  const [dirty, setDirty] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const hydratedKeyRef = useRef<string | null>(null)
+
+  // A stable key for persistence: an explicit id when available (saved games),
+  // otherwise a content hash so the same game re-loads its saved insights.
+  const resolvedKey = useMemo(() => {
+    if (gameKey) return gameKey
+    return gameKeyFromContent(keyScope ?? "review", [
+      startFen ?? "",
+      userColor,
+      ...moves.map((m) => m.san),
+    ])
+  }, [gameKey, keyScope, startFen, userColor, moves])
+
+  // Restore previously-saved insights for this game (no engine needed). Reading
+  // localStorage must happen post-mount to stay SSR-safe, so this hydration runs
+  // in an effect (matching the saved-game loaders elsewhere in the app).
+  useEffect(() => {
+    if (hydratedKeyRef.current === resolvedKey) return
+    const rec = getSavedInsights<GameInsights>(resolvedKey)
+    if (rec) {
+      hydratedKeyRef.current = resolvedKey
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe localStorage hydration
+      setInsights(rec.payload)
+      setMode(rec.mode)
+      setSavedAt(rec.savedAt)
+      setDirty(false)
+    }
+  }, [resolvedKey])
+
+  const handleSave = useCallback(() => {
+    if (!insights) return
+    const ok = saveInsights<GameInsights>({
+      gameKey: resolvedKey,
+      surface: "play",
+      mode,
+      label: gameLabel ?? "Saved game insights",
+      notableCount: insights.plyInsights.length,
+      analyzedCount: insights.analyzedCount ?? 0,
+      payload: insights,
+    })
+    if (ok) {
+      setSavedAt(new Date().toISOString())
+      setDirty(false)
+      setSaveError(null)
+      hydratedKeyRef.current = resolvedKey
+    } else {
+      setSaveError("Couldn't save — device storage may be full or unavailable.")
+    }
+  }, [insights, resolvedKey, mode, gameLabel])
+
+  const handleRemove = useCallback(() => {
+    deleteSavedInsights(resolvedKey)
+    setSavedAt(null)
+    setDirty(false)
+    setSaveError(null)
+  }, [resolvedKey])
 
   const practice = useMemo(() => {
     if (!insights) return null
@@ -121,14 +203,23 @@ export function PlayGameInsights({ moves, userColor, startFen, className }: Prop
         scanned,
         (ply) => `Move ${Math.ceil((ply + 1) / 2)}`,
       )
-      setInsights({ plyInsights, ...aggregated, motifSources, analyzedCount: scanned.length })
+      const summary = buildGameSummary(scanned, sideFromColor(userColor))
+      setInsights({
+        plyInsights,
+        ...aggregated,
+        motifSources,
+        analyzedCount: scanned.length,
+        summary,
+      })
+      // Freshly generated → differs from any saved copy until (re)saved.
+      setDirty(true)
     } catch {
       setError("Couldn't generate insights. Try again.")
     } finally {
       setLoading(false)
       setProgress(null)
     }
-  }, [moves, mode, startFen])
+  }, [moves, mode, startFen, userColor])
 
   return (
     <div
@@ -176,6 +267,23 @@ export function PlayGameInsights({ moves, userColor, startFen, className }: Prop
 
       {insights && (
         <>
+          <SaveInsightsBar
+            saved={savedAt !== null}
+            dirty={dirty}
+            savedAt={savedAt}
+            mode={mode}
+            error={saveError}
+            onSave={handleSave}
+            onRemove={handleRemove}
+          />
+
+          {insights.summary && (
+            <GameSummaryInsights
+              summary={insights.summary}
+              moveLabel={(ply) => `Move ${Math.ceil((ply + 1) / 2)}`}
+            />
+          )}
+
           {insights.aggregatedKeyConcepts.length > 0 && (
             <div className="flex flex-col gap-2">
               <p className="text-[11px] font-bold uppercase tracking-wide text-amber-700 dark:text-amber-400">

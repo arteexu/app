@@ -10,13 +10,17 @@ import {
   renameSavedPlayGame,
   type SavedPlayGame,
 } from "@/lib/play/saved-play-games"
+import { deleteSavedInsights, hasSavedInsights } from "@/lib/insights/saved-insights"
 import { resultTag } from "@/lib/play/types"
 
 export function PlaySavedGamesList() {
   const [games, setGames] = useState<SavedPlayGame[] | null>(null)
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe localStorage read
   useEffect(() => setGames(listSavedPlayGames()), [])
 
   function handleDelete(id: string) {
+    // Also drop any saved insights for this game so nothing is orphaned.
+    deleteSavedInsights(`play:${id}`)
     setGames(deleteSavedPlayGame(id))
   }
 
@@ -84,6 +88,11 @@ function SavedCard({
 }) {
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState(entry.name)
+  const [hasInsights, setHasInsights] = useState(false)
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe localStorage read
+    setHasInsights(hasSavedInsights(`play:${entry.id}`))
+  }, [entry.id])
   const savedDate = new Date(entry.savedAt).toLocaleDateString()
   const outcome =
     entry.result.winner === "draw"
@@ -136,6 +145,14 @@ function SavedCard({
         </span>
         <span aria-hidden>·</span>
         <span>Saved {savedDate}</span>
+        {hasInsights && (
+          <>
+            <span aria-hidden>·</span>
+            <span className="inline-flex items-center gap-1 font-semibold text-indigo-600 dark:text-indigo-400">
+              🧠 Insights saved
+            </span>
+          </>
+        )}
       </div>
       <div className="flex gap-2 mt-0.5">
         <Link

@@ -8,6 +8,7 @@
 
 import { getKeyConcept, type KeyConceptId } from "@/lib/key-concepts"
 import { getTacticalPattern, type TacticalPatternId } from "@/lib/tactical-patterns"
+import { findLessonInCourses } from "@/lib/courses"
 import type { InsightMotifId } from "./motifs"
 
 /** Deep link that auto-selects a concept in the /key-concepts browser. */
@@ -18,6 +19,11 @@ export function keyConceptHref(id: KeyConceptId | string): string {
 /** Deep link that auto-selects a pattern in the /tactical-patterns browser. */
 export function tacticalPatternHref(id: TacticalPatternId | string): string {
   return `/tactical-patterns?pattern=${encodeURIComponent(id)}`
+}
+
+/** Deep link that opens a lesson at its first step. */
+export function lessonHref(lessonId: string): string {
+  return `/lessons/${encodeURIComponent(lessonId)}`
 }
 
 export type MotifLearnTarget =
@@ -63,4 +69,57 @@ export function motifLearnTarget(id: InsightMotifId): MotifLearnTarget {
     }
   }
   return null
+}
+
+// ── Lesson mapping (concept / pattern / motif → the lessons that teach it) ─────
+// The taxonomy entries (KEY_CONCEPTS / TACTICAL_PATTERNS) carry `lessonIds`. We
+// resolve those ids against the in-memory course data so the post-game insights
+// can offer "Learn this in: <lesson>" links. Ids that don't resolve to a real
+// lesson are dropped (graceful degradation — never a dangling deep-link).
+
+/** A lesson that teaches a detected concept / pattern, ready to deep-link into. */
+export interface LessonLink {
+  lessonId: string
+  title: string
+  courseTitle: string
+  href: string
+}
+
+function resolveLessons(lessonIds: readonly string[]): LessonLink[] {
+  const out: LessonLink[] = []
+  const seen = new Set<string>()
+  for (const id of lessonIds) {
+    if (seen.has(id)) continue
+    const match = findLessonInCourses(id)
+    if (!match) continue // dangling id — skip rather than emit a broken link
+    seen.add(id)
+    out.push({
+      lessonId: id,
+      title: match.lesson.title,
+      courseTitle: match.course.title,
+      href: lessonHref(id),
+    })
+  }
+  return out
+}
+
+/** Lessons that teach a given Key Concept (validated against course data). */
+export function lessonsForKeyConcept(id: KeyConceptId | string): LessonLink[] {
+  const concept = getKeyConcept(id)
+  return concept ? resolveLessons(concept.lessonIds) : []
+}
+
+/** Lessons that teach a given Tactical Pattern (validated against course data). */
+export function lessonsForTacticalPattern(id: TacticalPatternId | string): LessonLink[] {
+  const pattern = getTacticalPattern(id)
+  return pattern ? resolveLessons(pattern.lessonIds) : []
+}
+
+/** Lessons that teach the taxonomy entry a detected motif maps to (or none). */
+export function lessonsForMotif(id: InsightMotifId): LessonLink[] {
+  const target = motifLearnTarget(id)
+  if (!target) return []
+  return target.kind === "pattern"
+    ? lessonsForTacticalPattern(target.id)
+    : lessonsForKeyConcept(target.id)
 }

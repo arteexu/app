@@ -13,7 +13,12 @@ import { getAllCourses, getCourseLessons } from "@/lib/courses"
 import type { Course, Lesson, PuzzleStep } from "@/lib/types"
 import { getKeyConcept, type KeyConceptId } from "@/lib/key-concepts"
 import { getTacticalPattern, type TacticalPatternId } from "@/lib/tactical-patterns"
-import { motifLearnTarget } from "./learn-links"
+import {
+  motifLearnTarget,
+  lessonsForKeyConcept,
+  lessonsForTacticalPattern,
+  type LessonLink,
+} from "./learn-links"
 import type { InsightMotifId } from "./motifs"
 
 /** A puzzle the learner can be deep-linked into to practice a concept/pattern. */
@@ -177,6 +182,93 @@ export function recommendPuzzlesForInsights(
       title: concept.title,
       icon: concept.icon,
       learnHref: `/key-concepts?concept=${encodeURIComponent(id)}`,
+      puzzles,
+    })
+  }
+
+  return groups
+}
+
+// ── Study plan: lessons ("Learn") + puzzles ("Practice") per detected target ──
+// Richer than recommendPuzzlesForInsights: each group carries BOTH the lessons
+// that teach the concept/pattern and the puzzles that drill it. A group is kept
+// when it has at least one lesson OR one puzzle, so detected ideas that only have
+// lessons (no tagged puzzles yet) still route the learner somewhere useful.
+
+export interface StudyRecommendationGroup {
+  kind: "concept" | "pattern"
+  id: KeyConceptId | TacticalPatternId
+  title: string
+  icon: string
+  /** Link to the gamified browser entry (the tag page). */
+  learnHref: string
+  /** Lessons that teach this concept/pattern (validated, may be empty). */
+  lessons: LessonLink[]
+  /** Tagged puzzles that drill this concept/pattern (may be empty). */
+  puzzles: PuzzleRecommendation[]
+}
+
+/** Default number of lessons surfaced per concept/pattern. */
+export const DEFAULT_LESSONS_PER_GROUP = 2
+
+export function recommendStudyForInsights(
+  input: InsightTagInput,
+  limitPuzzlesPerGroup = DEFAULT_PUZZLES_PER_GROUP,
+  limitLessonsPerGroup = DEFAULT_LESSONS_PER_GROUP,
+): StudyRecommendationGroup[] {
+  const patternIds: string[] = []
+  const conceptIds: string[] = []
+  const seenPattern = new Set<string>()
+  const seenConcept = new Set<string>()
+
+  const addPattern = (id: string) => {
+    if (!seenPattern.has(id)) { seenPattern.add(id); patternIds.push(id) }
+  }
+  const addConcept = (id: string) => {
+    if (!seenConcept.has(id)) { seenConcept.add(id); conceptIds.push(id) }
+  }
+
+  for (const id of input.tacticalPatternIds ?? []) addPattern(id)
+  for (const id of input.keyConceptIds ?? []) addConcept(id)
+  for (const id of input.motifIds ?? []) {
+    const target = motifLearnTarget(id)
+    if (!target) continue
+    if (target.kind === "pattern") addPattern(target.id)
+    else addConcept(target.id)
+  }
+
+  const groups: StudyRecommendationGroup[] = []
+
+  for (const id of patternIds) {
+    const pattern = getTacticalPattern(id)
+    if (!pattern) continue
+    const lessons = lessonsForTacticalPattern(id).slice(0, limitLessonsPerGroup)
+    const puzzles = puzzlesForTacticalPattern(id, limitPuzzlesPerGroup)
+    if (lessons.length === 0 && puzzles.length === 0) continue
+    groups.push({
+      kind: "pattern",
+      id: id as TacticalPatternId,
+      title: pattern.title,
+      icon: pattern.icon,
+      learnHref: `/tactical-patterns?pattern=${encodeURIComponent(id)}`,
+      lessons,
+      puzzles,
+    })
+  }
+
+  for (const id of conceptIds) {
+    const concept = getKeyConcept(id)
+    if (!concept) continue
+    const lessons = lessonsForKeyConcept(id).slice(0, limitLessonsPerGroup)
+    const puzzles = puzzlesForKeyConcept(id, limitPuzzlesPerGroup)
+    if (lessons.length === 0 && puzzles.length === 0) continue
+    groups.push({
+      kind: "concept",
+      id: id as KeyConceptId,
+      title: concept.title,
+      icon: concept.icon,
+      learnHref: `/key-concepts?concept=${encodeURIComponent(id)}`,
+      lessons,
       puzzles,
     })
   }

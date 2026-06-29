@@ -58,7 +58,13 @@ export function PlayGameReview({ game }: { game: SavedPlayGame }) {
 
       <PlayGameReviewStepper moves={game.moves} userColor={game.userColor} />
 
-      <PlayGameInsights moves={game.moves} result={game.result} userColor={game.userColor} />
+      <PlayGameInsights
+        moves={game.moves}
+        result={game.result}
+        userColor={game.userColor}
+        gameKey={`play:${game.id}`}
+        gameLabel={game.name}
+      />
 
       <div className="flex gap-3">
         <Link

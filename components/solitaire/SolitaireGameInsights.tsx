@@ -3,7 +3,7 @@
 // Post-game "Key ideas from this game" — analyzes a handful of pivotal plies via
 // the existing commentary pipeline (engine → ConceptRecord → /api/commentary).
 
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { clsx } from "clsx"
 import type { Side, SolitaireGame } from "@/lib/solitaire/types"
@@ -15,7 +15,15 @@ import { keyConceptHref, tacticalPatternHref } from "@/lib/insights/learn-links"
 import { buildMotifPractice, type MotifPlySource } from "@/lib/insights/practice"
 import { MotifPracticeSection } from "@/components/insights/MotifPracticeSection"
 import { RecommendedPuzzles } from "@/components/insights/RecommendedPuzzles"
+import { GameSummaryInsights } from "@/components/insights/GameSummaryInsights"
+import { SaveInsightsBar } from "@/components/insights/SaveInsightsBar"
 import { AnalysisModeToggle } from "@/components/insights/AnalysisModeToggle"
+import { buildGameSummary, sideFromColor } from "@/lib/insights/game-summary"
+import {
+  getSavedInsights,
+  saveInsights,
+  deleteSavedInsights,
+} from "@/lib/insights/saved-insights"
 import { COMMENTARY_FEATURE_ENABLED } from "@/lib/commentary/config"
 import { generateCoachComment } from "@/lib/commentary/client"
 import {
@@ -54,6 +62,55 @@ export function SolitaireGameInsights({ game, side, results, className }: Props)
   const [error, setError] = useState<string | null>(null)
   const [progress, setProgress] = useState<string | null>(null)
   const [mode, setMode] = useState<AnalysisDepthMode>("standard")
+  const [savedAt, setSavedAt] = useState<string | null>(null)
+  const [dirty, setDirty] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const hydratedKeyRef = useRef<string | null>(null)
+
+  // Stable per-(game, side) key — the same solved game re-loads its insights.
+  const resolvedKey = useMemo(() => `solitaire:${game.id}:${side}`, [game.id, side])
+
+  // SSR-safe: hydrate any saved insights for this (game, side) after mount.
+  useEffect(() => {
+    if (hydratedKeyRef.current === resolvedKey) return
+    const rec = getSavedInsights<GameInsights>(resolvedKey)
+    if (rec) {
+      hydratedKeyRef.current = resolvedKey
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe localStorage hydration
+      setInsights(rec.payload)
+      setMode(rec.mode)
+      setSavedAt(rec.savedAt)
+      setDirty(false)
+    }
+  }, [resolvedKey])
+
+  const handleSave = useCallback(() => {
+    if (!insights) return
+    const ok = saveInsights<GameInsights>({
+      gameKey: resolvedKey,
+      surface: "solitaire",
+      mode,
+      label: game.title,
+      notableCount: insights.plyInsights.length,
+      analyzedCount: insights.analyzedCount ?? 0,
+      payload: insights,
+    })
+    if (ok) {
+      setSavedAt(new Date().toISOString())
+      setDirty(false)
+      setSaveError(null)
+      hydratedKeyRef.current = resolvedKey
+    } else {
+      setSaveError("Couldn't save — device storage may be full or unavailable.")
+    }
+  }, [insights, resolvedKey, mode, game.title])
+
+  const handleRemove = useCallback(() => {
+    deleteSavedInsights(resolvedKey)
+    setSavedAt(null)
+    setDirty(false)
+    setSaveError(null)
+  }, [resolvedKey])
 
   const practice = useMemo(() => {
     if (!insights) return null
@@ -134,14 +191,22 @@ export function SolitaireGameInsights({ game, side, results, className }: Props)
         scanned,
         (ply) => `Move ${moveNumberAtPly(game, ply)}`,
       )
-      setInsights({ plyInsights, ...aggregated, motifSources, analyzedCount: scanned.length })
+      const summary = buildGameSummary(scanned, sideFromColor(side))
+      setInsights({
+        plyInsights,
+        ...aggregated,
+        motifSources,
+        analyzedCount: scanned.length,
+        summary,
+      })
+      setDirty(true)
     } catch {
       setError("Couldn't generate insights. Try again.")
     } finally {
       setLoading(false)
       setProgress(null)
     }
-  }, [game, results, mode])
+  }, [game, results, mode, side])
 
   if (!COMMENTARY_FEATURE_ENABLED) return null
 
@@ -189,6 +254,23 @@ export function SolitaireGameInsights({ game, side, results, className }: Props)
 
       {insights && (
         <>
+          <SaveInsightsBar
+            saved={savedAt !== null}
+            dirty={dirty}
+            savedAt={savedAt}
+            mode={mode}
+            error={saveError}
+            onSave={handleSave}
+            onRemove={handleRemove}
+          />
+
+          {insights.summary && (
+            <GameSummaryInsights
+              summary={insights.summary}
+              moveLabel={(ply) => `Move ${moveNumberAtPly(game, ply)}`}
+            />
+          )}
+
           {insights.aggregatedKeyConcepts.length > 0 && (
             <div className="flex flex-col gap-2">
               <p className="text-[11px] font-bold uppercase tracking-wide text-amber-700 dark:text-amber-400">

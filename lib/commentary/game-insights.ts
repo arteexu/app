@@ -115,6 +115,8 @@ export interface GameInsights {
   motifSources?: import("@/lib/insights/practice").MotifPlySource[]
   /** How many plies were analyzed (for the "scanned N moves" summary). */
   analyzedCount?: number
+  /** Game-level report (accuracy, phases, turning point, recurring themes). */
+  summary?: import("@/lib/insights/game-summary").GameSummary
 }
 
 export function aggregateFromPlyInsights(insights: PlyInsight[]): {

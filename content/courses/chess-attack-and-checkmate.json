@@ -14,8 +14,14 @@
           "title": "What Is the Goal of Chess?",
           "description": "Checkmate — and how to recognize it.",
           "estimatedMinutes": 5,
-          "keyConceptIds": ["kc-checkmate", "kc-back-rank-mate"],
-          "tacticalPatternIds": ["tp-back-rank-mate", "tp-smoothered-mate"],
+          "keyConceptIds": [
+            "kc-checkmate",
+            "kc-back-rank-mate"
+          ],
+          "tacticalPatternIds": [
+            "tp-back-rank-mate",
+            "tp-smoothered-mate"
+          ],
           "steps": [
             {
               "type": "concept",
@@ -38,7 +44,11 @@
                       "c6": "rgba(239, 68, 68, 0.25)"
                     },
                     "arrows": [
-                      { "from": "c6", "to": "a8", "color": "#ef4444" }
+                      {
+                        "from": "c6",
+                        "to": "a8",
+                        "color": "#ef4444"
+                      }
                     ]
                   }
                 },
@@ -50,7 +60,11 @@
                       "b8": "rgba(251, 191, 36, 0.45)"
                     },
                     "arrows": [
-                      { "from": "c6", "to": "a8", "color": "#ef4444" }
+                      {
+                        "from": "c6",
+                        "to": "a8",
+                        "color": "#ef4444"
+                      }
                     ]
                   }
                 },
@@ -63,8 +77,16 @@
                       "b8": "rgba(34, 197, 94, 0.35)"
                     },
                     "arrows": [
-                      { "from": "c6", "to": "a8", "color": "#ef4444" },
-                      { "from": "a6", "to": "b8", "color": "#22c55e" }
+                      {
+                        "from": "c6",
+                        "to": "a8",
+                        "color": "#ef4444"
+                      },
+                      {
+                        "from": "a6",
+                        "to": "b8",
+                        "color": "#22c55e"
+                      }
                     ]
                   }
                 },
@@ -76,8 +98,16 @@
                       "a7": "rgba(251, 191, 36, 0.45)"
                     },
                     "arrows": [
-                      { "from": "c6", "to": "a8", "color": "#ef4444" },
-                      { "from": "a8", "to": "a7", "color": "#94a3b8" }
+                      {
+                        "from": "c6",
+                        "to": "a8",
+                        "color": "#ef4444"
+                      },
+                      {
+                        "from": "a8",
+                        "to": "a7",
+                        "color": "#94a3b8"
+                      }
                     ]
                   }
                 },
@@ -91,9 +121,21 @@
                       "b6": "rgba(59, 130, 246, 0.25)"
                     },
                     "arrows": [
-                      { "from": "c6", "to": "a8", "color": "#ef4444" },
-                      { "from": "b6", "to": "a7", "color": "#3b82f6" },
-                      { "from": "a8", "to": "b7", "color": "#94a3b8" }
+                      {
+                        "from": "c6",
+                        "to": "a8",
+                        "color": "#ef4444"
+                      },
+                      {
+                        "from": "b6",
+                        "to": "a7",
+                        "color": "#3b82f6"
+                      },
+                      {
+                        "from": "a8",
+                        "to": "b7",
+                        "color": "#94a3b8"
+                      }
                     ]
                   }
                 },
@@ -107,9 +149,21 @@
                       "a7": "rgba(59, 130, 246, 0.25)"
                     },
                     "arrows": [
-                      { "from": "c6", "to": "a8", "color": "#ef4444" },
-                      { "from": "c6", "to": "b7", "color": "#f97316" },
-                      { "from": "b6", "to": "b7", "color": "#f97316" }
+                      {
+                        "from": "c6",
+                        "to": "a8",
+                        "color": "#ef4444"
+                      },
+                      {
+                        "from": "c6",
+                        "to": "b7",
+                        "color": "#f97316"
+                      },
+                      {
+                        "from": "b6",
+                        "to": "b7",
+                        "color": "#f97316"
+                      }
                     ]
                   },
                   "buttonLabel": "Got it →"
@@ -120,13 +174,18 @@
               "type": "puzzle",
               "id": "s-goal-backrank-puzzle",
               "subType": "checkmate-in-n",
-              "keyConceptIds": ["kc-checkmate", "kc-back-rank-mate"],
+              "keyConceptIds": [
+                "kc-checkmate",
+                "kc-back-rank-mate"
+              ],
               "tacticalPatternId": "tp-back-rank-mate",
               "question": "White to move. The black king is trapped behind its own pawns. Find checkmate in 1.",
               "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Re8#"],
+                "moves": [
+                  "Re8#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Re7": "Re7 does not give check — the king can still move. The rook needs to reach the 8th rank to attack the king directly.",
@@ -136,7 +195,14 @@
                 }
               },
               "explanation": "Re8# — the rook swings to the 8th rank and delivers check to the king on g8. The king cannot escape: f8 and h8 are covered by the rook along rank 8, and f7, g7, h7 are all blocked by Black's own pawns. This is called the **back rank mate** — the king's pawn shelter becomes its prison.",
-              "successMessage": "The back rank mate — the king's own pawns become its prison!"
+              "successMessage": "The back rank mate — the king's own pawns become its prison!",
+              "keyConcepts": [
+                "kc-checkmate",
+                "kc-back-rank-mate"
+              ],
+              "tacticalPatterns": [
+                "tp-back-rank-mate"
+              ]
             },
             {
               "type": "concept",
@@ -162,7 +228,9 @@
               "fen": "6rk/6pp/8/6N1/8/8/5PPP/6K1 w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Nf7#"],
+                "moves": [
+                  "Nf7#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Nh7": "Nh7 gives check, but the king can move to g8 — the rook doesn't block it in this line. Find the square where the knight covers h8 AND blocks all other exits.",
@@ -172,17 +240,32 @@
                 }
               },
               "explanation": "Nf7# — the knight jumps to f7, attacking the king on h8. Knight checks can never be blocked, only the king can respond. But every escape square is filled by Black's own pieces: g8 has the rook, g7 and h7 have pawns. The king is smothered. Checkmate!",
-              "successMessage": "The smothered mate — the knight seals the king in its own fortress!"
+              "successMessage": "The smothered mate — the knight seals the king in its own fortress!",
+              "tacticalPatterns": [
+                "tp-smoothered-mate"
+              ]
             },
             {
               "type": "multiple-choice",
               "id": "s-goal-mc1",
               "question": "What is checkmate?",
               "options": [
-                { "text": "The king is in check and cannot escape", "explanation": "Exactly right. Check + no legal escape = checkmate. The game ends immediately." },
-                { "text": "The king is captured", "explanation": "The king is never actually captured in chess. The game ends the moment the king cannot escape check — before capture." },
-                { "text": "A player has no pieces left", "explanation": "You can have many pieces and still be checkmated. It's purely about the king's position." },
-                { "text": "A player runs out of moves", "explanation": "Having no moves is only checkmate if you're also in check. If you have no moves but aren't in check, that's stalemate — a draw." }
+                {
+                  "text": "The king is in check and cannot escape",
+                  "explanation": "Exactly right. Check + no legal escape = checkmate. The game ends immediately."
+                },
+                {
+                  "text": "The king is captured",
+                  "explanation": "The king is never actually captured in chess. The game ends the moment the king cannot escape check — before capture."
+                },
+                {
+                  "text": "A player has no pieces left",
+                  "explanation": "You can have many pieces and still be checkmated. It's purely about the king's position."
+                },
+                {
+                  "text": "A player runs out of moves",
+                  "explanation": "Having no moves is only checkmate if you're also in check. If you have no moves but aren't in check, that's stalemate — a draw."
+                }
               ],
               "correctIndex": 0
             }
@@ -200,8 +283,12 @@
           "title": "The Back Rank Mate",
           "description": "One of the most common checkmates — a rook or queen delivers mate on the first or eighth rank.",
           "estimatedMinutes": 8,
-          "keyConceptIds": ["kc-back-rank-mate"],
-          "tacticalPatternIds": ["tp-back-rank-mate"],
+          "keyConceptIds": [
+            "kc-back-rank-mate"
+          ],
+          "tacticalPatternIds": [
+            "tp-back-rank-mate"
+          ],
           "steps": [
             {
               "type": "concept",
@@ -210,7 +297,13 @@
               "body": "The **back rank mate** happens when a rook or queen delivers checkmate on the first or eighth rank, and the enemy king is trapped behind its own pawns.\n\nThe pawns on g7, h7, and f7 form a **pawn shelter** — normally protective, but here they become a **prison**. The king has nowhere to go.\n\nLook at the position below. White plays Re8#. The black king on g8 is mated: g7, h7, and f7 are all blocked by Black's own pawns. The king cannot move, and cannot capture the rook (it's protected).",
               "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
               "annotations": {
-                "arrows": [{ "from": "e1", "to": "e8", "color": "#f6a623" }],
+                "arrows": [
+                  {
+                    "from": "e1",
+                    "to": "e8",
+                    "color": "#f6a623"
+                  }
+                ],
                 "highlightSquares": {
                   "g8": "rgba(255, 0, 0, 0.3)",
                   "f7": "rgba(200, 200, 200, 0.4)",
@@ -226,7 +319,11 @@
               "description": "Step through this sequence to see how a rook invades the back rank and delivers checkmate.",
               "fen": "2r3k1/5ppp/8/8/8/3Q4/5PPP/3R2K1 w - - 0 1",
               "orientation": "white",
-              "moves": ["Qd8+", "Rxd8", "Rxd8#"],
+              "moves": [
+                "Qd8+",
+                "Rxd8",
+                "Rxd8#"
+              ],
               "moveAnnotations": {
                 "0": "Qd8+ — White sacrifices the queen! The black king is already trapped — it can't escape to f8 or h8 (both covered by the rook), and f7/g7/h7 are blocked by its own pawns. Black must take.",
                 "2": "Rxd8# — The second rook sweeps up the d-file to d8, capturing the black rook and delivering checkmate. The king still cannot escape — rank 8 is now controlled by this rook, and all 7th rank squares remain blocked."
@@ -242,7 +339,9 @@
               "fen": "6k1/6p1/6P1/8/8/8/8/R6K w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Ra8#"],
+                "moves": [
+                  "Ra8#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Ra7": "This is not a check!"
@@ -250,7 +349,13 @@
                 }
               },
               "explanation": "Re8# — the rook lands on e8, giving check. The black king on g8 is trapped. It has a pawn on g7 and the squares on h7 and f7 are blocked. Checkmate.",
-              "successMessage": "Clean back rank mate! The pawns that shelter the king become its prison."
+              "successMessage": "Clean back rank mate! The pawns that shelter the king become its prison.",
+              "keyConcepts": [
+                "kc-back-rank-mate"
+              ],
+              "tacticalPatterns": [
+                "tp-back-rank-mate"
+              ]
             },
             {
               "type": "puzzle",
@@ -260,7 +365,11 @@
               "fen": "1r5k/1q6/8/8/6n1/8/6P1/RN5K b - - 0 1",
               "orientation": "black",
               "solution": {
-                "moves": ["Qxb1+", "Rxb1", "Rxb1+#"],
+                "moves": [
+                  "Qxb1+",
+                  "Rxb1",
+                  "Rxb1+#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Qh7+": "Qh7+ checks the king but there is no continuation that checkmates after"
@@ -268,7 +377,10 @@
                 }
               },
               "explanation": "Qxb1+ sacrifices the rook — the white king cannot escape (g1 is covered by the queen, h2 is covered by the knight, and g2 is covered by white's pawn. The rook must capture back, and white delivers checkmate.",
-              "successMessage": "The backrank pattern! The king cannot escape, so white is always at the brink of checkmate!"
+              "successMessage": "The backrank pattern! The king cannot escape, so white is always at the brink of checkmate!",
+              "tacticalPatterns": [
+                "tp-back-rank-mate"
+              ]
             },
             {
               "type": "puzzle",
@@ -282,7 +394,11 @@
                 "san": "Rxb1",
                 "annotation": "Black captured the queen on b1 — but the queen was bait. Now the d1 rook has a clear path to the back rank, and the white king on g6 covers every escape square on the 7th rank.",
                 "arrows": [
-                  { "from": "b8", "to": "b1", "color": "#ef4444" }
+                  {
+                    "from": "b8",
+                    "to": "b1",
+                    "color": "#ef4444"
+                  }
                 ],
                 "highlightSquares": {
                   "b8": "rgba(239,68,68,0.25)",
@@ -290,7 +406,9 @@
                 }
               },
               "solution": {
-                "moves": ["Rd8#"],
+                "moves": [
+                  "Rd8#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Rd7": "Rd7 doesn't give check — the king on g8 can still move. The rook needs to land on rank 8.",
@@ -300,7 +418,10 @@
                 }
               },
               "explanation": "Rd8# — the rook swings to the back rank for immediate checkmate. The black king on g8 is trapped: f8 and h8 are covered by the rook along rank 8, g7 is blocked by Black's own pawn, and f7 and h7 are both covered by the white king on g6. Rxb1 was a classic back rank oversight — Black won a queen but walked into a forced mate.",
-              "successMessage": "Back rank mate! The queen was a decoy — the rook on d1 was the real threat all along."
+              "successMessage": "Back rank mate! The queen was a decoy — the rook on d1 was the real threat all along.",
+              "tacticalPatterns": [
+                "tp-back-rank-mate"
+              ]
             }
           ]
         },
@@ -333,10 +454,22 @@
               "id": "s-mp-why-mc",
               "question": "Why is studying mating patterns one of the most effective ways to improve at chess?",
               "options": [
-                { "text": "They teach you to recognise winning configurations instantly, so you can steer toward them all game", "explanation": "Exactly. Patterns shortcut calculation — once you know what checkmate looks like, you play toward it from the very first move. That's why strong players make mating attacks look inevitable rather than accidental." },
-                { "text": "Memorising patterns is the only way to win — all chess games are just pattern recall", "explanation": "Not quite. Patterns are a powerful tool, but chess also requires calculation, positional judgment, and creativity. Patterns give you a template; you still need to read the position." },
-                { "text": "They help you avoid draws by stalemate", "explanation": "Stalemate awareness is a separate skill. Mating patterns are about recognising checkmate configurations quickly so you can create and execute them in your own games." },
-                { "text": "Opening theory is more important, so patterns are mainly for beginners", "explanation": "Actually the opposite is true. Understanding how to finish a game is foundational — once you know the endgame, your opening and middlegame choices become purposeful. Strong players of all levels keep sharpening their pattern recognition." }
+                {
+                  "text": "They teach you to recognise winning configurations instantly, so you can steer toward them all game",
+                  "explanation": "Exactly. Patterns shortcut calculation — once you know what checkmate looks like, you play toward it from the very first move. That's why strong players make mating attacks look inevitable rather than accidental."
+                },
+                {
+                  "text": "Memorising patterns is the only way to win — all chess games are just pattern recall",
+                  "explanation": "Not quite. Patterns are a powerful tool, but chess also requires calculation, positional judgment, and creativity. Patterns give you a template; you still need to read the position."
+                },
+                {
+                  "text": "They help you avoid draws by stalemate",
+                  "explanation": "Stalemate awareness is a separate skill. Mating patterns are about recognising checkmate configurations quickly so you can create and execute them in your own games."
+                },
+                {
+                  "text": "Opening theory is more important, so patterns are mainly for beginners",
+                  "explanation": "Actually the opposite is true. Understanding how to finish a game is foundational — once you know the endgame, your opening and middlegame choices become purposeful. Strong players of all levels keep sharpening their pattern recognition."
+                }
               ],
               "correctIndex": 0
             },
@@ -348,7 +481,17 @@
               "tacticalPatternId": "tp-rook-ladder",
               "fen": "7K/7R/6R1/k7/8/8/8/8 w - - 0 1",
               "orientation": "white",
-              "moves": ["Rh5+", "Kb4", "Rg4+", "Kc3", "Rh3+", "Kd2", "Rg2+", "Ke1", "Rh1#"],
+              "moves": [
+                "Rh5+",
+                "Kb4",
+                "Rg4+",
+                "Kc3",
+                "Rh3+",
+                "Kd2",
+                "Rg2+",
+                "Ke1",
+                "Rh1#"
+              ],
               "moveAnnotations": {
                 "0": "Rh5+ — the first rook cuts off rank 5. The king must retreat upward, but rank 5 is now permanently sealed. The second rook is waiting.",
                 "1": "Kb4 — the king flees down the board. It has no choice: every square on rank 5 is covered by the rook.",
@@ -370,7 +513,9 @@
               "fen": "7k/R7/5N2/5K2/8/8/8/8 w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Rh7#"],
+                "moves": [
+                  "Rh7#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Ra8": "Ra8 gives check along rank 8, but the king can escape to g7. You need the rook on a square that also seals rank 7.",
@@ -380,7 +525,10 @@
                 }
               },
               "explanation": "Rh7# — the rook slides to h7, checking the king along the h-file. The king has no escape: g8 is covered by the knight on f6, g7 is covered by the rook along rank 7, and capturing the rook is impossible because the knight on f6 protects h7. This is the Arabian Mate — a knight and rook trap the king in the corner.",
-              "successMessage": "The Arabian Mate — knight guards the escape, rook delivers the final check!"
+              "successMessage": "The Arabian Mate — knight guards the escape, rook delivers the final check!",
+              "tacticalPatterns": [
+                "tp-arabian-mate"
+              ]
             },
             {
               "type": "puzzle",
@@ -391,7 +539,9 @@
               "fen": "6k1/5p1p/7B/8/8/8/8/3R3K w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Rd8#"],
+                "moves": [
+                  "Rd8#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Rd7": "Rd7 doesn't give check — the king can still move. The rook needs to land on rank 8 to attack the king directly.",
@@ -401,7 +551,11 @@
                 }
               },
               "explanation": "Rd8# — the rook lands on the 8th rank and checks the king on g8. Every escape is sealed: f8 and h8 are covered by the rook along rank 8, the pawn on f7 blocks f7, the pawn on h7 blocks h7, and — crucially — g7 is covered by the bishop on h6. Without the bishop, the king could flee to g7. This is Morphy's Mate: rook on the back rank, bishop guarding the key escape diagonal.",
-              "successMessage": "Morphy's Mate — the bishop seals the diagonal, the rook finishes the job!"
+              "successMessage": "Morphy's Mate — the bishop seals the diagonal, the rook finishes the job!",
+              "tacticalPatterns": [
+                "tp-back-rank-mate",
+                "tp-morphy-mate"
+              ]
             },
             {
               "type": "puzzle",
@@ -412,7 +566,9 @@
               "fen": "q5k1/5p1p/5QpP/8/8/8/5PPP/6K1 w - - 0 1",
               "orientation": "white",
               "solution": {
-                "moves": ["Qg7#"],
+                "moves": [
+                  "Qg7#"
+                ],
                 "wrongMoveExplanations": {
                   "0": {
                     "Qh8": "Qh8 gives check, but the king can move to f7 or h7 — not checkmate.",
@@ -422,7 +578,10 @@
                 }
               },
               "explanation": "Qg7# — the queen steps onto the weak g7 square and delivers checkmate. The black king on g8 has nowhere to go: f8 and h8 are covered by the queen along rank 8 and diagonals, f7 and h7 are blocked by Black's own pawns, and g7 is occupied by the queen itself. The black pawn structure on g6, g7, h7 looked like shelter — but it became a prison. The 'Swiss cheese' name comes from the holes punched through Black's dark squares.",
-              "successMessage": "The Swiss Cheese Mate — Black's own pawns sealed the escape!"
+              "successMessage": "The Swiss Cheese Mate — Black's own pawns sealed the escape!",
+              "tacticalPatterns": [
+                "tp-swiss-cheese-mate"
+              ]
             }
           ]
         }
@@ -452,10 +611,22 @@
               "id": "s-qk-mc1",
               "question": "Queen and king vs lone king — which is true about delivering checkmate?",
               "options": [
-                { "text": "The enemy king must be on the edge or in a corner", "explanation": "Correct. A king in the center has too many escape squares. Push it to the edge, then the corner, then mate." },
-                { "text": "The queen can force checkmate without the king's help", "explanation": "The queen alone cannot deliver checkmate — it needs the king to cut off escape squares near the final position." },
-                { "text": "Checkmate can happen anywhere on the board", "explanation": "Not quite. The enemy king must be restricted to the edge or corner. A king in the center has too many flight squares." },
-                { "text": "You only need 5 moves maximum", "explanation": "The queen + king vs lone king can take up to 10 moves. The key is being systematic, not fast." }
+                {
+                  "text": "The enemy king must be on the edge or in a corner",
+                  "explanation": "Correct. A king in the center has too many escape squares. Push it to the edge, then the corner, then mate."
+                },
+                {
+                  "text": "The queen can force checkmate without the king's help",
+                  "explanation": "The queen alone cannot deliver checkmate — it needs the king to cut off escape squares near the final position."
+                },
+                {
+                  "text": "Checkmate can happen anywhere on the board",
+                  "explanation": "Not quite. The enemy king must be restricted to the edge or corner. A king in the center has too many flight squares."
+                },
+                {
+                  "text": "You only need 5 moves maximum",
+                  "explanation": "The queen + king vs lone king can take up to 10 moves. The key is being systematic, not fast."
+                }
               ],
               "correctIndex": 0
             },
@@ -490,10 +661,22 @@
               "id": "s-rk-mc1",
               "question": "Why is checkmate with a rook harder than with a queen?",
               "options": [
-                { "text": "The rook cannot confine the king alone — you need your king to help tighten the box", "explanation": "Exactly. The queen can cut off both ranks and files simultaneously; the rook can only cut off one at a time, so your king must close off the other dimension." },
-                { "text": "The rook is weaker than the queen, so it can't give check", "explanation": "Rooks give check just fine. The difficulty is that one rook can't confine the king as efficiently as a queen — your king's help is essential." },
-                { "text": "You need two rooks to checkmate a lone king", "explanation": "One rook and a king is enough — but it takes more moves and technique than a queen. Two rooks is even easier (the lawnmower method)." },
-                { "text": "Stalemate is impossible with a rook, so it's actually easier", "explanation": "Stalemate is very much possible with a rook — more so than with a queen, in fact, because the king near the edge has very few moves. Always check before giving check." }
+                {
+                  "text": "The rook cannot confine the king alone — you need your king to help tighten the box",
+                  "explanation": "Exactly. The queen can cut off both ranks and files simultaneously; the rook can only cut off one at a time, so your king must close off the other dimension."
+                },
+                {
+                  "text": "The rook is weaker than the queen, so it can't give check",
+                  "explanation": "Rooks give check just fine. The difficulty is that one rook can't confine the king as efficiently as a queen — your king's help is essential."
+                },
+                {
+                  "text": "You need two rooks to checkmate a lone king",
+                  "explanation": "One rook and a king is enough — but it takes more moves and technique than a queen. Two rooks is even easier (the lawnmower method)."
+                },
+                {
+                  "text": "Stalemate is impossible with a rook, so it's actually easier",
+                  "explanation": "Stalemate is very much possible with a rook — more so than with a queen, in fact, because the king near the edge has very few moves. Always check before giving check."
+                }
               ],
               "correctIndex": 0
             },
@@ -521,7 +704,9 @@
           "title": "Find All the Checkmates",
           "description": "Train your board vision: find every square where the queen can deliver checkmate.",
           "estimatedMinutes": 8,
-          "keyConceptIds": ["kc-see-the-whole-board"],
+          "keyConceptIds": [
+            "kc-see-the-whole-board"
+          ],
           "steps": [
             {
               "type": "concept",
@@ -536,7 +721,14 @@
               "question": "White to move. Find ALL 6 checkmates in this position — each one is a different queen move. The board resets after each find.",
               "fen": "k7/6Q1/1KN5/8/8/8/8/8 w - - 0 1",
               "orientation": "white",
-              "checkmates": ["Qf8#", "Qg8#", "Qh8#", "Qa1#", "Qb7#", "Qa7#"],
+              "checkmates": [
+                "Qf8#",
+                "Qg8#",
+                "Qh8#",
+                "Qa1#",
+                "Qb7#",
+                "Qa7#"
+              ],
               "explanation": "All 6 queen moves deliver checkmate because the knight on c6 permanently controls b8, and the king on b6 permanently controls a7 and b7. That traps the black king in the corner regardless of where the queen goes. The queen can strike along rank 8 (Qf8, Qg8, Qh8), the a-file (Qa1), or rank 7 (Qb7, Qa7) — all 6 are forced checkmates!",
               "successMessage": "Excellent board vision! You found all 6 checkmates."
             }
@@ -568,7 +760,15 @@
               "description": "White delivers checkmate in 4 moves. Step through each move to see the trap — and the critical mistake.",
               "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
               "orientation": "white",
-              "moves": ["e4", "e5", "Qh5", "Nc6", "Bc4", "Nf6", "Qxf7#"],
+              "moves": [
+                "e4",
+                "e5",
+                "Qh5",
+                "Nc6",
+                "Bc4",
+                "Nf6",
+                "Qxf7#"
+              ],
               "moveAnnotations": {
                 "0": "1. e4 — White opens with the King's Pawn, claiming the center and clearing paths for the queen and bishop.",
                 "1": "1...e5 — Black mirrors, also staking a claim in the center. The position looks perfectly equal.",
@@ -585,8 +785,15 @@
                     "label": "Qh5 — eyes f7",
                     "detail": "The queen on h5 immediately eyes **f7**, defended only by Black's king.",
                     "kind": "concept",
-                    "arrows": [{ "from": "h5", "to": "f7" }],
-                    "highlightSquares": ["f7"]
+                    "arrows": [
+                      {
+                        "from": "h5",
+                        "to": "f7"
+                      }
+                    ],
+                    "highlightSquares": [
+                      "f7"
+                    ]
                   }
                 ],
                 "4": [
@@ -595,8 +802,15 @@
                     "label": "Bc4 — aims at f7",
                     "detail": "The bishop on c4 and queen on h5 both target **f7**.",
                     "kind": "concept",
-                    "arrows": [{ "from": "c4", "to": "f7" }],
-                    "highlightSquares": ["f7"]
+                    "arrows": [
+                      {
+                        "from": "c4",
+                        "to": "f7"
+                      }
+                    ],
+                    "highlightSquares": [
+                      "f7"
+                    ]
                   }
                 ]
               }
@@ -606,10 +820,22 @@
               "id": "s-sm-mc1",
               "question": "Why is 3...Nf6 a blunder in the Scholar's Mate?",
               "options": [
-                { "text": "It allows Qxf7# — checkmate that cannot be stopped", "explanation": "Exactly. After Nf6, White has an immediate forced checkmate with Qxf7#. The queen is protected by the bishop, and the king has no escape. Black should have played 3...g6 to push the queen back." },
-                { "text": "It loses the knight to a bishop fork", "explanation": "No fork is involved here. The issue is that Nf6 ignores the checkmate threat on f7. The queen and bishop already had checkmate set up." },
-                { "text": "It weakens the pawn structure", "explanation": "Pawn structure is irrelevant here — the game ends on the very next move with Qxf7#. The problem is the immediate checkmate threat that Nf6 fails to address." },
-                { "text": "It blocks the bishop on f8", "explanation": "While Nf6 does block the f8 bishop, that's not the critical problem. The real issue is that it does nothing to stop Qxf7#, which is checkmate." }
+                {
+                  "text": "It allows Qxf7# — checkmate that cannot be stopped",
+                  "explanation": "Exactly. After Nf6, White has an immediate forced checkmate with Qxf7#. The queen is protected by the bishop, and the king has no escape. Black should have played 3...g6 to push the queen back."
+                },
+                {
+                  "text": "It loses the knight to a bishop fork",
+                  "explanation": "No fork is involved here. The issue is that Nf6 ignores the checkmate threat on f7. The queen and bishop already had checkmate set up."
+                },
+                {
+                  "text": "It weakens the pawn structure",
+                  "explanation": "Pawn structure is irrelevant here — the game ends on the very next move with Qxf7#. The problem is the immediate checkmate threat that Nf6 fails to address."
+                },
+                {
+                  "text": "It blocks the bishop on f8",
+                  "explanation": "While Nf6 does block the f8 bishop, that's not the critical problem. The real issue is that it does nothing to stop Qxf7#, which is checkmate."
+                }
               ],
               "correctIndex": 0
             }
@@ -627,7 +853,9 @@
           "title": "Choosing the Right Move",
           "description": "Four candidate moves, one winner — understand the difference between good and great.",
           "estimatedMinutes": 10,
-          "keyConceptIds": ["kc-candidate-moves"],
+          "keyConceptIds": [
+            "kc-candidate-moves"
+          ],
           "steps": [
             {
               "type": "concept",
@@ -646,7 +874,9 @@
                 {
                   "san": "Rxg6+",
                   "isCorrect": true,
-                  "continuation": ["Ke7"]
+                  "continuation": [
+                    "Ke7"
+                  ]
                 },
                 {
                   "san": "Rf8",

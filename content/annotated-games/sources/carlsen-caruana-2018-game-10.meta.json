@@ -1,0 +1,122 @@
+{
+  "id": "carlsen-caruana-2018-game-10",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 10",
+  "description": "Caruana repeats his Game 8 Sveshnikov and Carlsen throws everything at the white king with the daring 21...b5! (\"either you win the game, or you get mated\"), but precise defense steers it to a draw — annotated by GM Maxime Vachier-Lagrave.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "10",
+    "eco": "B33",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g10-b4",
+      "ply": 23,
+      "prompt": "Caruana deviates from Game 8 (which saw 12.Bd2) with 12.b4. What is the annotator's view of it?",
+      "options": [
+        {
+          "text": "It's an early deviation that is very direct, but he finds it a bit strange to allow Black's ...a5 counter so happily.",
+          "explanation": "Correct. The note: \"We have an early deviation from Fabiano. It is very direct but at the same time it seems a bit strange to me to allow so happily the direct counter with a5.\""
+        },
+        {
+          "text": "It is a well-established main line that simply equalizes.",
+          "explanation": "No — the annotator explicitly calls it \"an early deviation from Fabiano,\" not a known main line."
+        },
+        {
+          "text": "It wins the d6-pawn by force.",
+          "explanation": "No material gain is claimed; the annotator questions allowing ...a5, he does not mention winning d6."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What black reply does the annotator find it strange to permit?"
+    },
+    {
+      "id": "g10-b5",
+      "ply": 42,
+      "prompt": "Why does Carlsen play 21...b5 (\"!\")?",
+      "options": [
+        {
+          "text": "It is the most challenging, double-edged try — as Carlsen put it, \"Either you win the game, or you get mated.\"",
+          "explanation": "Correct. The note: \"And Magnus goes for it... this move seems the most challenging,\" with Carlsen's quote \"I just go for it and up the stakes even more. Either you win the game, or you get mated.\""
+        },
+        {
+          "text": "It safely forces a draw by simplification.",
+          "explanation": "The opposite — it sharpens the game to the maximum, staking everything on the attack."
+        },
+        {
+          "text": "It wins material on the queenside by force.",
+          "explanation": "It's a speculative pawn offer to open lines, not a forced material win."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Carlsen summed up the stakes in one memorable sentence."
+    },
+    {
+      "id": "g10-qg5",
+      "ply": 46,
+      "prompt": "How does the annotator characterize 23...Qg5 (\"!?\")?",
+      "options": [
+        {
+          "text": "A practical decision heading straight at White's king — the most direct and most frightening try in practice.",
+          "explanation": "Correct. The note: \"A very interesting practical decision by Magnus... this approach of going straight at White's king is not only the most direct but also the most frightening in practice.\""
+        },
+        {
+          "text": "The only move that avoids losing on the spot.",
+          "explanation": "No — the annotator says \"basically every sensible move was possible in this position.\""
+        },
+        {
+          "text": "A quiet move offering an immediate draw.",
+          "explanation": "It is the most aggressive, king-hunting choice, the opposite of a quiet draw offer."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Was this the only option, or one of many — and what does it aim at?"
+    },
+    {
+      "id": "g10-qe2",
+      "ply": 70,
+      "prompt": "Why does the annotator reward Black's 35...Qe2 (\"!\")?",
+      "options": [
+        {
+          "text": "It punishes the slightly inaccurate 35.Rd1 — White has no comfortable reply (e.g. 36.Qxe2 fxe2 leaves the pawn awkward to regain, and 36.Qb3+ or 36.Qd4 run into tactics).",
+          "explanation": "Correct. The annotator calls 35.Rd1 \"a bit of an inaccuracy due to Magnus' strong answer,\" and shows 36.Qxe2 fxe2 \"would be ostensibly unpleasant to face,\" while 36.Qb3+?? and 36.Qd4?? lose to concrete tactics."
+        },
+        {
+          "text": "It simply offers a queen trade into a dead-equal ending with nothing to calculate.",
+          "explanation": "The annotator instead shows Qe2 poses White real, concrete problems after the inaccurate 35.Rd1."
+        },
+        {
+          "text": "It wins White's queen outright by force.",
+          "explanation": "No queen is won; the move exploits the inaccuracy by making White's recapture/defense awkward."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which White move does the annotator flag as an inaccuracy just before this?"
+    },
+    {
+      "id": "g10-ra6",
+      "ply": 83,
+      "prompt": "Why does the annotator call 42.Ra6 (\"!\") a very important and correct decision?",
+      "options": [
+        {
+          "text": "Caruana judged that keeping both rooks on the b-file would leave him passive and without counterplay, so he activates a rook to generate the counterplay he needs.",
+          "explanation": "Correct. The note: \"Fabiano correctly judged that with both rooks on the b file he wouldn't be able to obtain the necessary counterplay with his rooks,\" whereas 42.Rab3 leaves White \"reduced to passivity.\""
+        },
+        {
+          "text": "It directly wins Black's d-pawn.",
+          "explanation": "No pawn is won; the move is about activity and counterplay, not material."
+        },
+        {
+          "text": "It forces an immediate draw by repetition.",
+          "explanation": "The point is to create active counterplay, not to repeat — the game continues."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What happens to White's counterplay if both rooks sit on the b-file?"
+    }
+  ]
+}

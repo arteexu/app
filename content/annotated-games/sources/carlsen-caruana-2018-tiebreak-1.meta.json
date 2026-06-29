@@ -1,0 +1,143 @@
+{
+  "id": "carlsen-caruana-2018-tiebreak-1",
+  "title": "Carlsen vs Caruana — 2018 Tiebreak Game 1",
+  "description": "Carlsen draws first blood in the rapid playoff, grinding out a tricky rook endgame after Caruana lets the White king escape its cage. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship (tiebreak)",
+    "site": "London",
+    "round": "13",
+    "eco": "A22",
+    "result": "1-0"
+  },
+  "conceptChecks": [
+    {
+      "id": "tb1-e4",
+      "ply": 7,
+      "prompt": "Why does the annotator like Carlsen's 4.e4 (\"!?\")?",
+      "options": [
+        {
+          "text": "It transposes to his favorite Rossolimo-type structures but a tempo up, an excellent practical choice where White can never be worse.",
+          "explanation": "Correct. The note: \"aiming just to get his typical Rossolimo positions a tempo up... the extra tempo means White can never be worse. Objectively Black must be fine, but practically, this was excellent preparation.\""
+        },
+        {
+          "text": "It wins the e5-pawn by force.",
+          "explanation": "No — it's a strategic transposition, not a material grab."
+        },
+        {
+          "text": "It is objectively the only move that fights for an edge.",
+          "explanation": "The annotator says 'objectively Black must be fine'; the value is practical, not objective superiority."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Think about which familiar structures Carlsen is steering toward."
+    },
+    {
+      "id": "tb1-d4",
+      "ply": 15,
+      "prompt": "The annotator marks 8.d4 with a \"!\". What is his assessment?",
+      "options": [
+        {
+          "text": "It's energetic and strong — Carlsen is playing with a lot of force.",
+          "explanation": "Correct. The note: \"Energetic and strong... Magnus is playing with a lot of force,\" and a move later praises him for 'not fearing the loss of a pawn.'"
+        },
+        {
+          "text": "It's an unsound pawn sacrifice the annotator criticizes.",
+          "explanation": "The opposite — he praises it as strong and admires White's willingness to give up a pawn."
+        },
+        {
+          "text": "It bails out into an immediate draw.",
+          "explanation": "No; the annotator stresses White's forceful play for the advantage."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Is this a cautious move or a forceful one?"
+    },
+    {
+      "id": "tb1-rb3",
+      "ply": 32,
+      "prompt": "What is the point of Caruana's 16...Rb3 (\"!\")?",
+      "options": [
+        {
+          "text": "Although the c-pawn will eventually fall, Black compromises White's pawn structure before it's captured.",
+          "explanation": "Correct. The note: \"The c-pawn will eventually fall, but Black can compromise White's structure before it is captured.\""
+        },
+        {
+          "text": "It permanently defends and saves the extra c-pawn.",
+          "explanation": "No — the annotator says the c-pawn 'will eventually fall'; the idea is to wreck White's structure first."
+        },
+        {
+          "text": "It wins material with a fork on b2.",
+          "explanation": "No fork or material win is mentioned."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does Black get in return for the c-pawn?"
+    },
+    {
+      "id": "tb1-nb5",
+      "ply": 38,
+      "prompt": "The annotator gives 19...Nb5 a \"?\". Why is it a mistake?",
+      "options": [
+        {
+          "text": "Chasing activity here makes Black's position fall apart; the passive 19...Nb7 was the prudent necessity.",
+          "explanation": "Correct. The note: \"Activity is always appealing and often correct, but now the position falls apart,\" while 19...Nb7 'may have been prudent... not falling apart just yet.'"
+        },
+        {
+          "text": "It simply hangs the knight for nothing.",
+          "explanation": "Not the reasoning — the whole position collapses tactically, whereas 19...Nb7 holds on."
+        },
+        {
+          "text": "It's actually the most accurate, equalizing move.",
+          "explanation": "No; the annotator marks it a clear mistake versus the prudent 19...Nb7."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Activity is tempting, but what happens to the rest of the position?"
+    },
+    {
+      "id": "tb1-bxe6",
+      "ply": 47,
+      "prompt": "Carlsen plays 24.Bxe6+ (\"?\"), which the annotator calls \"imprecise.\" What did White miss?",
+      "options": [
+        {
+          "text": "24.Rxd4!, when the lethal pin wins — though it required spotting a very difficult follow-up.",
+          "explanation": "Correct. The note: \"24.Rxd4! The pin is lethal. White has to spot a very difficult move, but then he wins,\" with the stunning 25.Kh1!!"
+        },
+        {
+          "text": "24.Bxc4, simply restoring material equality.",
+          "explanation": "No — the annotator's improvement is 24.Rxd4! exploiting the pin, not Bxc4."
+        },
+        {
+          "text": "A forced queen-mate against the black king.",
+          "explanation": "The queens were traded back on move 13; the win is via the lethal pin, not a queen mate."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which white rook could have exploited the pinned knight?"
+    },
+    {
+      "id": "tb1-rc3",
+      "ply": 68,
+      "prompt": "The annotator condemns 34...Rc3 (\"?\"). What principle did Black violate?",
+      "options": [
+        {
+          "text": "He let White's king into the game; 34...c3 followed by ...Ra2 would have drawn by keeping the king passive.",
+          "explanation": "Correct. The note: \"Black absolutely cannot let the White king enter the game,\" and the line 34...c3 ...Ra2 \"draws easily. The king is simply too passive.\""
+        },
+        {
+          "text": "He should have queened the c-pawn by force instead.",
+          "explanation": "No — the drawing method was to restrain White's king (34...c3, ...Ra2), not a winning pawn race."
+        },
+        {
+          "text": "It hangs the rook on c3.",
+          "explanation": "No; the flaw is strategic — allowing 35.Kg2 ('Freedom!'), not a material blunder."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does the very next move, 35.Kg2 ('Freedom!'), tell you?"
+    }
+  ]
+}

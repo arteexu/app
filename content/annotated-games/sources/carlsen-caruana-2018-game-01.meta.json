@@ -1,0 +1,143 @@
+{
+  "id": "carlsen-caruana-2018-game-01",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 1",
+  "description": "The match opens with a Rossolimo Sicilian. Carlsen outplays Caruana and reaches a winning position, but lets the full point slip in time pressure — a marathon 115-move draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "1",
+    "eco": "B31",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g1-b6",
+      "ply": 18,
+      "prompt": "Carlsen plays 9...b6 (\"!\"). What idea is behind this move?",
+      "options": [
+        {
+          "text": "He prepares to reroute the knight with Nf8-e6 before deciding where to castle.",
+          "explanation": "Correct. The annotator writes: \"I like this idea. Black prepares for Nf8-e6 before castling.\""
+        },
+        {
+          "text": "He immediately wins the e4-pawn by force.",
+          "explanation": "No — the annotator makes no such claim; 9...b6 is a slow regrouping move, not a tactic."
+        },
+        {
+          "text": "He fianchettoes a second bishop to b7 to attack g2.",
+          "explanation": "Black already has his bishop on g7; the point of 9...b6 is the Nf8-e6 maneuver, not a second fianchetto."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Where does the b8-knight want to go?"
+    },
+    {
+      "id": "g1-g5",
+      "ply": 28,
+      "prompt": "Why does the annotator give 14...g5 (\"!\") a strong-move mark?",
+      "options": [
+        {
+          "text": "Black gains kingside space and prepares Ng6, improving his pieces.",
+          "explanation": "Correct. The note reads: \"Another strong move. Black simply prepares to improve his pieces further, gaining space on the kingside and preparing for Ng6.\""
+        },
+        {
+          "text": "It sets an immediate trap that wins White's queen.",
+          "explanation": "The annotator describes 14...g5 as space-gaining and piece-improving, not a queen trap."
+        },
+        {
+          "text": "It forces an immediate draw by repetition.",
+          "explanation": "The opposite — Carlsen is playing for a win and improving his position, not repeating."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "It's about space and the knight's route to g6."
+    },
+    {
+      "id": "g1-nf8",
+      "ply": 42,
+      "prompt": "Carlsen has just played 21...Nf8 (\"?\"), which the annotator calls \"a little too creative.\" What did he recommend instead?",
+      "options": [
+        {
+          "text": "21...Rhg8, preparing Bxh5 and g5-g4, leaving White a long and difficult defense.",
+          "explanation": "Correct. The sideline reads: \"21...Rhg8 looks simplest to me. Black prepares for Bxh5 followed by g5-g4. White faces a long and difficult defense.\""
+        },
+        {
+          "text": "21...Qxd3, grabbing a pawn immediately.",
+          "explanation": "The annotator gives no such line; he recommends the calm 21...Rhg8, keeping the bind without handing White anything."
+        },
+        {
+          "text": "21...Nf6, retreating the knight to defend.",
+          "explanation": "The recommended move was 21...Rhg8 — the point was to keep pressing, not to retreat passively."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The annotator wanted the simplest move that keeps the pressure on."
+    },
+    {
+      "id": "g1-rg2",
+      "ply": 51,
+      "prompt": "The annotator says 26.Rg2 (\"?\") is \"the only decision I really did not understand.\" What did he say White needed to do instead?",
+      "options": [
+        {
+          "text": "Give up the exchange with 26.Rxf4, trading off the dark-squared bishop for two solid pawns.",
+          "explanation": "Correct. The note: \"White needed to give the exchange... 26.Rxf4 Bxf4 27.Qxf4 — White has exchanged off the annoying dark-squared bishop, has 2 very solid pawns for the exchange... any human would prefer the white side.\""
+        },
+        {
+          "text": "Trade all the rooks with 26.Rxf7.",
+          "explanation": "No such line is given; the annotator's recommendation was the exchange sacrifice 26.Rxf4."
+        },
+        {
+          "text": "Push 26.e5 to open lines for the attack.",
+          "explanation": "The annotator's point is the exchange sacrifice 26.Rxf4, not a pawn break here."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Sometimes you give up material to kill the opponent's best piece."
+    },
+    {
+      "id": "g1-qg1",
+      "ply": 70,
+      "prompt": "Carlsen plays 35...Qg1 (\"?\") and the annotator says this \"makes the win more difficult.\" What did he point to as the cleaner winning try?",
+      "options": [
+        {
+          "text": "35...Qg7, invading with the queen on the dark squares — White's position looks beyond saving.",
+          "explanation": "Correct. The sideline: \"35...Qg7! Black was best advised to invade with his queen on the dark squares. White's position looks beyond saving to me.\""
+        },
+        {
+          "text": "35...h4, ramming the h-pawn forward at once.",
+          "explanation": "Black did later play ...h4, but the annotator's recommended winning idea here was 35...Qg7, invading on the dark squares."
+        },
+        {
+          "text": "35...Rg2+, sacrificing the rook.",
+          "explanation": "No such sacrifice is suggested; the annotator favored the queen invasion 35...Qg7."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which piece does the annotator want to invade the dark squares?"
+    },
+    {
+      "id": "g1-re2",
+      "ply": 87,
+      "prompt": "After a grueling defense Caruana plays 44.Re2 (\"!\"). What does the annotator say this achieves?",
+      "options": [
+        {
+          "text": "The e-pawn now secures enough counterplay to make a draw.",
+          "explanation": "Correct. The note is simply: \"The e-pawn secures enough counterplay to make a draw.\""
+        },
+        {
+          "text": "It sets up a mating net against Black's king.",
+          "explanation": "White is defending, not attacking — the e-pawn provides counterplay for a draw, not a mate."
+        },
+        {
+          "text": "It wins Black's knight by a pin.",
+          "explanation": "No material is won; the point is the passed e-pawn's counterplay holding the balance."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Watch the e-pawn over the next several moves."
+    }
+  ]
+}

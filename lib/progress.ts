@@ -66,16 +66,33 @@ export function todayString(): string {
   return localDate()
 }
 
+// Converts a YYYY-MM-DD string into a calendar-day index (whole days since the
+// epoch). We anchor on Date.UTC so the subtraction is a pure calendar-day count,
+// unaffected by DST or the runtime's timezone — the inputs are already plain
+// dates, so this just compares "which calendar day" without time-of-day noise.
+function dayIndex(date: string): number {
+  const [y, m, d] = date.slice(0, 10).split("-").map(Number)
+  return Math.floor(Date.UTC(y, m - 1, d) / 86_400_000)
+}
+
 // Given the stored last_activity_date and current_streak, returns the new streak.
+//
+// IMPORTANT — this runs in TWO places: the client lesson writer (browser-local
+// time) and the server-side recordVisit (server/UTC time). Those contexts can
+// disagree on what "today" is by a few hours, so we must NOT use exact
+// today/yesterday string equality (that wrongly treated a date written by the
+// other context as a gap and reset the streak to 1). Instead we compare calendar
+// days numerically and only ever reset on a *real* gap of 2+ days:
+//   diff <= 0  → same day, or the stored date is "ahead" due to TZ skew →
+//                keep the streak as-is (never lower it for a clock/TZ mismatch).
+//   diff === 1 → the previous active day was yesterday → continue (+1).
+//   diff >= 2  → at least one full day was genuinely missed → reset to 1.
 export function calculateStreak(lastActivityDate: string | null, currentStreak: number): number {
-  if (!lastActivityDate) return 1
-  const today     = localDate()
-  const yest      = new Date()
-  yest.setDate(yest.getDate() - 1)
-  const yesterday = localDate(yest)
-  if (lastActivityDate === today)     return currentStreak           // already logged today
-  if (lastActivityDate === yesterday) return currentStreak + 1       // continuing streak
-  return 1                                                            // streak broken
+  if (!lastActivityDate) return Math.max(currentStreak, 1)  // first recorded day
+  const diff = dayIndex(localDate()) - dayIndex(lastActivityDate)
+  if (diff <= 0) return currentStreak           // already counted today (or TZ skew) — never lower
+  if (diff === 1) return currentStreak + 1       // consecutive day — continue the streak
+  return 1                                        // a full day was missed — streak resets
 }
 
 // Finds a lesson by ID across all chapters of a course.

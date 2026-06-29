@@ -1,0 +1,143 @@
+{
+  "id": "carlsen-caruana-2018-game-12",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 12",
+  "description": "In the final classical game Carlsen outplays Caruana in a Sveshnikov and reaches a clearly better position, yet famously offers a draw to head straight for the tiebreaks. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "12",
+    "eco": "B33",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g12-ne7",
+      "ply": 16,
+      "prompt": "Carlsen plays 8...Ne7 (\"!?\"). How does the annotator characterize it?",
+      "options": [
+        {
+          "text": "It's the first surprise of the game — a deviation from the 8...Nb8 seen in Games 8 and 10.",
+          "explanation": "Correct. The note: \"The first surprise. Games 8 and 10 saw 8...Nb8.\""
+        },
+        {
+          "text": "It's Carlsen's habitual main line that Caruana was surely booked against.",
+          "explanation": "No — the annotator calls it 'the first surprise,' a change from his earlier 8...Nb8."
+        },
+        {
+          "text": "It immediately wins the d5-pawn.",
+          "explanation": "The annotator makes no such claim; it's a repositioning surprise, not a tactic."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare it to what Black played in the earlier games of the match."
+    },
+    {
+      "id": "g12-h4",
+      "ply": 23,
+      "prompt": "What is the idea behind Caruana's 12.h4 (\"!?\")?",
+      "options": [
+        {
+          "text": "White plays against the g6-knight; the threat of h4-h5 is annoying for Black to meet.",
+          "explanation": "Correct. The note: \"White aims to play against the g6 knight. The threat of h4-h5 is not particularly subtle, but a bit annoying for Black to meet.\""
+        },
+        {
+          "text": "It simply prepares quick kingside castling.",
+          "explanation": "No — White's idea is the h5 thrust against the knight, not castling."
+        },
+        {
+          "text": "It defends against a Black mating attack on h2.",
+          "explanation": "The annotator describes h4 as an aggressive plan targeting g6, not a defensive move."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which black piece does the h-pawn want to harass?"
+    },
+    {
+      "id": "g12-f3",
+      "ply": 35,
+      "prompt": "The annotator marks 18.f3 with a \"?!\". Why does he criticize it?",
+      "options": [
+        {
+          "text": "It's too defensive and too slow; the natural 18.Be2 was called for instead.",
+          "explanation": "Correct. The note: \"The first dubious move of the game... this strikes me as too defensive and too slow,\" and he gives 18.Be2 as the move that \"looks by far the most natural.\""
+        },
+        {
+          "text": "It is forced in order to avoid losing a piece.",
+          "explanation": "No — the annotator offers 18.Be2 as a better, natural alternative, so f3 was not forced."
+        },
+        {
+          "text": "It wins the e5-pawn.",
+          "explanation": "No such claim; he calls f3 dubious and passive, not a material grab."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Was this a fighting move or a timid one?"
+    },
+    {
+      "id": "g12-bg6",
+      "ply": 44,
+      "prompt": "Carlsen plays 22...Bg6 (\"!\"). What does the annotator say about this moment?",
+      "options": [
+        {
+          "text": "It prepares ...f5 to roll the central majority; the timing exploits that White can't reply g3-g4 because of the hanging c-pawn.",
+          "explanation": "Correct. The note: \"f7-f5 is coming... I think Black is already seriously better. Note that Carlsen chose this moment... since White cannot comfortably play g3-g4 in response due to the hanging c-pawn.\""
+        },
+        {
+          "text": "It is a defensive move to hold a worse position.",
+          "explanation": "The opposite — the annotator says Black is 'already seriously better' and pressing."
+        },
+        {
+          "text": "It forces an immediate draw by repetition.",
+          "explanation": "No; Black is playing for the win with his central pawns."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Why is this the right moment, and what does it prepare?"
+    },
+    {
+      "id": "g12-a5",
+      "ply": 50,
+      "prompt": "The annotator gives 25...a5 a \"!?\". What is his verdict?",
+      "options": [
+        {
+          "text": "It isn't the most precise — 25...exf4 or 25...b5 were stronger — but Black should still be winning.",
+          "explanation": "Correct. The note: \"This move is not best. But it doesn't really bother me- I think Black should still win,\" while offering 25...exf4 and 25...b5 as alternatives."
+        },
+        {
+          "text": "It's an outright blunder that throws away the win.",
+          "explanation": "No — the annotator says it 'doesn't really bother me' and that Black should still win."
+        },
+        {
+          "text": "It's clearly the best move in the position.",
+          "explanation": "The annotator explicitly says it 'is not best,' preferring exf4 or b5."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Inaccurate, but does it actually spoil anything?"
+    },
+    {
+      "id": "g12-a4",
+      "ply": 58,
+      "prompt": "The annotator slaps 29...a4 with \"??\". Why is it such a serious error?",
+      "options": [
+        {
+          "text": "It opens the b4-square for White's queen and denies Black's own pieces the a4-square, sabotaging the only winning plan of ...b7-b5; 29...Ba4! was the convincing route.",
+          "explanation": "Correct. The note: \"His only plan to win the game is b7-b5... now he has cleared the b4-square for White's queen!... the pawn on a4 deprives Black's knight and bishop access to this square.\" He gives 29...Ba4! as \"the most convincing route to victory.\""
+        },
+        {
+          "text": "It simply hangs the a-pawn for nothing.",
+          "explanation": "That's not the point — the flaw is strategic: it frees Qb4 and kills the ...b5 break."
+        },
+        {
+          "text": "It walks into a forced checkmate.",
+          "explanation": "No mate is mentioned; the criticism is that it ruins Black's winning plan."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What square does the pawn surrender, and which plan does it wreck?"
+    }
+  ]
+}

@@ -250,7 +250,7 @@ export function SolitaireMultiplayer({ onStartMatch, onCompete, autoFind = false
               </div>
             </div>
             <Link
-              href="/leaderboard"
+              href="/play/leaderboard"
               className="inline-flex items-center gap-1.5 rounded-2xl bg-white text-rose-700 font-display font-extrabold px-4 py-2.5 shadow-md hover:scale-[1.03] transition-transform"
             >
               🏆 Leaderboard

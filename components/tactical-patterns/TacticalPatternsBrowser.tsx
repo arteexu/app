@@ -13,9 +13,22 @@ import { clsx } from "clsx"
 
 export function TacticalPatternsBrowser() {
   const [unlockedIds, setUnlockedIds] = useState<string[]>([])
+  // Deep-link target from `?pattern=<id>` — auto-scrolled to and briefly ringed.
+  const [highlightId, setHighlightId] = useState<string | null>(null)
 
   useEffect(() => {
     setUnlockedIds(getUnlockedTacticalPatternIds())
+
+    const target = new URLSearchParams(window.location.search).get("pattern")
+    if (!target || !TACTICAL_PATTERNS.some((p) => p.id === target)) return
+    setHighlightId(target)
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`pattern-${target}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" })
+    })
+    const timer = setTimeout(() => setHighlightId(null), 2800)
+    return () => clearTimeout(timer)
   }, [])
 
   const unlockedSet = new Set(unlockedIds)
@@ -56,11 +69,14 @@ export function TacticalPatternsBrowser() {
                 return (
                   <li
                     key={pattern.id}
+                    id={`pattern-${pattern.id}`}
                     className={clsx(
-                      "rounded-2xl border-2 p-5 transition-all",
+                      "scroll-mt-24 rounded-2xl border-2 p-5 transition-all",
                       unlocked
                         ? "border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/20"
                         : "border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900/30 opacity-75",
+                      highlightId === pattern.id &&
+                        "ring-4 ring-rose-400/70 dark:ring-rose-500/60 border-rose-400 dark:border-rose-500",
                     )}
                   >
                     <div className="flex items-start gap-3">

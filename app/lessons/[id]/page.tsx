@@ -3,8 +3,15 @@ import { createClient } from "@/lib/supabase/server"
 import { findLessonInCourses } from "@/lib/courses"
 import { LessonPlayer } from "./LessonPlayer"
 
-export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function LessonPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ step?: string }>
+}) {
   const { id } = await params
+  const { step: initialStepId } = await searchParams
   const match = findLessonInCourses(id)
   if (!match) notFound()
   const { course: typedCourse, lesson, chapter } = match
@@ -39,6 +46,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
       chapterTitle={chapter?.title ?? ""}
       initialCompletedStepIds={completedStepIds}
       initialCompletedLessonIds={completedLessonIds}
+      initialStepId={initialStepId}
       userId={user.id}
     />
   )

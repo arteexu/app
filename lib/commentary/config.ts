@@ -27,6 +27,24 @@ export const COMMENTARY_RIGOROUS_DEPTH = 20
 export const COMMENTARY_MULTIPV = 4
 
 /**
+ * CCC concept prioritization: how many of the 12 concept families (Material,
+ * Pawns, Kingsafety, …) to surface to the LLM, ranked by the magnitude of their
+ * before→after change. The paper's examples use ~2–3; we default to 4.
+ */
+export const COMMENTARY_TOP_K_CONCEPTS = 4
+
+/**
+ * GCC-Eval (rubric judge) settings. Weighted-summation scoring (Eq. 1) needs token
+ * logprobs, which CHAT models expose but reasoning models do not under JSON mode,
+ * so the evaluator defaults to a chat model. Override with COMMENTARY_EVAL_MODEL.
+ */
+export const DEFAULT_COMMENTARY_EVAL_MODEL = "gpt-4o-mini"
+
+/** GCC-Eval rubric dimensions. relevance/completeness get an engine-eval hint. */
+export const GCC_EVAL_DIMENSIONS = ["relevance", "completeness", "clarity", "fluency"] as const
+export type GccEvalDimension = (typeof GCC_EVAL_DIMENSIONS)[number]
+
+/**
  * Default server-side search depth for rigorous mode when run on the server
  * (overridable via the COMMENTARY_SERVER_DEPTH env var, read in the API route).
  * The server engine isn't capped by the browser, so this can be deeper.

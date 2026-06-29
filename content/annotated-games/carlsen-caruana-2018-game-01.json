@@ -1,0 +1,2210 @@
+{
+  "id": "carlsen-caruana-2018-game-01",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 1",
+  "description": "The match opens with a Rossolimo Sicilian. Carlsen outplays Caruana and reaches a winning position, but lets the full point slip in time pressure — a marathon 115-move draw. Annotated by GM Sam Shankland.",
+  "headers": {
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "date": "2018.11.09",
+    "round": "1",
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "result": "1/2-1/2",
+    "eco": "B31",
+    "annotator": "chess.com",
+    "year": 2018
+  },
+  "plies": [
+    {
+      "ply": 1,
+      "moveNumber": 1,
+      "side": "white",
+      "san": "e4",
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+    },
+    {
+      "ply": 2,
+      "moveNumber": 1,
+      "side": "black",
+      "san": "c5",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "comment": "The first surprise. Caruana is mostly a 1.e4 player, but the Sicilian is a rare guest in Carlsen's repertoire."
+    },
+    {
+      "ply": 3,
+      "moveNumber": 2,
+      "side": "white",
+      "san": "Nf3",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
+    },
+    {
+      "ply": 4,
+      "moveNumber": 2,
+      "side": "black",
+      "san": "Nc6",
+      "fen": "r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3"
+    },
+    {
+      "ply": 5,
+      "moveNumber": 3,
+      "side": "white",
+      "san": "Bb5",
+      "fen": "r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+      "comment": "White avoids the main lines of the Open Sicilian that might arise after 3.d4. Nowadays at the top level, the Rossolimo is as good a chance to fight for an edge as any of White's other tries."
+    },
+    {
+      "ply": 6,
+      "moveNumber": 3,
+      "side": "black",
+      "san": "g6",
+      "fen": "r1bqkbnr/pp1ppp1p/2n3p1/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4"
+    },
+    {
+      "ply": 7,
+      "moveNumber": 4,
+      "side": "white",
+      "san": "Bxc6",
+      "fen": "r1bqkbnr/pp1ppp1p/2B3p1/2p5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4"
+    },
+    {
+      "ply": 8,
+      "moveNumber": 4,
+      "side": "black",
+      "san": "dxc6",
+      "fen": "r1bqkbnr/pp2pp1p/2p3p1/2p5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5"
+    },
+    {
+      "ply": 9,
+      "moveNumber": 5,
+      "side": "white",
+      "san": "d3",
+      "fen": "r1bqkbnr/pp2pp1p/2p3p1/2p5/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 5"
+    },
+    {
+      "ply": 10,
+      "moveNumber": 5,
+      "side": "black",
+      "san": "Bg7",
+      "fen": "r1bqk1nr/pp2ppbp/2p3p1/2p5/4P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 1 6"
+    },
+    {
+      "ply": 11,
+      "moveNumber": 6,
+      "side": "white",
+      "san": "h3",
+      "fen": "r1bqk1nr/pp2ppbp/2p3p1/2p5/4P3/3P1N1P/PPP2PP1/RNBQK2R b KQkq - 0 6"
+    },
+    {
+      "ply": 12,
+      "moveNumber": 6,
+      "side": "black",
+      "san": "Nf6",
+      "fen": "r1bqk2r/pp2ppbp/2p2np1/2p5/4P3/3P1N1P/PPP2PP1/RNBQK2R w KQkq - 1 7"
+    },
+    {
+      "ply": 13,
+      "moveNumber": 7,
+      "side": "white",
+      "san": "Nc3",
+      "fen": "r1bqk2r/pp2ppbp/2p2np1/2p5/4P3/2NP1N1P/PPP2PP1/R1BQK2R b KQkq - 2 7"
+    },
+    {
+      "ply": 14,
+      "moveNumber": 7,
+      "side": "black",
+      "san": "Nd7",
+      "fen": "r1bqk2r/pp1nppbp/2p3p1/2p5/4P3/2NP1N1P/PPP2PP1/R1BQK2R w KQkq - 3 8",
+      "comment": "Presumably an improvement over their previous encounter from some years ago.",
+      "variations": [
+        {
+          "startsAfterPly": 13,
+          "moves": [
+            {
+              "san": "b6",
+              "fen": "r1bqk2r/p3ppbp/1pp2np1/2p5/4P3/2NP1N1P/PPP2PP1/R1BQK2R w KQkq - 0 8",
+              "comment": "Magnus chose this move in a game against Caruana back in 2015. He won very nicely, but the opening could have gone a lot worse."
+            },
+            {
+              "san": "Be3",
+              "fen": "r1bqk2r/p3ppbp/1pp2np1/2p5/4P3/2NPBN1P/PPP2PP1/R2QK2R b KQkq - 1 8"
+            },
+            {
+              "san": "e5",
+              "fen": "r1bqk2r/p4pbp/1pp2np1/2p1p3/4P3/2NPBN1P/PPP2PP1/R2QK2R w KQkq - 0 9",
+              "comment": "And now instead of castling, Caruana could have more less won the game with"
+            },
+            {
+              "san": "Nxe5",
+              "fen": "r1bqk2r/p4pbp/1pp2np1/2p1N3/4P3/2NPB2P/PPP2PP1/R2QK2R b KQkq - 0 9",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Nxe4",
+              "fen": "r1bqk2r/p4pbp/1pp3p1/2p1N3/4n3/2NPB2P/PPP2PP1/R2QK2R w KQkq - 0 10",
+              "comment": "When the silent killer"
+            },
+            {
+              "san": "Qf3",
+              "fen": "r1bqk2r/p4pbp/1pp3p1/2p1N3/4n3/2NPBQ1P/PPP2PP1/R3K2R b KQkq - 1 10",
+              "comment": "Is a serious problem for Black to deal with",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 15,
+      "moveNumber": 8,
+      "side": "white",
+      "san": "Be3",
+      "fen": "r1bqk2r/pp1nppbp/2p3p1/2p5/4P3/2NPBN1P/PPP2PP1/R2QK2R b KQkq - 4 8"
+    },
+    {
+      "ply": 16,
+      "moveNumber": 8,
+      "side": "black",
+      "san": "e5",
+      "fen": "r1bqk2r/pp1n1pbp/2p3p1/2p1p3/4P3/2NPBN1P/PPP2PP1/R2QK2R w KQkq - 0 9"
+    },
+    {
+      "ply": 17,
+      "moveNumber": 9,
+      "side": "white",
+      "san": "O-O",
+      "fen": "r1bqk2r/pp1n1pbp/2p3p1/2p1p3/4P3/2NPBN1P/PPP2PP1/R2Q1RK1 b kq - 1 9",
+      "variations": [
+        {
+          "startsAfterPly": 16,
+          "moves": [
+            {
+              "san": "Qd2",
+              "fen": "r1bqk2r/pp1n1pbp/2p3p1/2p1p3/4P3/2NPBN1P/PPPQ1PP1/R3K2R b KQkq - 1 9",
+              "comment": "White can also consider remaining flexible with the king. Sometimes it might want to go to the queenside."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 18,
+      "moveNumber": 9,
+      "side": "black",
+      "san": "b6",
+      "fen": "r1bqk2r/p2n1pbp/1pp3p1/2p1p3/4P3/2NPBN1P/PPP2PP1/R2Q1RK1 w kq - 0 10",
+      "nags": [
+        "!"
+      ],
+      "comment": "I like this idea. Black prepares for Nf8-e6 before castling."
+    },
+    {
+      "ply": 19,
+      "moveNumber": 10,
+      "side": "white",
+      "san": "Nh2",
+      "fen": "r1bqk2r/p2n1pbp/1pp3p1/2p1p3/4P3/2NPB2P/PPP2PPN/R2Q1RK1 b kq - 1 10"
+    },
+    {
+      "ply": 20,
+      "moveNumber": 10,
+      "side": "black",
+      "san": "Nf8",
+      "fen": "r1bqkn1r/p4pbp/1pp3p1/2p1p3/4P3/2NPB2P/PPP2PPN/R2Q1RK1 w kq - 2 11",
+      "comment": "White more or less has to play f4 now- otherwise he will never manage once Black has played Ne6."
+    },
+    {
+      "ply": 21,
+      "moveNumber": 11,
+      "side": "white",
+      "san": "f4",
+      "fen": "r1bqkn1r/p4pbp/1pp3p1/2p1p3/4PP2/2NPB2P/PPP3PN/R2Q1RK1 b kq - 0 11"
+    },
+    {
+      "ply": 22,
+      "moveNumber": 11,
+      "side": "black",
+      "san": "exf4",
+      "fen": "r1bqkn1r/p4pbp/1pp3p1/2p5/4Pp2/2NPB2P/PPP3PN/R2Q1RK1 w kq - 0 12"
+    },
+    {
+      "ply": 23,
+      "moveNumber": 12,
+      "side": "white",
+      "san": "Rxf4",
+      "fen": "r1bqkn1r/p4pbp/1pp3p1/2p5/4PR2/2NPB2P/PPP3PN/R2Q2K1 b kq - 0 12"
+    },
+    {
+      "ply": 24,
+      "moveNumber": 12,
+      "side": "black",
+      "san": "Be6",
+      "fen": "r2qkn1r/p4pbp/1pp1b1p1/2p5/4PR2/2NPB2P/PPP3PN/R2Q2K1 w kq - 1 13",
+      "nags": [
+        "!?"
+      ],
+      "comment": "This was the first seriously notable moment of the game. I was very surprised Black would not want to put the knight on e6, but Carlsen had other ideas. His plan will be to play h6, g5, and Ng6. Then, depending on how White plays, he will castle on which side he feels is best. Around here I joined the live broadcast and said I already would prefer the black side of the position, though White is objectively not worse yet."
+    },
+    {
+      "ply": 25,
+      "moveNumber": 13,
+      "side": "white",
+      "san": "Rf2",
+      "fen": "r2qkn1r/p4pbp/1pp1b1p1/2p5/4P3/2NPB2P/PPP2RPN/R2Q2K1 b kq - 2 13"
+    },
+    {
+      "ply": 26,
+      "moveNumber": 13,
+      "side": "black",
+      "san": "h6",
+      "fen": "r2qkn1r/p4pb1/1pp1b1pp/2p5/4P3/2NPB2P/PPP2RPN/R2Q2K1 w kq - 0 14",
+      "nags": [
+        "!"
+      ]
+    },
+    {
+      "ply": 27,
+      "moveNumber": 14,
+      "side": "white",
+      "san": "Qd2",
+      "fen": "r2qkn1r/p4pb1/1pp1b1pp/2p5/4P3/2NPB2P/PPPQ1RPN/R5K1 b kq - 1 14",
+      "comment": "White develops another piece and pressures the h6 pawn, discouraging Black from castling kingside.",
+      "variations": [
+        {
+          "startsAfterPly": 26,
+          "moves": [
+            {
+              "san": "Nf3",
+              "fen": "r2qkn1r/p4pb1/1pp1b1pp/2p5/4P3/2NPBN1P/PPP2RP1/R2Q2K1 b kq - 1 14",
+              "comment": "The machine's proposal doesn't make any sense to me. What does the knight do here? Caruana's choice is much more human and was the move I expected during the game."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 28,
+      "moveNumber": 14,
+      "side": "black",
+      "san": "g5",
+      "fen": "r2qkn1r/p4pb1/1pp1b2p/2p3p1/4P3/2NPB2P/PPPQ1RPN/R5K1 w kq - 0 15",
+      "nags": [
+        "!"
+      ],
+      "comment": "Another strong move. Black simply prepares to improve his pieces further, gaining space on the kingside and preparing for Ng6."
+    },
+    {
+      "ply": 29,
+      "moveNumber": 15,
+      "side": "white",
+      "san": "Raf1",
+      "fen": "r2qkn1r/p4pb1/1pp1b2p/2p3p1/4P3/2NPB2P/PPPQ1RPN/5RK1 b kq - 1 15",
+      "nags": [
+        "?!"
+      ],
+      "comment": "This was the first moment I really did not like Caruana's choice. While he is certainly not worse yet, it feels wrong to me to keep this square from the knight. It must be said that my computer disagrees with me.",
+      "variations": [
+        {
+          "startsAfterPly": 28,
+          "moves": [
+            {
+              "san": "Nf1",
+              "fen": "r2qkn1r/p4pb1/1pp1b2p/2p3p1/4P3/2NPB2P/PPPQ1RP1/R4NK1 b kq - 1 15",
+              "comment": "My idea during the broadcast was to try to bring the knight to g3 and f5. This is not a bad idea, but the wrong execution."
+            }
+          ]
+        },
+        {
+          "startsAfterPly": 28,
+          "moves": [
+            {
+              "san": "Ne2",
+              "fen": "r2qkn1r/p4pb1/1pp1b2p/2p3p1/4P3/3PB2P/PPPQNRPN/R5K1 b kq - 1 15",
+              "comment": "Probably this enterprising pawn sacrifice is worth attention. White is ready for c3, Ng3, and Nf5.",
+              "nags": [
+                "!?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 30,
+      "moveNumber": 15,
+      "side": "black",
+      "san": "Qd6",
+      "fen": "r3kn1r/p4pb1/1ppqb2p/2p3p1/4P3/2NPB2P/PPPQ1RPN/5RK1 w kq - 2 16"
+    },
+    {
+      "ply": 31,
+      "moveNumber": 16,
+      "side": "white",
+      "san": "Ng4",
+      "fen": "r3kn1r/p4pb1/1ppqb2p/2p3p1/4P1N1/2NPB2P/PPPQ1RP1/5RK1 b kq - 3 16",
+      "comment": "The computer hates Caruana's move here, but it's very consistent with his previous play. White eyes the squares on the weakened f-file. [Editor's note: This is the move Caruana criticized the most of his.]"
+    },
+    {
+      "ply": 32,
+      "moveNumber": 16,
+      "side": "black",
+      "san": "O-O-O",
+      "fen": "2kr1n1r/p4pb1/1ppqb2p/2p3p1/4P1N1/2NPB2P/PPPQ1RP1/5RK1 w - - 4 17"
+    },
+    {
+      "ply": 33,
+      "moveNumber": 17,
+      "side": "white",
+      "san": "Nf6",
+      "fen": "2kr1n1r/p4pb1/1ppqbN1p/2p3p1/4P3/2NPB2P/PPPQ1RP1/5RK1 b - - 5 17",
+      "comment": "The knight is well placed, but soon removed."
+    },
+    {
+      "ply": 34,
+      "moveNumber": 17,
+      "side": "black",
+      "san": "Nd7",
+      "fen": "2kr3r/p2n1pb1/1ppqbN1p/2p3p1/4P3/2NPB2P/PPPQ1RP1/5RK1 w - - 6 18",
+      "nags": [
+        "!"
+      ]
+    },
+    {
+      "ply": 35,
+      "moveNumber": 18,
+      "side": "white",
+      "san": "Nh5",
+      "fen": "2kr3r/p2n1pb1/1ppqb2p/2p3pN/4P3/2NPB2P/PPPQ1RP1/5RK1 b - - 7 18"
+    },
+    {
+      "ply": 36,
+      "moveNumber": 18,
+      "side": "black",
+      "san": "Be5",
+      "fen": "2kr3r/p2n1p2/1ppqb2p/2p1b1pN/4P3/2NPB2P/PPPQ1RP1/5RK1 w - - 8 19",
+      "nags": [
+        "!"
+      ],
+      "comment": "Around here I really thought Magnus would win the first game. White is horribly passive and will face serious issues on the kingside, which should soon open. The position became objectively lost at some point, but Caruana still must be praised for defending this position."
+    },
+    {
+      "ply": 37,
+      "moveNumber": 19,
+      "side": "white",
+      "san": "g4",
+      "fen": "2kr3r/p2n1p2/1ppqb2p/2p1b1pN/4P1P1/2NPB2P/PPPQ1R2/5RK1 b - - 0 19",
+      "nags": [
+        "!"
+      ],
+      "comment": "The first good decision. White stops g5-g4 from Black, and it will not be easy for him to get h6-h5 through."
+    },
+    {
+      "ply": 38,
+      "moveNumber": 19,
+      "side": "black",
+      "san": "f6",
+      "fen": "2kr3r/p2n4/1ppqbp1p/2p1b1pN/4P1P1/2NPB2P/PPPQ1R2/5RK1 w - - 0 20"
+    },
+    {
+      "ply": 39,
+      "moveNumber": 20,
+      "side": "white",
+      "san": "b3",
+      "fen": "2kr3r/p2n4/1ppqbp1p/2p1b1pN/4P1P1/1PNPB2P/P1PQ1R2/5RK1 b - - 0 20"
+    },
+    {
+      "ply": 40,
+      "moveNumber": 20,
+      "side": "black",
+      "san": "Bf7",
+      "fen": "2kr3r/p2n1b2/1ppq1p1p/2p1b1pN/4P1P1/1PNPB2P/P1PQ1R2/5RK1 w - - 1 21"
+    },
+    {
+      "ply": 41,
+      "moveNumber": 21,
+      "side": "white",
+      "san": "Nd1",
+      "fen": "2kr3r/p2n1b2/1ppq1p1p/2p1b1pN/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 b - - 2 21"
+    },
+    {
+      "ply": 42,
+      "moveNumber": 21,
+      "side": "black",
+      "san": "Nf8",
+      "fen": "2kr1n1r/p4b2/1ppq1p1p/2p1b1pN/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 w - - 3 22",
+      "nags": [
+        "?"
+      ],
+      "comment": "Magnus got a little too creative for his own good. Even without the f6 pawn, his position remains strong, but there was no reason to give White anything for his suffering.",
+      "variations": [
+        {
+          "startsAfterPly": 41,
+          "moves": [
+            {
+              "san": "Rhg8",
+              "fen": "2kr2r1/p2n1b2/1ppq1p1p/2p1b1pN/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 w - - 3 22",
+              "comment": "Looks simplest to me. Black prepares for Bxh5 followed by g5-g4. White faces a long and difficult defense."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 43,
+      "moveNumber": 22,
+      "side": "white",
+      "san": "Nxf6",
+      "fen": "2kr1n1r/p4b2/1ppq1N1p/2p1b1p1/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 b - - 0 22",
+      "comment": "Now White at least has a pawn for his suffering, though his position soon deteriorated further."
+    },
+    {
+      "ply": 44,
+      "moveNumber": 22,
+      "side": "black",
+      "san": "Ne6",
+      "fen": "2kr3r/p4b2/1ppqnN1p/2p1b1p1/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 w - - 1 23"
+    },
+    {
+      "ply": 45,
+      "moveNumber": 23,
+      "side": "white",
+      "san": "Nh5",
+      "fen": "2kr3r/p4b2/1ppqn2p/2p1b1pN/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 b - - 2 23"
+    },
+    {
+      "ply": 46,
+      "moveNumber": 23,
+      "side": "black",
+      "san": "Bxh5",
+      "fen": "2kr3r/p7/1ppqn2p/2p1b1pb/4P1P1/1P1PB2P/P1PQ1R2/3N1RK1 w - - 0 24"
+    },
+    {
+      "ply": 47,
+      "moveNumber": 24,
+      "side": "white",
+      "san": "gxh5",
+      "fen": "2kr3r/p7/1ppqn2p/2p1b1pP/4P3/1P1PB2P/P1PQ1R2/3N1RK1 b - - 0 24"
+    },
+    {
+      "ply": 48,
+      "moveNumber": 24,
+      "side": "black",
+      "san": "Nf4",
+      "fen": "2kr3r/p7/1ppq3p/2p1b1pP/4Pn2/1P1PB2P/P1PQ1R2/3N1RK1 w - - 1 25"
+    },
+    {
+      "ply": 49,
+      "moveNumber": 25,
+      "side": "white",
+      "san": "Bxf4",
+      "fen": "2kr3r/p7/1ppq3p/2p1b1pP/4PB2/1P1P3P/P1PQ1R2/3N1RK1 b - - 0 25"
+    },
+    {
+      "ply": 50,
+      "moveNumber": 25,
+      "side": "black",
+      "san": "gxf4",
+      "fen": "2kr3r/p7/1ppq3p/2p1b2P/4Pp2/1P1P3P/P1PQ1R2/3N1RK1 w - - 0 26"
+    },
+    {
+      "ply": 51,
+      "moveNumber": 26,
+      "side": "white",
+      "san": "Rg2",
+      "fen": "2kr3r/p7/1ppq3p/2p1b2P/4Pp2/1P1P3P/P1PQ2R1/3N1RK1 b - - 1 26",
+      "nags": [
+        "?"
+      ],
+      "comment": "Caruana had made some inaccuracies before to get into a mess, but this was the only decision I really did not understand. Even very strong players make mistakes and this is totally normal, but this particular one is hard to understand. White needed to give the exchange, at which point I might even prefer his position.",
+      "variations": [
+        {
+          "startsAfterPly": 50,
+          "moves": [
+            {
+              "san": "Rxf4",
+              "fen": "2kr3r/p7/1ppq3p/2p1b2P/4PR2/1P1P3P/P1PQ4/3N1RK1 b - - 0 26",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Bxf4",
+              "fen": "2kr3r/p7/1ppq3p/2p4P/4Pb2/1P1P3P/P1PQ4/3N1RK1 w - - 0 27"
+            },
+            {
+              "san": "Qxf4",
+              "fen": "2kr3r/p7/1ppq3p/2p4P/4PQ2/1P1P3P/P1P5/3N1RK1 b - - 0 27",
+              "comment": "White has exchanged off the annoying dark squared bishop, has 2 very solid pawns for the exchange, and most importantly, his miserable knight that ewas dominated by the f4 pawn can come to e3 and then f5. The computer screams equal but I think any human would prefer the white side.",
+              "nags": [
+                "$44"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 52,
+      "moveNumber": 26,
+      "side": "black",
+      "san": "Rhg8",
+      "fen": "2kr2r1/p7/1ppq3p/2p1b2P/4Pp2/1P1P3P/P1PQ2R1/3N1RK1 w - - 2 27"
+    },
+    {
+      "ply": 53,
+      "moveNumber": 27,
+      "side": "white",
+      "san": "Qe2",
+      "fen": "2kr2r1/p7/1ppq3p/2p1b2P/4Pp2/1P1P3P/P1P1Q1R1/3N1RK1 b - - 3 27"
+    },
+    {
+      "ply": 54,
+      "moveNumber": 27,
+      "side": "black",
+      "san": "Rxg2+",
+      "fen": "2kr4/p7/1ppq3p/2p1b2P/4Pp2/1P1P3P/P1P1Q1r1/3N1RK1 w - - 0 28"
+    },
+    {
+      "ply": 55,
+      "moveNumber": 28,
+      "side": "white",
+      "san": "Qxg2",
+      "fen": "2kr4/p7/1ppq3p/2p1b2P/4Pp2/1P1P3P/P1P3Q1/3N1RK1 b - - 0 28"
+    },
+    {
+      "ply": 56,
+      "moveNumber": 28,
+      "side": "black",
+      "san": "Qe6",
+      "fen": "2kr4/p7/1pp1q2p/2p1b2P/4Pp2/1P1P3P/P1P3Q1/3N1RK1 w - - 1 29",
+      "nags": [
+        "!"
+      ],
+      "comment": "A high-class move. Black will soon seize the g-file with Rg8."
+    },
+    {
+      "ply": 57,
+      "moveNumber": 29,
+      "side": "white",
+      "san": "Nf2",
+      "fen": "2kr4/p7/1pp1q2p/2p1b2P/4Pp2/1P1P3P/P1P2NQ1/5RK1 b - - 2 29"
+    },
+    {
+      "ply": 58,
+      "moveNumber": 29,
+      "side": "black",
+      "san": "Rg8",
+      "fen": "2k3r1/p7/1pp1q2p/2p1b2P/4Pp2/1P1P3P/P1P2NQ1/5RK1 w - - 3 30"
+    },
+    {
+      "ply": 59,
+      "moveNumber": 30,
+      "side": "white",
+      "san": "Ng4",
+      "fen": "2k3r1/p7/1pp1q2p/2p1b2P/4PpN1/1P1P3P/P1P3Q1/5RK1 b - - 4 30"
+    },
+    {
+      "ply": 60,
+      "moveNumber": 30,
+      "side": "black",
+      "san": "Qe8",
+      "fen": "2k1q1r1/p7/1pp4p/2p1b2P/4PpN1/1P1P3P/P1P3Q1/5RK1 w - - 5 31",
+      "nags": [
+        "!"
+      ],
+      "comment": "Now White is in really bad shape. If he could save the h5-pawn he would probably be better, but once it is captured, h6-h5 will boot yhe g4-knight off its post and the g-file will open. In addition to the position to being objectively bad, it is much harder for White to play than for Black."
+    },
+    {
+      "ply": 61,
+      "moveNumber": 31,
+      "side": "white",
+      "san": "Qf3",
+      "fen": "2k1q1r1/p7/1pp4p/2p1b2P/4PpN1/1P1P1Q1P/P1P5/5RK1 b - - 6 31"
+    },
+    {
+      "ply": 62,
+      "moveNumber": 31,
+      "side": "black",
+      "san": "Qxh5",
+      "fen": "2k3r1/p7/1pp4p/2p1b2q/4PpN1/1P1P1Q1P/P1P5/5RK1 w - - 0 32"
+    },
+    {
+      "ply": 63,
+      "moveNumber": 32,
+      "side": "white",
+      "san": "Kf2",
+      "fen": "2k3r1/p7/1pp4p/2p1b2q/4PpN1/1P1P1Q1P/P1P2K2/5R2 b - - 1 32"
+    },
+    {
+      "ply": 64,
+      "moveNumber": 32,
+      "side": "black",
+      "san": "Bc7",
+      "fen": "2k3r1/p1b5/1pp4p/2p4q/4PpN1/1P1P1Q1P/P1P2K2/5R2 w - - 2 33"
+    },
+    {
+      "ply": 65,
+      "moveNumber": 33,
+      "side": "white",
+      "san": "Ke2",
+      "fen": "2k3r1/p1b5/1pp4p/2p4q/4PpN1/1P1P1Q1P/P1P1K3/5R2 b - - 3 33",
+      "nags": [
+        "?"
+      ],
+      "comment": "It's hard to criticize Caruana since his position was just difficult, but this was not best.",
+      "variations": [
+        {
+          "startsAfterPly": 64,
+          "moves": [
+            {
+              "san": "e5",
+              "fen": "2k3r1/p1b5/1pp4p/2p1P2q/5pN1/1P1P1Q1P/P1P2K2/5R2 b - - 0 33"
+            },
+            {
+              "san": "Kb7",
+              "fen": "6r1/pkb5/1pp4p/2p1P2q/5pN1/1P1P1Q1P/P1P2K2/5R2 w - - 1 34"
+            },
+            {
+              "san": "Nf6",
+              "fen": "6r1/pkb5/1pp2N1p/2p1P2q/5p2/1P1P1Q1P/P1P2K2/5R2 b - - 2 34",
+              "comment": "Offered more saving chances, but it is very hard to play like a machine all the time."
+            },
+            {
+              "san": "Qh4+",
+              "fen": "6r1/pkb5/1pp2N1p/2p1P3/5p1q/1P1P1Q1P/P1P2K2/5R2 w - - 3 35"
+            },
+            {
+              "san": "Ke2",
+              "fen": "6r1/pkb5/1pp2N1p/2p1P3/5p1q/1P1P1Q1P/P1P1K3/5R2 b - - 4 35"
+            },
+            {
+              "san": "Rg3",
+              "fen": "8/pkb5/1pp2N1p/2p1P3/5p1q/1P1P1QrP/P1P1K3/5R2 w - - 5 36"
+            },
+            {
+              "san": "Qxf4",
+              "fen": "8/pkb5/1pp2N1p/2p1P3/5Q1q/1P1P2rP/P1P1K3/5R2 b - - 0 36"
+            },
+            {
+              "san": "Qxf4",
+              "fen": "8/pkb5/1pp2N1p/2p1P3/5q2/1P1P2rP/P1P1K3/5R2 w - - 0 37"
+            },
+            {
+              "san": "Rxf4",
+              "fen": "8/pkb5/1pp2N1p/2p1P3/5R2/1P1P2rP/P1P1K3/8 b - - 0 37"
+            },
+            {
+              "san": "Bxe5",
+              "fen": "8/pk6/1pp2N1p/2p1b3/5R2/1P1P2rP/P1P1K3/8 w - - 0 38"
+            },
+            {
+              "san": "Rf5",
+              "fen": "8/pk6/1pp2N1p/2p1bR2/8/1P1P2rP/P1P1K3/8 b - - 1 38"
+            },
+            {
+              "san": "Bxf6",
+              "fen": "8/pk6/1pp2b1p/2p2R2/8/1P1P2rP/P1P1K3/8 w - - 0 39"
+            },
+            {
+              "san": "Rxf6",
+              "fen": "8/pk6/1pp2R1p/2p5/8/1P1P2rP/P1P1K3/8 b - - 0 39"
+            },
+            {
+              "san": "Rxh3",
+              "fen": "8/pk6/1pp2R1p/2p5/8/1P1P3r/P1P1K3/8 w - - 0 40"
+            },
+            {
+              "san": "Rf7+",
+              "fen": "8/pk3R2/1pp4p/2p5/8/1P1P3r/P1P1K3/8 b - - 1 40",
+              "comment": "White should probably hold."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 66,
+      "moveNumber": 33,
+      "side": "black",
+      "san": "Qg5",
+      "fen": "2k3r1/p1b5/1pp4p/2p3q1/4PpN1/1P1P1Q1P/P1P1K3/5R2 w - - 4 34",
+      "nags": [
+        "!"
+      ],
+      "comment": "Simple and strong. h5 is coming, the g-file will open."
+    },
+    {
+      "ply": 67,
+      "moveNumber": 34,
+      "side": "white",
+      "san": "Nh2",
+      "fen": "2k3r1/p1b5/1pp4p/2p3q1/4Pp2/1P1P1Q1P/P1P1K2N/5R2 b - - 5 34"
+    },
+    {
+      "ply": 68,
+      "moveNumber": 34,
+      "side": "black",
+      "san": "h5",
+      "fen": "2k3r1/p1b5/1pp5/2p3qp/4Pp2/1P1P1Q1P/P1P1K2N/5R2 w - - 0 35"
+    },
+    {
+      "ply": 69,
+      "moveNumber": 35,
+      "side": "white",
+      "san": "Rf2",
+      "fen": "2k3r1/p1b5/1pp5/2p3qp/4Pp2/1P1P1Q1P/P1P1KR1N/8 b - - 1 35",
+      "comment": "Up to this point Magnus had played quite a good game, though I imagine he will be mad at himself for Nf8. But around here, he started to drift. The move he played is good enough to win, but he missed the most incisive continuation."
+    },
+    {
+      "ply": 70,
+      "moveNumber": 35,
+      "side": "black",
+      "san": "Qg1",
+      "fen": "2k3r1/p1b5/1pp5/2p4p/4Pp2/1P1P1Q1P/P1P1KR1N/6q1 w - - 2 36",
+      "nags": [
+        "?"
+      ],
+      "comment": "The first mistake is the one that makes the win more difficult, not the one that makes it no longer winning.",
+      "variations": [
+        {
+          "startsAfterPly": 69,
+          "moves": [
+            {
+              "san": "Qg7",
+              "fen": "2k3r1/p1b3q1/1pp5/2p4p/4Pp2/1P1P1Q1P/P1P1KR1N/8 w - - 2 36",
+              "comment": "Black was best advised to invade with his queen on the dark squares. White's position looks beyond saving to me.",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 71,
+      "moveNumber": 36,
+      "side": "white",
+      "san": "Nf1",
+      "fen": "2k3r1/p1b5/1pp5/2p4p/4Pp2/1P1P1Q1P/P1P1KR2/5Nq1 b - - 3 36",
+      "comment": "The next few moves were marred by time pressure, but I think Magnus will not see this is a valid excuse for letting White off the hook."
+    },
+    {
+      "ply": 72,
+      "moveNumber": 36,
+      "side": "black",
+      "san": "h4",
+      "fen": "2k3r1/p1b5/1pp5/2p5/4Pp1p/1P1P1Q1P/P1P1KR2/5Nq1 w - - 0 37",
+      "nags": [
+        "?"
+      ],
+      "variations": [
+        {
+          "startsAfterPly": 71,
+          "moves": [
+            {
+              "san": "Qg7",
+              "fen": "2k3r1/p1b3q1/1pp5/2p4p/4Pp2/1P1P1Q1P/P1P1KR2/5N2 w - - 4 37",
+              "comment": "Was again strong",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 73,
+      "moveNumber": 37,
+      "side": "white",
+      "san": "Kd2",
+      "fen": "2k3r1/p1b5/1pp5/2p5/4Pp1p/1P1P1Q1P/P1PK1R2/5Nq1 b - - 1 37",
+      "variations": [
+        {
+          "startsAfterPly": 72,
+          "moves": [
+            {
+              "san": "e5",
+              "fen": "2k3r1/p1b5/1pp5/2p1P3/5p1p/1P1P1Q1P/P1P1KR2/5Nq1 b - - 0 37",
+              "comment": "Would have opened White's queen. It's very hard to do this since it allows Black to make good use of the open e-file, but it was indeed best.",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Rg5",
+              "fen": "2k5/p1b5/1pp5/2p1P1r1/5p1p/1P1P1Q1P/P1P1KR2/5Nq1 w - - 1 38"
+            },
+            {
+              "san": "Nd2",
+              "fen": "2k5/p1b5/1pp5/2p1P1r1/5p1p/1P1P1Q1P/P1PNKR2/6q1 b - - 2 38",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Rxe5+",
+              "fen": "2k5/p1b5/1pp5/2p1r3/5p1p/1P1P1Q1P/P1PNKR2/6q1 w - - 0 39"
+            },
+            {
+              "san": "Ne4",
+              "fen": "2k5/p1b5/1pp5/2p1r3/4Np1p/1P1P1Q1P/P1P1KR2/6q1 b - - 1 39",
+              "comment": "Blocking the rook again, like it did from g4, but this time there is no pawn thrust to boot the knight away.",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Qc1",
+              "fen": "2k5/p1b5/1pp5/2p1r3/4Np1p/1P1P1Q1P/P1P1KR2/2q5 w - - 2 40"
+            },
+            {
+              "san": "Qxf4",
+              "fen": "2k5/p1b5/1pp5/2p1r3/4NQ1p/1P1P3P/P1P1KR2/2q5 b - - 0 40"
+            },
+            {
+              "san": "Qxc2+",
+              "fen": "2k5/p1b5/1pp5/2p1r3/4NQ1p/1P1P3P/P1q1KR2/8 w - - 0 41"
+            },
+            {
+              "san": "Qd2",
+              "fen": "2k5/p1b5/1pp5/2p1r3/4N2p/1P1P3P/P1qQKR2/8 b - - 1 41",
+              "comment": "White is suffering, but has very good defensive chances."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 74,
+      "moveNumber": 37,
+      "side": "black",
+      "san": "Kb7",
+      "fen": "6r1/pkb5/1pp5/2p5/4Pp1p/1P1P1Q1P/P1PK1R2/5Nq1 w - - 2 38"
+    },
+    {
+      "ply": 75,
+      "moveNumber": 38,
+      "side": "white",
+      "san": "c3",
+      "fen": "6r1/pkb5/1pp5/2p5/4Pp1p/1PPP1Q1P/P2K1R2/5Nq1 b - - 0 38"
+    },
+    {
+      "ply": 76,
+      "moveNumber": 38,
+      "side": "black",
+      "san": "Be5",
+      "fen": "6r1/pk6/1pp5/2p1b3/4Pp1p/1PPP1Q1P/P2K1R2/5Nq1 w - - 1 39"
+    },
+    {
+      "ply": 77,
+      "moveNumber": 39,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "6r1/pk6/1pp5/2p1b3/4Pp1p/1PPP1Q1P/P1K2R2/5Nq1 b - - 2 39"
+    },
+    {
+      "ply": 78,
+      "moveNumber": 39,
+      "side": "black",
+      "san": "Qg7",
+      "fen": "6r1/pk4q1/1pp5/2p1b3/4Pp1p/1PPP1Q1P/P1K2R2/5N2 w - - 3 40",
+      "nags": [
+        "?"
+      ],
+      "comment": "Paradoxically, the move Magnus needed to play previously now lets White off the hook. The position has changed and now it will not be the queen, but the bishop, that invades the queenside- a much less scary prospect for the first player.",
+      "variations": [
+        {
+          "startsAfterPly": 77,
+          "moves": [
+            {
+              "san": "a5",
+              "fen": "6r1/1k6/1pp5/p1p1b3/4Pp1p/1PPP1Q1P/P1K2R2/5Nq1 w - - 0 40",
+              "comment": "The best move was b5, but this looked the most human to me. Just make a move, keep the king safe, and wait for time control to find the winning way."
+            },
+            {
+              "san": "a4",
+              "fen": "6r1/1k6/1pp5/p1p1b3/P3Pp1p/1PPP1Q1P/2K2R2/5Nq1 b - - 0 40"
+            },
+            {
+              "san": "Rg6",
+              "fen": "8/1k6/1pp3r1/p1p1b3/P3Pp1p/1PPP1Q1P/2K2R2/5Nq1 w - - 1 41",
+              "comment": "Something like this would allow Black more time to find a breakthrough, and White has no counterplay to worry about."
+            }
+          ]
+        },
+        {
+          "startsAfterPly": 77,
+          "moves": [
+            {
+              "san": "b5",
+              "fen": "6r1/pk6/2p5/1pp1b3/4Pp1p/1PPP1Q1P/P1K2R2/5Nq1 w - - 0 40",
+              "comment": "According to the machine, this move wins convicningly. And I don't really understand why. It's a hard move to grasp and almost impossible to find in time pressure."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 79,
+      "moveNumber": 40,
+      "side": "white",
+      "san": "Nh2",
+      "fen": "6r1/pk4q1/1pp5/2p1b3/4Pp1p/1PPP1Q1P/P1K2R1N/8 b - - 4 40",
+      "nags": [
+        "!"
+      ],
+      "comment": "Caruana has survived the worst of it and now has more time. The position remains unpleasant, but very defensible."
+    },
+    {
+      "ply": 80,
+      "moveNumber": 40,
+      "side": "black",
+      "san": "Bxc3",
+      "fen": "6r1/pk4q1/1pp5/2p5/4Pp1p/1PbP1Q1P/P1K2R1N/8 w - - 0 41",
+      "variations": [
+        {
+          "startsAfterPly": 79,
+          "moves": [
+            {
+              "san": "Qg3",
+              "fen": "6r1/pk6/1pp5/2p1b3/4Pp1p/1PPP1QqP/P1K2R1N/8 w - - 5 41",
+              "comment": "This might have been a better try, but it's a tough move to play. After"
+            },
+            {
+              "san": "Ng4",
+              "fen": "6r1/pk6/1pp5/2p1b3/4PpNp/1PPP1QqP/P1K2R2/8 b - - 6 41",
+              "comment": "Black must give an exchange with"
+            },
+            {
+              "san": "Rxg4",
+              "fen": "8/pk6/1pp5/2p1b3/4Pprp/1PPP1QqP/P1K2R2/8 w - - 0 42",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "hxg4",
+              "fen": "8/pk6/1pp5/2p1b3/4PpPp/1PPP1Qq1/P1K2R2/8 b - - 0 42"
+            },
+            {
+              "san": "h3",
+              "fen": "8/pk6/1pp5/2p1b3/4PpP1/1PPP1Qqp/P1K2R2/8 w - - 0 43"
+            },
+            {
+              "san": "Qe2",
+              "fen": "8/pk6/1pp5/2p1b3/4PpP1/1PPP2qp/P1K1QR2/8 b - - 1 43",
+              "comment": "And apparently this position is good for him, but this is hard for a human to do."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 81,
+      "moveNumber": 41,
+      "side": "white",
+      "san": "Qxf4",
+      "fen": "6r1/pk4q1/1pp5/2p5/4PQ1p/1PbP3P/P1K2R1N/8 b - - 0 41"
+    },
+    {
+      "ply": 82,
+      "moveNumber": 41,
+      "side": "black",
+      "san": "Bd4",
+      "fen": "6r1/pk4q1/1pp5/2p5/3bPQ1p/1P1P3P/P1K2R1N/8 w - - 1 42"
+    },
+    {
+      "ply": 83,
+      "moveNumber": 42,
+      "side": "white",
+      "san": "Qf7+",
+      "fen": "6r1/pk3Qq1/1pp5/2p5/3bP2p/1P1P3P/P1K2R1N/8 b - - 2 42",
+      "nags": [
+        "!"
+      ]
+    },
+    {
+      "ply": 84,
+      "moveNumber": 42,
+      "side": "black",
+      "san": "Ka6",
+      "fen": "6r1/p4Qq1/kpp5/2p5/3bP2p/1P1P3P/P1K2R1N/8 w - - 3 43"
+    },
+    {
+      "ply": 85,
+      "moveNumber": 43,
+      "side": "white",
+      "san": "Qxg7",
+      "fen": "6r1/p5Q1/kpp5/2p5/3bP2p/1P1P3P/P1K2R1N/8 b - - 0 43"
+    },
+    {
+      "ply": 86,
+      "moveNumber": 43,
+      "side": "black",
+      "san": "Rxg7",
+      "fen": "8/p5r1/kpp5/2p5/3bP2p/1P1P3P/P1K2R1N/8 w - - 0 44"
+    },
+    {
+      "ply": 87,
+      "moveNumber": 44,
+      "side": "white",
+      "san": "Re2",
+      "fen": "8/p5r1/kpp5/2p5/3bP2p/1P1P3P/P1K1R2N/8 b - - 1 44",
+      "nags": [
+        "!"
+      ],
+      "comment": "The e-pawn secures enough counterplay to make a draw."
+    },
+    {
+      "ply": 88,
+      "moveNumber": 44,
+      "side": "black",
+      "san": "Rg3",
+      "fen": "8/p7/kpp5/2p5/3bP2p/1P1P2rP/P1K1R2N/8 w - - 2 45"
+    },
+    {
+      "ply": 89,
+      "moveNumber": 45,
+      "side": "white",
+      "san": "Ng4",
+      "fen": "8/p7/kpp5/2p5/3bP1Np/1P1P2rP/P1K1R3/8 b - - 3 45",
+      "nags": [
+        "!"
+      ],
+      "variations": [
+        {
+          "startsAfterPly": 88,
+          "moves": [
+            {
+              "san": "e5",
+              "fen": "8/p7/kpp5/2p1P3/3b3p/1P1P2rP/P1K1R2N/8 b - - 0 45",
+              "nags": [
+                "?"
+              ]
+            },
+            {
+              "san": "Bxe5",
+              "fen": "8/p7/kpp5/2p1b3/7p/1P1P2rP/P1K1R2N/8 w - - 0 46"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 90,
+      "moveNumber": 45,
+      "side": "black",
+      "san": "Rxh3",
+      "fen": "8/p7/kpp5/2p5/3bP1Np/1P1P3r/P1K1R3/8 w - - 0 46"
+    },
+    {
+      "ply": 91,
+      "moveNumber": 46,
+      "side": "white",
+      "san": "e5",
+      "fen": "8/p7/kpp5/2p1P3/3b2Np/1P1P3r/P1K1R3/8 b - - 0 46"
+    },
+    {
+      "ply": 92,
+      "moveNumber": 46,
+      "side": "black",
+      "san": "Rf3",
+      "fen": "8/p7/kpp5/2p1P3/3b2Np/1P1P1r2/P1K1R3/8 w - - 1 47"
+    },
+    {
+      "ply": 93,
+      "moveNumber": 47,
+      "side": "white",
+      "san": "e6",
+      "fen": "8/p7/kpp1P3/2p5/3b2Np/1P1P1r2/P1K1R3/8 b - - 0 47"
+    },
+    {
+      "ply": 94,
+      "moveNumber": 47,
+      "side": "black",
+      "san": "Rf8",
+      "fen": "5r2/p7/kpp1P3/2p5/3b2Np/1P1P4/P1K1R3/8 w - - 1 48"
+    },
+    {
+      "ply": 95,
+      "moveNumber": 48,
+      "side": "white",
+      "san": "e7",
+      "fen": "5r2/p3P3/kpp5/2p5/3b2Np/1P1P4/P1K1R3/8 b - - 0 48"
+    },
+    {
+      "ply": 96,
+      "moveNumber": 48,
+      "side": "black",
+      "san": "Re8",
+      "fen": "4r3/p3P3/kpp5/2p5/3b2Np/1P1P4/P1K1R3/8 w - - 1 49"
+    },
+    {
+      "ply": 97,
+      "moveNumber": 49,
+      "side": "white",
+      "san": "Nh6",
+      "fen": "4r3/p3P3/kpp4N/2p5/3b3p/1P1P4/P1K1R3/8 b - - 2 49"
+    },
+    {
+      "ply": 98,
+      "moveNumber": 49,
+      "side": "black",
+      "san": "h3",
+      "fen": "4r3/p3P3/kpp4N/2p5/3b4/1P1P3p/P1K1R3/8 w - - 0 50"
+    },
+    {
+      "ply": 99,
+      "moveNumber": 50,
+      "side": "white",
+      "san": "Nf5",
+      "fen": "4r3/p3P3/kpp5/2p2N2/3b4/1P1P3p/P1K1R3/8 b - - 1 50"
+    },
+    {
+      "ply": 100,
+      "moveNumber": 50,
+      "side": "black",
+      "san": "Bf6",
+      "fen": "4r3/p3P3/kpp2b2/2p2N2/8/1P1P3p/P1K1R3/8 w - - 2 51",
+      "comment": "The last several moves have been absolutely forced. Now the best Black will ever get is a pawn up rook ending with h3 and e7 trading, which definitely should be a draw."
+    },
+    {
+      "ply": 101,
+      "moveNumber": 51,
+      "side": "white",
+      "san": "a3",
+      "fen": "4r3/p3P3/kpp2b2/2p2N2/8/PP1P3p/2K1R3/8 b - - 0 51"
+    },
+    {
+      "ply": 102,
+      "moveNumber": 51,
+      "side": "black",
+      "san": "b5",
+      "fen": "4r3/p3P3/k1p2b2/1pp2N2/8/PP1P3p/2K1R3/8 w - - 0 52"
+    },
+    {
+      "ply": 103,
+      "moveNumber": 52,
+      "side": "white",
+      "san": "b4",
+      "fen": "4r3/p3P3/k1p2b2/1pp2N2/1P6/P2P3p/2K1R3/8 b - - 0 52"
+    },
+    {
+      "ply": 104,
+      "moveNumber": 52,
+      "side": "black",
+      "san": "cxb4",
+      "fen": "4r3/p3P3/k1p2b2/1p3N2/1p6/P2P3p/2K1R3/8 w - - 0 53"
+    },
+    {
+      "ply": 105,
+      "moveNumber": 53,
+      "side": "white",
+      "san": "axb4",
+      "fen": "4r3/p3P3/k1p2b2/1p3N2/1P6/3P3p/2K1R3/8 b - - 0 53"
+    },
+    {
+      "ply": 106,
+      "moveNumber": 53,
+      "side": "black",
+      "san": "Bxe7",
+      "fen": "4r3/p3b3/k1p5/1p3N2/1P6/3P3p/2K1R3/8 w - - 0 54"
+    },
+    {
+      "ply": 107,
+      "moveNumber": 54,
+      "side": "white",
+      "san": "Nxe7",
+      "fen": "4r3/p3N3/k1p5/1p6/1P6/3P3p/2K1R3/8 b - - 0 54"
+    },
+    {
+      "ply": 108,
+      "moveNumber": 54,
+      "side": "black",
+      "san": "h2",
+      "fen": "4r3/p3N3/k1p5/1p6/1P6/3P4/2K1R2p/8 w - - 0 55"
+    },
+    {
+      "ply": 109,
+      "moveNumber": 55,
+      "side": "white",
+      "san": "Rxh2",
+      "fen": "4r3/p3N3/k1p5/1p6/1P6/3P4/2K4R/8 b - - 0 55"
+    },
+    {
+      "ply": 110,
+      "moveNumber": 55,
+      "side": "black",
+      "san": "Rxe7",
+      "fen": "8/p3r3/k1p5/1p6/1P6/3P4/2K4R/8 w - - 0 56",
+      "comment": "I think one of Magnus' biggest mistakes of the game was not offering a draw on the spot here. He definitely is not going to win the game, he will be furious with himself for letting the full point slip, and giving him more time to emotionally recover before playing tomorrow probably would have been a better choice than playing on for 50 more moves, hoping for the 0.1% chance of winning to come into fruition."
+    },
+    {
+      "ply": 111,
+      "moveNumber": 56,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "8/p3r3/k1p4R/1p6/1P6/3P4/2K5/8 b - - 1 56"
+    },
+    {
+      "ply": 112,
+      "moveNumber": 56,
+      "side": "black",
+      "san": "Kb6",
+      "fen": "8/p3r3/1kp4R/1p6/1P6/3P4/2K5/8 w - - 2 57"
+    },
+    {
+      "ply": 113,
+      "moveNumber": 57,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "8/p3r3/1kp4R/1p6/1P6/2KP4/8/8 b - - 3 57"
+    },
+    {
+      "ply": 114,
+      "moveNumber": 57,
+      "side": "black",
+      "san": "Rd7",
+      "fen": "8/p2r4/1kp4R/1p6/1P6/2KP4/8/8 w - - 4 58"
+    },
+    {
+      "ply": 115,
+      "moveNumber": 58,
+      "side": "white",
+      "san": "Rg6",
+      "fen": "8/p2r4/1kp3R1/1p6/1P6/2KP4/8/8 b - - 5 58"
+    },
+    {
+      "ply": 116,
+      "moveNumber": 58,
+      "side": "black",
+      "san": "Kc7",
+      "fen": "8/p1kr4/2p3R1/1p6/1P6/2KP4/8/8 w - - 6 59"
+    },
+    {
+      "ply": 117,
+      "moveNumber": 59,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "8/p1kr4/2p4R/1p6/1P6/2KP4/8/8 b - - 7 59"
+    },
+    {
+      "ply": 118,
+      "moveNumber": 59,
+      "side": "black",
+      "san": "Rd6",
+      "fen": "8/p1k5/2pr3R/1p6/1P6/2KP4/8/8 w - - 8 60"
+    },
+    {
+      "ply": 119,
+      "moveNumber": 60,
+      "side": "white",
+      "san": "Rh8",
+      "fen": "7R/p1k5/2pr4/1p6/1P6/2KP4/8/8 b - - 9 60"
+    },
+    {
+      "ply": 120,
+      "moveNumber": 60,
+      "side": "black",
+      "san": "Rg6",
+      "fen": "7R/p1k5/2p3r1/1p6/1P6/2KP4/8/8 w - - 10 61"
+    },
+    {
+      "ply": 121,
+      "moveNumber": 61,
+      "side": "white",
+      "san": "Ra8",
+      "fen": "R7/p1k5/2p3r1/1p6/1P6/2KP4/8/8 b - - 11 61"
+    },
+    {
+      "ply": 122,
+      "moveNumber": 61,
+      "side": "black",
+      "san": "Kb7",
+      "fen": "R7/pk6/2p3r1/1p6/1P6/2KP4/8/8 w - - 12 62"
+    },
+    {
+      "ply": 123,
+      "moveNumber": 62,
+      "side": "white",
+      "san": "Rh8",
+      "fen": "7R/pk6/2p3r1/1p6/1P6/2KP4/8/8 b - - 13 62"
+    },
+    {
+      "ply": 124,
+      "moveNumber": 62,
+      "side": "black",
+      "san": "Rg5",
+      "fen": "7R/pk6/2p5/1p4r1/1P6/2KP4/8/8 w - - 14 63"
+    },
+    {
+      "ply": 125,
+      "moveNumber": 63,
+      "side": "white",
+      "san": "Rh7+",
+      "fen": "8/pk5R/2p5/1p4r1/1P6/2KP4/8/8 b - - 15 63"
+    },
+    {
+      "ply": 126,
+      "moveNumber": 63,
+      "side": "black",
+      "san": "Kb6",
+      "fen": "8/p6R/1kp5/1p4r1/1P6/2KP4/8/8 w - - 16 64"
+    },
+    {
+      "ply": 127,
+      "moveNumber": 64,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "8/p7/1kp4R/1p4r1/1P6/2KP4/8/8 b - - 17 64"
+    },
+    {
+      "ply": 128,
+      "moveNumber": 64,
+      "side": "black",
+      "san": "Rg1",
+      "fen": "8/p7/1kp4R/1p6/1P6/2KP4/8/6r1 w - - 18 65"
+    },
+    {
+      "ply": 129,
+      "moveNumber": 65,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "8/p7/1kp4R/1p6/1P6/3P4/2K5/6r1 b - - 19 65"
+    },
+    {
+      "ply": 130,
+      "moveNumber": 65,
+      "side": "black",
+      "san": "Rf1",
+      "fen": "8/p7/1kp4R/1p6/1P6/3P4/2K5/5r2 w - - 20 66"
+    },
+    {
+      "ply": 131,
+      "moveNumber": 66,
+      "side": "white",
+      "san": "Rg6",
+      "fen": "8/p7/1kp3R1/1p6/1P6/3P4/2K5/5r2 b - - 21 66"
+    },
+    {
+      "ply": 132,
+      "moveNumber": 66,
+      "side": "black",
+      "san": "Rh1",
+      "fen": "8/p7/1kp3R1/1p6/1P6/3P4/2K5/7r w - - 22 67"
+    },
+    {
+      "ply": 133,
+      "moveNumber": 67,
+      "side": "white",
+      "san": "Rf6",
+      "fen": "8/p7/1kp2R2/1p6/1P6/3P4/2K5/7r b - - 23 67"
+    },
+    {
+      "ply": 134,
+      "moveNumber": 67,
+      "side": "black",
+      "san": "Rh8",
+      "fen": "7r/p7/1kp2R2/1p6/1P6/3P4/2K5/8 w - - 24 68"
+    },
+    {
+      "ply": 135,
+      "moveNumber": 68,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "7r/p7/1kp2R2/1p6/1P6/2KP4/8/8 b - - 25 68"
+    },
+    {
+      "ply": 136,
+      "moveNumber": 68,
+      "side": "black",
+      "san": "Ra8",
+      "fen": "r7/p7/1kp2R2/1p6/1P6/2KP4/8/8 w - - 26 69"
+    },
+    {
+      "ply": 137,
+      "moveNumber": 69,
+      "side": "white",
+      "san": "d4",
+      "fen": "r7/p7/1kp2R2/1p6/1P1P4/2K5/8/8 b - - 0 69"
+    },
+    {
+      "ply": 138,
+      "moveNumber": 69,
+      "side": "black",
+      "san": "Rd8",
+      "fen": "3r4/p7/1kp2R2/1p6/1P1P4/2K5/8/8 w - - 1 70"
+    },
+    {
+      "ply": 139,
+      "moveNumber": 70,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "3r4/p7/1kp4R/1p6/1P1P4/2K5/8/8 b - - 2 70"
+    },
+    {
+      "ply": 140,
+      "moveNumber": 70,
+      "side": "black",
+      "san": "Rd7",
+      "fen": "8/p2r4/1kp4R/1p6/1P1P4/2K5/8/8 w - - 3 71"
+    },
+    {
+      "ply": 141,
+      "moveNumber": 71,
+      "side": "white",
+      "san": "Rg6",
+      "fen": "8/p2r4/1kp3R1/1p6/1P1P4/2K5/8/8 b - - 4 71"
+    },
+    {
+      "ply": 142,
+      "moveNumber": 71,
+      "side": "black",
+      "san": "Kc7",
+      "fen": "8/p1kr4/2p3R1/1p6/1P1P4/2K5/8/8 w - - 5 72"
+    },
+    {
+      "ply": 143,
+      "moveNumber": 72,
+      "side": "white",
+      "san": "Rg5",
+      "fen": "8/p1kr4/2p5/1p4R1/1P1P4/2K5/8/8 b - - 6 72"
+    },
+    {
+      "ply": 144,
+      "moveNumber": 72,
+      "side": "black",
+      "san": "Rd6",
+      "fen": "8/p1k5/2pr4/1p4R1/1P1P4/2K5/8/8 w - - 7 73"
+    },
+    {
+      "ply": 145,
+      "moveNumber": 73,
+      "side": "white",
+      "san": "Rg8",
+      "fen": "6R1/p1k5/2pr4/1p6/1P1P4/2K5/8/8 b - - 8 73"
+    },
+    {
+      "ply": 146,
+      "moveNumber": 73,
+      "side": "black",
+      "san": "Rh6",
+      "fen": "6R1/p1k5/2p4r/1p6/1P1P4/2K5/8/8 w - - 9 74"
+    },
+    {
+      "ply": 147,
+      "moveNumber": 74,
+      "side": "white",
+      "san": "Ra8",
+      "fen": "R7/p1k5/2p4r/1p6/1P1P4/2K5/8/8 b - - 10 74"
+    },
+    {
+      "ply": 148,
+      "moveNumber": 74,
+      "side": "black",
+      "san": "Rh3+",
+      "fen": "R7/p1k5/2p5/1p6/1P1P4/2K4r/8/8 w - - 11 75"
+    },
+    {
+      "ply": 149,
+      "moveNumber": 75,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "R7/p1k5/2p5/1p6/1P1P4/7r/2K5/8 b - - 12 75"
+    },
+    {
+      "ply": 150,
+      "moveNumber": 75,
+      "side": "black",
+      "san": "Ra3",
+      "fen": "R7/p1k5/2p5/1p6/1P1P4/r7/2K5/8 w - - 13 76"
+    },
+    {
+      "ply": 151,
+      "moveNumber": 76,
+      "side": "white",
+      "san": "Kb2",
+      "fen": "R7/p1k5/2p5/1p6/1P1P4/r7/1K6/8 b - - 14 76"
+    },
+    {
+      "ply": 152,
+      "moveNumber": 76,
+      "side": "black",
+      "san": "Ra4",
+      "fen": "R7/p1k5/2p5/1p6/rP1P4/8/1K6/8 w - - 15 77"
+    },
+    {
+      "ply": 153,
+      "moveNumber": 77,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "R7/p1k5/2p5/1p6/rP1P4/2K5/8/8 b - - 16 77"
+    },
+    {
+      "ply": 154,
+      "moveNumber": 77,
+      "side": "black",
+      "san": "a6",
+      "fen": "R7/2k5/p1p5/1p6/rP1P4/2K5/8/8 w - - 0 78"
+    },
+    {
+      "ply": 155,
+      "moveNumber": 78,
+      "side": "white",
+      "san": "Rh8",
+      "fen": "7R/2k5/p1p5/1p6/rP1P4/2K5/8/8 b - - 1 78"
+    },
+    {
+      "ply": 156,
+      "moveNumber": 78,
+      "side": "black",
+      "san": "Ra3+",
+      "fen": "7R/2k5/p1p5/1p6/1P1P4/r1K5/8/8 w - - 2 79"
+    },
+    {
+      "ply": 157,
+      "moveNumber": 79,
+      "side": "white",
+      "san": "Kb2",
+      "fen": "7R/2k5/p1p5/1p6/1P1P4/r7/1K6/8 b - - 3 79"
+    },
+    {
+      "ply": 158,
+      "moveNumber": 79,
+      "side": "black",
+      "san": "Rg3",
+      "fen": "7R/2k5/p1p5/1p6/1P1P4/6r1/1K6/8 w - - 4 80"
+    },
+    {
+      "ply": 159,
+      "moveNumber": 80,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "7R/2k5/p1p5/1p6/1P1P4/6r1/2K5/8 b - - 5 80"
+    },
+    {
+      "ply": 160,
+      "moveNumber": 80,
+      "side": "black",
+      "san": "Rg5",
+      "fen": "7R/2k5/p1p5/1p4r1/1P1P4/8/2K5/8 w - - 6 81"
+    },
+    {
+      "ply": 161,
+      "moveNumber": 81,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "8/2k5/p1p4R/1p4r1/1P1P4/8/2K5/8 b - - 7 81"
+    },
+    {
+      "ply": 162,
+      "moveNumber": 81,
+      "side": "black",
+      "san": "Rd5",
+      "fen": "8/2k5/p1p4R/1p1r4/1P1P4/8/2K5/8 w - - 8 82"
+    },
+    {
+      "ply": 163,
+      "moveNumber": 82,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "8/2k5/p1p4R/1p1r4/1P1P4/2K5/8/8 b - - 9 82"
+    },
+    {
+      "ply": 164,
+      "moveNumber": 82,
+      "side": "black",
+      "san": "Rd6",
+      "fen": "8/2k5/p1pr3R/1p6/1P1P4/2K5/8/8 w - - 10 83"
+    },
+    {
+      "ply": 165,
+      "moveNumber": 83,
+      "side": "white",
+      "san": "Rh8",
+      "fen": "7R/2k5/p1pr4/1p6/1P1P4/2K5/8/8 b - - 11 83"
+    },
+    {
+      "ply": 166,
+      "moveNumber": 83,
+      "side": "black",
+      "san": "Rg6",
+      "fen": "7R/2k5/p1p3r1/1p6/1P1P4/2K5/8/8 w - - 12 84"
+    },
+    {
+      "ply": 167,
+      "moveNumber": 84,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "7R/2k5/p1p3r1/1p6/1P1P4/8/2K5/8 b - - 13 84"
+    },
+    {
+      "ply": 168,
+      "moveNumber": 84,
+      "side": "black",
+      "san": "Kb7",
+      "fen": "7R/1k6/p1p3r1/1p6/1P1P4/8/2K5/8 w - - 14 85"
+    },
+    {
+      "ply": 169,
+      "moveNumber": 85,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "7R/1k6/p1p3r1/1p6/1P1P4/2K5/8/8 b - - 15 85"
+    },
+    {
+      "ply": 170,
+      "moveNumber": 85,
+      "side": "black",
+      "san": "Rg3+",
+      "fen": "7R/1k6/p1p5/1p6/1P1P4/2K3r1/8/8 w - - 16 86"
+    },
+    {
+      "ply": 171,
+      "moveNumber": 86,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "7R/1k6/p1p5/1p6/1P1P4/6r1/2K5/8 b - - 17 86"
+    },
+    {
+      "ply": 172,
+      "moveNumber": 86,
+      "side": "black",
+      "san": "Rg1",
+      "fen": "7R/1k6/p1p5/1p6/1P1P4/8/2K5/6r1 w - - 18 87"
+    },
+    {
+      "ply": 173,
+      "moveNumber": 87,
+      "side": "white",
+      "san": "Rh5",
+      "fen": "8/1k6/p1p5/1p5R/1P1P4/8/2K5/6r1 b - - 19 87"
+    },
+    {
+      "ply": 174,
+      "moveNumber": 87,
+      "side": "black",
+      "san": "Rg2+",
+      "fen": "8/1k6/p1p5/1p5R/1P1P4/8/2K3r1/8 w - - 20 88"
+    },
+    {
+      "ply": 175,
+      "moveNumber": 88,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "8/1k6/p1p5/1p5R/1P1P4/2K5/6r1/8 b - - 21 88"
+    },
+    {
+      "ply": 176,
+      "moveNumber": 88,
+      "side": "black",
+      "san": "Rg3+",
+      "fen": "8/1k6/p1p5/1p5R/1P1P4/2K3r1/8/8 w - - 22 89"
+    },
+    {
+      "ply": 177,
+      "moveNumber": 89,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "8/1k6/p1p5/1p5R/1P1P4/6r1/2K5/8 b - - 23 89"
+    },
+    {
+      "ply": 178,
+      "moveNumber": 89,
+      "side": "black",
+      "san": "Rg4",
+      "fen": "8/1k6/p1p5/1p5R/1P1P2r1/8/2K5/8 w - - 24 90"
+    },
+    {
+      "ply": 179,
+      "moveNumber": 90,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "8/1k6/p1p5/1p5R/1P1P2r1/2K5/8/8 b - - 25 90"
+    },
+    {
+      "ply": 180,
+      "moveNumber": 90,
+      "side": "black",
+      "san": "Kb6",
+      "fen": "8/8/pkp5/1p5R/1P1P2r1/2K5/8/8 w - - 26 91"
+    },
+    {
+      "ply": 181,
+      "moveNumber": 91,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "8/8/pkp4R/1p6/1P1P2r1/2K5/8/8 b - - 27 91"
+    },
+    {
+      "ply": 182,
+      "moveNumber": 91,
+      "side": "black",
+      "san": "Rg5",
+      "fen": "8/8/pkp4R/1p4r1/1P1P4/2K5/8/8 w - - 28 92"
+    },
+    {
+      "ply": 183,
+      "moveNumber": 92,
+      "side": "white",
+      "san": "Rf6",
+      "fen": "8/8/pkp2R2/1p4r1/1P1P4/2K5/8/8 b - - 29 92"
+    },
+    {
+      "ply": 184,
+      "moveNumber": 92,
+      "side": "black",
+      "san": "Rh5",
+      "fen": "8/8/pkp2R2/1p5r/1P1P4/2K5/8/8 w - - 30 93"
+    },
+    {
+      "ply": 185,
+      "moveNumber": 93,
+      "side": "white",
+      "san": "Rg6",
+      "fen": "8/8/pkp3R1/1p5r/1P1P4/2K5/8/8 b - - 31 93"
+    },
+    {
+      "ply": 186,
+      "moveNumber": 93,
+      "side": "black",
+      "san": "Rh3+",
+      "fen": "8/8/pkp3R1/1p6/1P1P4/2K4r/8/8 w - - 32 94"
+    },
+    {
+      "ply": 187,
+      "moveNumber": 94,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "8/8/pkp3R1/1p6/1P1P4/7r/2K5/8 b - - 33 94"
+    },
+    {
+      "ply": 188,
+      "moveNumber": 94,
+      "side": "black",
+      "san": "Rh5",
+      "fen": "8/8/pkp3R1/1p5r/1P1P4/8/2K5/8 w - - 34 95"
+    },
+    {
+      "ply": 189,
+      "moveNumber": 95,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "8/8/pkp3R1/1p5r/1P1P4/2K5/8/8 b - - 35 95"
+    },
+    {
+      "ply": 190,
+      "moveNumber": 95,
+      "side": "black",
+      "san": "Rd5",
+      "fen": "8/8/pkp3R1/1p1r4/1P1P4/2K5/8/8 w - - 36 96"
+    },
+    {
+      "ply": 191,
+      "moveNumber": 96,
+      "side": "white",
+      "san": "Rh6",
+      "fen": "8/8/pkp4R/1p1r4/1P1P4/2K5/8/8 b - - 37 96"
+    },
+    {
+      "ply": 192,
+      "moveNumber": 96,
+      "side": "black",
+      "san": "Kc7",
+      "fen": "8/2k5/p1p4R/1p1r4/1P1P4/2K5/8/8 w - - 38 97"
+    },
+    {
+      "ply": 193,
+      "moveNumber": 97,
+      "side": "white",
+      "san": "Rh7+",
+      "fen": "8/2k4R/p1p5/1p1r4/1P1P4/2K5/8/8 b - - 39 97"
+    },
+    {
+      "ply": 194,
+      "moveNumber": 97,
+      "side": "black",
+      "san": "Rd7",
+      "fen": "8/2kr3R/p1p5/1p6/1P1P4/2K5/8/8 w - - 40 98"
+    },
+    {
+      "ply": 195,
+      "moveNumber": 98,
+      "side": "white",
+      "san": "Rh5",
+      "fen": "8/2kr4/p1p5/1p5R/1P1P4/2K5/8/8 b - - 41 98"
+    },
+    {
+      "ply": 196,
+      "moveNumber": 98,
+      "side": "black",
+      "san": "Rd6",
+      "fen": "8/2k5/p1pr4/1p5R/1P1P4/2K5/8/8 w - - 42 99"
+    },
+    {
+      "ply": 197,
+      "moveNumber": 99,
+      "side": "white",
+      "san": "Rh8",
+      "fen": "7R/2k5/p1pr4/1p6/1P1P4/2K5/8/8 b - - 43 99"
+    },
+    {
+      "ply": 198,
+      "moveNumber": 99,
+      "side": "black",
+      "san": "Rg6",
+      "fen": "7R/2k5/p1p3r1/1p6/1P1P4/2K5/8/8 w - - 44 100"
+    },
+    {
+      "ply": 199,
+      "moveNumber": 100,
+      "side": "white",
+      "san": "Rf8",
+      "fen": "5R2/2k5/p1p3r1/1p6/1P1P4/2K5/8/8 b - - 45 100"
+    },
+    {
+      "ply": 200,
+      "moveNumber": 100,
+      "side": "black",
+      "san": "Rg3+",
+      "fen": "5R2/2k5/p1p5/1p6/1P1P4/2K3r1/8/8 w - - 46 101"
+    },
+    {
+      "ply": 201,
+      "moveNumber": 101,
+      "side": "white",
+      "san": "Kc2",
+      "fen": "5R2/2k5/p1p5/1p6/1P1P4/6r1/2K5/8 b - - 47 101"
+    },
+    {
+      "ply": 202,
+      "moveNumber": 101,
+      "side": "black",
+      "san": "Ra3",
+      "fen": "5R2/2k5/p1p5/1p6/1P1P4/r7/2K5/8 w - - 48 102"
+    },
+    {
+      "ply": 203,
+      "moveNumber": 102,
+      "side": "white",
+      "san": "Rf7+",
+      "fen": "8/2k2R2/p1p5/1p6/1P1P4/r7/2K5/8 b - - 49 102"
+    },
+    {
+      "ply": 204,
+      "moveNumber": 102,
+      "side": "black",
+      "san": "Kd6",
+      "fen": "8/5R2/p1pk4/1p6/1P1P4/r7/2K5/8 w - - 50 103"
+    },
+    {
+      "ply": 205,
+      "moveNumber": 103,
+      "side": "white",
+      "san": "Ra7",
+      "fen": "8/R7/p1pk4/1p6/1P1P4/r7/2K5/8 b - - 51 103"
+    },
+    {
+      "ply": 206,
+      "moveNumber": 103,
+      "side": "black",
+      "san": "Kd5",
+      "fen": "8/R7/p1p5/1p1k4/1P1P4/r7/2K5/8 w - - 52 104"
+    },
+    {
+      "ply": 207,
+      "moveNumber": 104,
+      "side": "white",
+      "san": "Kb2",
+      "fen": "8/R7/p1p5/1p1k4/1P1P4/r7/1K6/8 b - - 53 104"
+    },
+    {
+      "ply": 208,
+      "moveNumber": 104,
+      "side": "black",
+      "san": "Rd3",
+      "fen": "8/R7/p1p5/1p1k4/1P1P4/3r4/1K6/8 w - - 54 105"
+    },
+    {
+      "ply": 209,
+      "moveNumber": 105,
+      "side": "white",
+      "san": "Rxa6",
+      "fen": "8/8/R1p5/1p1k4/1P1P4/3r4/1K6/8 b - - 0 105"
+    },
+    {
+      "ply": 210,
+      "moveNumber": 105,
+      "side": "black",
+      "san": "Rxd4",
+      "fen": "8/8/R1p5/1p1k4/1P1r4/8/1K6/8 w - - 0 106"
+    },
+    {
+      "ply": 211,
+      "moveNumber": 106,
+      "side": "white",
+      "san": "Kb3",
+      "fen": "8/8/R1p5/1p1k4/1P1r4/1K6/8/8 b - - 1 106"
+    },
+    {
+      "ply": 212,
+      "moveNumber": 106,
+      "side": "black",
+      "san": "Re4",
+      "fen": "8/8/R1p5/1p1k4/1P2r3/1K6/8/8 w - - 2 107"
+    },
+    {
+      "ply": 213,
+      "moveNumber": 107,
+      "side": "white",
+      "san": "Kc3",
+      "fen": "8/8/R1p5/1p1k4/1P2r3/2K5/8/8 b - - 3 107"
+    },
+    {
+      "ply": 214,
+      "moveNumber": 107,
+      "side": "black",
+      "san": "Rc4+",
+      "fen": "8/8/R1p5/1p1k4/1Pr5/2K5/8/8 w - - 4 108"
+    },
+    {
+      "ply": 215,
+      "moveNumber": 108,
+      "side": "white",
+      "san": "Kb3",
+      "fen": "8/8/R1p5/1p1k4/1Pr5/1K6/8/8 b - - 5 108"
+    },
+    {
+      "ply": 216,
+      "moveNumber": 108,
+      "side": "black",
+      "san": "Kd4",
+      "fen": "8/8/R1p5/1p6/1Prk4/1K6/8/8 w - - 6 109"
+    },
+    {
+      "ply": 217,
+      "moveNumber": 109,
+      "side": "white",
+      "san": "Rb6",
+      "fen": "8/8/1Rp5/1p6/1Prk4/1K6/8/8 b - - 7 109"
+    },
+    {
+      "ply": 218,
+      "moveNumber": 109,
+      "side": "black",
+      "san": "Kd3",
+      "fen": "8/8/1Rp5/1p6/1Pr5/1K1k4/8/8 w - - 8 110"
+    },
+    {
+      "ply": 219,
+      "moveNumber": 110,
+      "side": "white",
+      "san": "Ra6",
+      "fen": "8/8/R1p5/1p6/1Pr5/1K1k4/8/8 b - - 9 110"
+    },
+    {
+      "ply": 220,
+      "moveNumber": 110,
+      "side": "black",
+      "san": "Rc2",
+      "fen": "8/8/R1p5/1p6/1P6/1K1k4/2r5/8 w - - 10 111"
+    },
+    {
+      "ply": 221,
+      "moveNumber": 111,
+      "side": "white",
+      "san": "Rb6",
+      "fen": "8/8/1Rp5/1p6/1P6/1K1k4/2r5/8 b - - 11 111"
+    },
+    {
+      "ply": 222,
+      "moveNumber": 111,
+      "side": "black",
+      "san": "Rc3+",
+      "fen": "8/8/1Rp5/1p6/1P6/1Krk4/8/8 w - - 12 112"
+    },
+    {
+      "ply": 223,
+      "moveNumber": 112,
+      "side": "white",
+      "san": "Kb2",
+      "fen": "8/8/1Rp5/1p6/1P6/2rk4/1K6/8 b - - 13 112"
+    },
+    {
+      "ply": 224,
+      "moveNumber": 112,
+      "side": "black",
+      "san": "Rc4",
+      "fen": "8/8/1Rp5/1p6/1Pr5/3k4/1K6/8 w - - 14 113"
+    },
+    {
+      "ply": 225,
+      "moveNumber": 113,
+      "side": "white",
+      "san": "Kb3",
+      "fen": "8/8/1Rp5/1p6/1Pr5/1K1k4/8/8 b - - 15 113"
+    },
+    {
+      "ply": 226,
+      "moveNumber": 113,
+      "side": "black",
+      "san": "Kd4",
+      "fen": "8/8/1Rp5/1p6/1Prk4/1K6/8/8 w - - 16 114"
+    },
+    {
+      "ply": 227,
+      "moveNumber": 114,
+      "side": "white",
+      "san": "Ra6",
+      "fen": "8/8/R1p5/1p6/1Prk4/1K6/8/8 b - - 17 114"
+    },
+    {
+      "ply": 228,
+      "moveNumber": 114,
+      "side": "black",
+      "san": "Kd5",
+      "fen": "8/8/R1p5/1p1k4/1Pr5/1K6/8/8 w - - 18 115"
+    },
+    {
+      "ply": 229,
+      "moveNumber": 115,
+      "side": "white",
+      "san": "Ra8",
+      "fen": "R7/8/2p5/1p1k4/1Pr5/1K6/8/8 b - - 19 115",
+      "comment": "Both sides are probably unhappy with this game. Caruana for getting pushed around and barely surviving with White in the first game, and Carlsen for letting a full point slip. In general Magnus is the one I might worry about tilting a little more, but I think at least for now, both players will come tomorrow ready to play and having put this first game behind them. I look forward to seeing what may come!"
+    }
+  ],
+  "conceptChecks": [
+    {
+      "id": "g1-b6",
+      "ply": 18,
+      "prompt": "Carlsen plays 9...b6 (\"!\"). What idea is behind this move?",
+      "options": [
+        {
+          "text": "He prepares to reroute the knight with Nf8-e6 before deciding where to castle.",
+          "explanation": "Correct. The annotator writes: \"I like this idea. Black prepares for Nf8-e6 before castling.\""
+        },
+        {
+          "text": "He immediately wins the e4-pawn by force.",
+          "explanation": "No — the annotator makes no such claim; 9...b6 is a slow regrouping move, not a tactic."
+        },
+        {
+          "text": "He fianchettoes a second bishop to b7 to attack g2.",
+          "explanation": "Black already has his bishop on g7; the point of 9...b6 is the Nf8-e6 maneuver, not a second fianchetto."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Where does the b8-knight want to go?"
+    },
+    {
+      "id": "g1-g5",
+      "ply": 28,
+      "prompt": "Why does the annotator give 14...g5 (\"!\") a strong-move mark?",
+      "options": [
+        {
+          "text": "Black gains kingside space and prepares Ng6, improving his pieces.",
+          "explanation": "Correct. The note reads: \"Another strong move. Black simply prepares to improve his pieces further, gaining space on the kingside and preparing for Ng6.\""
+        },
+        {
+          "text": "It sets an immediate trap that wins White's queen.",
+          "explanation": "The annotator describes 14...g5 as space-gaining and piece-improving, not a queen trap."
+        },
+        {
+          "text": "It forces an immediate draw by repetition.",
+          "explanation": "The opposite — Carlsen is playing for a win and improving his position, not repeating."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "It's about space and the knight's route to g6."
+    },
+    {
+      "id": "g1-nf8",
+      "ply": 42,
+      "prompt": "Carlsen has just played 21...Nf8 (\"?\"), which the annotator calls \"a little too creative.\" What did he recommend instead?",
+      "options": [
+        {
+          "text": "21...Rhg8, preparing Bxh5 and g5-g4, leaving White a long and difficult defense.",
+          "explanation": "Correct. The sideline reads: \"21...Rhg8 looks simplest to me. Black prepares for Bxh5 followed by g5-g4. White faces a long and difficult defense.\""
+        },
+        {
+          "text": "21...Qxd3, grabbing a pawn immediately.",
+          "explanation": "The annotator gives no such line; he recommends the calm 21...Rhg8, keeping the bind without handing White anything."
+        },
+        {
+          "text": "21...Nf6, retreating the knight to defend.",
+          "explanation": "The recommended move was 21...Rhg8 — the point was to keep pressing, not to retreat passively."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The annotator wanted the simplest move that keeps the pressure on."
+    },
+    {
+      "id": "g1-rg2",
+      "ply": 51,
+      "prompt": "The annotator says 26.Rg2 (\"?\") is \"the only decision I really did not understand.\" What did he say White needed to do instead?",
+      "options": [
+        {
+          "text": "Give up the exchange with 26.Rxf4, trading off the dark-squared bishop for two solid pawns.",
+          "explanation": "Correct. The note: \"White needed to give the exchange... 26.Rxf4 Bxf4 27.Qxf4 — White has exchanged off the annoying dark-squared bishop, has 2 very solid pawns for the exchange... any human would prefer the white side.\""
+        },
+        {
+          "text": "Trade all the rooks with 26.Rxf7.",
+          "explanation": "No such line is given; the annotator's recommendation was the exchange sacrifice 26.Rxf4."
+        },
+        {
+          "text": "Push 26.e5 to open lines for the attack.",
+          "explanation": "The annotator's point is the exchange sacrifice 26.Rxf4, not a pawn break here."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Sometimes you give up material to kill the opponent's best piece."
+    },
+    {
+      "id": "g1-qg1",
+      "ply": 70,
+      "prompt": "Carlsen plays 35...Qg1 (\"?\") and the annotator says this \"makes the win more difficult.\" What did he point to as the cleaner winning try?",
+      "options": [
+        {
+          "text": "35...Qg7, invading with the queen on the dark squares — White's position looks beyond saving.",
+          "explanation": "Correct. The sideline: \"35...Qg7! Black was best advised to invade with his queen on the dark squares. White's position looks beyond saving to me.\""
+        },
+        {
+          "text": "35...h4, ramming the h-pawn forward at once.",
+          "explanation": "Black did later play ...h4, but the annotator's recommended winning idea here was 35...Qg7, invading on the dark squares."
+        },
+        {
+          "text": "35...Rg2+, sacrificing the rook.",
+          "explanation": "No such sacrifice is suggested; the annotator favored the queen invasion 35...Qg7."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which piece does the annotator want to invade the dark squares?"
+    },
+    {
+      "id": "g1-re2",
+      "ply": 87,
+      "prompt": "After a grueling defense Caruana plays 44.Re2 (\"!\"). What does the annotator say this achieves?",
+      "options": [
+        {
+          "text": "The e-pawn now secures enough counterplay to make a draw.",
+          "explanation": "Correct. The note is simply: \"The e-pawn secures enough counterplay to make a draw.\""
+        },
+        {
+          "text": "It sets up a mating net against Black's king.",
+          "explanation": "White is defending, not attacking — the e-pawn provides counterplay for a draw, not a mate."
+        },
+        {
+          "text": "It wins Black's knight by a pin.",
+          "explanation": "No material is won; the point is the passed e-pawn's counterplay holding the balance."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Watch the e-pawn over the next several moves."
+    }
+  ]
+}

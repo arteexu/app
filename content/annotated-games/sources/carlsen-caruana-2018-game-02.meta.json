@@ -1,0 +1,143 @@
+{
+  "id": "carlsen-caruana-2018-game-02",
+  "title": "Carlsen vs Caruana — 2018 WCC, Game 2",
+  "description": "In a Queen's Gambit Declined Caruana equalizes effortlessly with Black, neutralizing even Carlsen's provocative 15.Ne5?! to reach a calm 49-move draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "2",
+    "eco": "D37",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g2-c5",
+      "ply": 12,
+      "prompt": "The annotator calls 6...c5 (\"!?\") \"the first interesting moment.\" Why?",
+      "options": [
+        {
+          "text": "It is a less common choice than Caruana's usual 6...Nbd7, a small surprise rather than the main path.",
+          "explanation": "Correct. The note reads: \"Caruana chooses a less common move than the typical Nbd7, which he has played a lot in the past with reasonable success,\" and the sideline calls 6...Nbd7 \"much more common.\""
+        },
+        {
+          "text": "It is a brand-new novelty never before seen at any level.",
+          "explanation": "The annotator only calls it less common than 6...Nbd7, not an unheard-of novelty."
+        },
+        {
+          "text": "It immediately wins White's c4-pawn by force.",
+          "explanation": "No such claim is made; 6...c5 is a developing/structural choice, not a pawn grab."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare it to Caruana's usual move in this position."
+    },
+    {
+      "id": "g2-rd8",
+      "ply": 20,
+      "prompt": "How does the annotator characterize Caruana's 10...Rd8 (\"!?\")?",
+      "options": [
+        {
+          "text": "An uncommon try — not a novelty, but he can't find any games by 2600+ players, unlike the normal 10...Re8.",
+          "explanation": "Correct. The note: \"Not a novelty, but definitely not a common move, and I can't find any games played by anyone over 2600,\" while 10...Re8 \"is a much more normal move.\""
+        },
+        {
+          "text": "The established main line that nearly everyone plays here.",
+          "explanation": "The opposite — the annotator says 10...Re8 is the normal move and that 10...Rd8 is rarely seen."
+        },
+        {
+          "text": "A clear blunder that loses a pawn.",
+          "explanation": "The annotator never calls it a mistake; Black is \"supposed to be doing all right\" in this position."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Did the annotator find strong-player precedents for it?"
+    },
+    {
+      "id": "g2-ne4",
+      "ply": 22,
+      "prompt": "What is the point of 11...Ne4 (\"!\") according to the annotation?",
+      "options": [
+        {
+          "text": "Black takes the chance to compromise White's queenside pawn structure.",
+          "explanation": "Correct. The note is exactly: \"Black takes his chance to compromise White's queenside structure\" — after ...Nxc3 bxc3 White's pawns are damaged."
+        },
+        {
+          "text": "It wins a piece by a hidden tactic.",
+          "explanation": "No tactic is claimed; the point is the long-term structural damage to White's queenside."
+        },
+        {
+          "text": "It sets up an immediate mating attack on White's king.",
+          "explanation": "The annotator describes a structural idea, not an attack on the king."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Look at what happens to White's pawns after the knights come off."
+    },
+    {
+      "id": "g2-ne5",
+      "ply": 29,
+      "prompt": "Why does the annotator attach a \"?!\" to 15.Ne5?",
+      "options": [
+        {
+          "text": "Carlsen is \"asking for trouble\" — accurate play still holds, but the move needlessly invites difficulties.",
+          "explanation": "Correct. The note: \"Magnus is asking for trouble with this move, but if he plays accurately he is not going to be in any real danger.\""
+        },
+        {
+          "text": "It is a losing blunder that drops material by force.",
+          "explanation": "No — the annotator says that with accurate play Carlsen \"is not going to be in any real danger.\""
+        },
+        {
+          "text": "It wins a pawn and gives White a clear advantage.",
+          "explanation": "The opposite — the move makes things harder for White, not better."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The note is about risk, not about an outright mistake."
+    },
+    {
+      "id": "g2-rxd8",
+      "ply": 37,
+      "prompt": "Why does the annotator prefer 19.Rxd8+ (\"!\") over the immediate 19.fxe5?",
+      "options": [
+        {
+          "text": "After 19.fxe5? Bd7! Black can claim an edge, so White inserts the rook trade first to keep the balance.",
+          "explanation": "Correct. The sideline reads: \"19.fxe5? Is less accurate and Black can claim an edge with 19...Bd7! 20.Bxb7 Rab8!\""
+        },
+        {
+          "text": "19.fxe5 loses on the spot.",
+          "explanation": "The annotator only calls 19.fxe5 \"less accurate,\" giving Black an edge — not a losing move."
+        },
+        {
+          "text": "19.Rxd8+ wins the exchange by force.",
+          "explanation": "No material is won; it is simply the more precise move order to hold."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does Black get to play if White recaptures on e5 first?"
+    },
+    {
+      "id": "g2-a6",
+      "ply": 55,
+      "prompt": "Why does Carlsen play 28.a6 (\"!\") in the rook ending?",
+      "options": [
+        {
+          "text": "He forces matters at once to liquidate the queenside before Black's king can reach c6, securing the draw.",
+          "explanation": "Correct. The note warns the ending is \"a little dangerous for White if Black can get the king to c6,\" so \"Magnus forced matters right away\" with 28.a6 and 29.c5."
+        },
+        {
+          "text": "He is pressing for a win with an outside passed pawn.",
+          "explanation": "White is defending and steering toward a draw, not playing for a win."
+        },
+        {
+          "text": "It sets up a mating net against the black king.",
+          "explanation": "There is no mating idea; the point is to simplify the queenside into a dead draw."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Where did the annotator say Black's king must not be allowed to go?"
+    }
+  ]
+}

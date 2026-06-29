@@ -8,8 +8,9 @@
 import { useEffect, useMemo, useState } from "react"
 import { Chess } from "chess.js"
 import { Chessboard } from "react-chessboard"
-import { generateCoachComment } from "@/lib/commentary/client"
+import { generateCoachComment, requestGccEval } from "@/lib/commentary/client"
 import { prioritizeSignals, type Signal } from "@/lib/commentary/prioritize"
+import type { GccEvalResult } from "@/lib/commentary/gcc-eval"
 import type { CommentaryResponse, ConceptRecord } from "@/lib/commentary/types"
 import { COMMENTARY_RIGOROUS_DEPTH, COMMENTARY_MULTIPV } from "@/lib/commentary/config"
 import { sideToMove } from "@/lib/engine/format"
@@ -83,6 +84,11 @@ export default function CommentaryEvalPage() {
 
   const [serverAnalysis, setServerAnalysis] = useState(true)
 
+  // GCC-Eval (rubric judge) state.
+  const [gccEval, setGccEval] = useState<GccEvalResult | null>(null)
+  const [gccLoading, setGccLoading] = useState(false)
+  const [gccError, setGccError] = useState<string | null>(null)
+
   // Labeling state.
   const [verdict, setVerdict] = useState<"up" | "down" | null>(null)
   const [edited, setEdited] = useState("")
@@ -144,6 +150,23 @@ export default function CommentaryEvalPage() {
     setFlaggedInput("")
     setFlaggedLines([])
     setSavedNote(null)
+    setGccEval(null)
+    setGccError(null)
+  }
+
+  async function runGccEval() {
+    if (!record || !response) return
+    setGccLoading(true)
+    setGccError(null)
+    setGccEval(null)
+    try {
+      const result = await requestGccEval(record, response.comment)
+      setGccEval(result)
+    } catch (e) {
+      setGccError(e instanceof Error ? e.message : "GCC-Eval failed")
+    } finally {
+      setGccLoading(false)
+    }
   }
 
   function loadCase(tc: TestCase) {
@@ -409,7 +432,78 @@ export default function CommentaryEvalPage() {
                 Verification failures: {response.guardrail.failures.join("; ")}
               </p>
             )}
+            <div className="flex items-center gap-3 pt-1">
+              <button
+                onClick={runGccEval}
+                disabled={gccLoading}
+                className="text-sm font-bold px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-60 transition"
+              >
+                {gccLoading ? "Scoring…" : "Run GCC-Eval"}
+              </button>
+              {gccError && <span className="text-xs text-red-600 dark:text-red-400">{gccError}</span>}
+            </div>
           </div>
+        )}
+
+        {/* GCC-Eval rubric scores */}
+        {gccEval && (
+          <Section title="GCC-Eval (rubric judge: relevance · completeness · clarity · fluency)">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge>{gccEval.source === "llm" ? `LLM judge${gccEval.model ? ` · ${gccEval.model}` : ""}` : "heuristic fallback"}</Badge>
+              <Badge>overall {gccEval.overall.toFixed(2)}/5 ({gccEval.overallNormalized.toFixed(2)})</Badge>
+              {gccEval.reason && <Badge>{gccEval.reason}</Badge>}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-1">
+              {gccEval.scores.map((s) => (
+                <div
+                  key={s.dimension}
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 p-3 flex flex-col gap-1"
+                >
+                  <span className="text-[11px] font-bold uppercase tracking-wide text-slate-500">
+                    {s.dimension}
+                  </span>
+                  <span className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                    {s.score.toFixed(2)}
+                  </span>
+                  <span className="text-[10px] text-slate-400">
+                    {s.weighted ? "weighted (logprobs)" : "integer"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1">
+              1–5 per dimension; relevance &amp; completeness use the engine-eval hint
+              (expert augmentation). Overall is the mean; the [0,1] value matches the paper&apos;s tables.
+            </p>
+          </Section>
+        )}
+
+        {/* Prioritized CCC concepts */}
+        {record && (record.prioritizedConcepts?.length ?? 0) > 0 && (
+          <Section title="Prioritized concepts (CCC — ranked by before→after delta)">
+            <ul className="flex flex-col gap-1">
+              {record.prioritizedConcepts!.map((pc) => (
+                <li key={pc.name} className="text-sm font-mono flex items-center gap-2">
+                  <span
+                    className={
+                      pc.direction === "improved"
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : pc.direction === "worsened"
+                          ? "text-red-600 dark:text-red-400"
+                          : "text-slate-500"
+                    }
+                  >
+                    {pc.label}
+                  </span>
+                  <span className="text-slate-500">
+                    {pc.direction} (Δ {pc.delta >= 0 ? "+" : ""}
+                    {pc.delta})
+                  </span>
+                  <span className="text-slate-400">imp={pc.importance}</span>
+                </li>
+              ))}
+            </ul>
+          </Section>
         )}
 
         {/* Labeling flywheel */}

@@ -1,0 +1,101 @@
+{
+  "id": "carlsen-caruana-2018-game-04",
+  "title": "Carlsen vs Caruana — 2018 WCC, Game 4",
+  "description": "A Four Knights English in which Caruana solves all his opening problems with Black, and after the precise 20...b5 fixes the structure, Carlsen is left with nothing to press for in a draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "4",
+    "eco": "A29",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g4-bc5",
+      "ply": 12,
+      "prompt": "How does the annotator describe 6...Bc5 (\"!?\")?",
+      "options": [
+        {
+          "text": "A funky sideline — not the main line, but reasonably common and played by strong players in recent years.",
+          "explanation": "Correct. The note: \"This funky move definitely is not the mainline, but it's reasonably common and has been played by some strong players in the past couple years,\" with 6...Nb6 listed as the long-time main line."
+        },
+        {
+          "text": "The established main line of the variation.",
+          "explanation": "The annotator says 6...Nb6 \"has been considered the mainline forever,\" not 6...Bc5."
+        },
+        {
+          "text": "A move that wins a pawn immediately.",
+          "explanation": "No material is won; it is just an offbeat developing choice."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare it to the move the annotator calls the long-time main line."
+    },
+    {
+      "id": "g4-rb1",
+      "ply": 23,
+      "prompt": "Why does the annotator like 12.Rb1 (\"!\")?",
+      "options": [
+        {
+          "text": "It is a very human, ambitious try that keeps tension — Carlsen avoided 12.Nxd4, which would fizzle out to a draw right away.",
+          "explanation": "Correct. The note: \"I like this move- it seems very human... It's hard to imagine Black not realizing Rb1 is a serious try,\" and on 12.Nxd4 says Magnus eschewed it \"probably thinking it would fizzle out to a draw right away.\""
+        },
+        {
+          "text": "It wins the d4-knight by force.",
+          "explanation": "No material is won; it is a positional try that keeps the game alive."
+        },
+        {
+          "text": "It forces an immediate draw.",
+          "explanation": "The opposite — it is the move that avoids the drawish 12.Nxd4."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What did Magnus avoid by not capturing on d4?"
+    },
+    {
+      "id": "g4-b5-break",
+      "ply": 29,
+      "prompt": "After 15.Re1 the annotator says Magnus had only one real way to keep the game imbalanced. What was it?",
+      "options": [
+        {
+          "text": "The pawn break 15.b5 — the annotator calls it Magnus's only chance to imbalance the position.",
+          "explanation": "Correct. The note: \"Magnus' only chance to imbalance the position was to go for b5,\" the move he analyzes as the critical try."
+        },
+        {
+          "text": "An immediate queen trade to head straight for a draw.",
+          "explanation": "The annotator points to the 15.b5 break as the winning try, not a queen trade."
+        },
+        {
+          "text": "A sacrifice on c6 to attack the king.",
+          "explanation": "No such sacrifice is suggested; the imbalancing idea was the b4-b5 break."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "It's a queenside pawn break."
+    },
+    {
+      "id": "g4-b5",
+      "ply": 40,
+      "prompt": "Why does the annotator call 20...b5 (\"!\") \"the last important move of the game\"?",
+      "options": [
+        {
+          "text": "It permanently prevents White's b4-b5 break and fixes the b4-pawn on a dark square, removing Carlsen's last winning idea.",
+          "explanation": "Correct. The note: \"Black does not allow White to play b4-b5, and he fixes the b4-pawn on a dark square... nobody has anything left to play for.\""
+        },
+        {
+          "text": "It wins the b4-pawn outright.",
+          "explanation": "No pawn is won; the point is to fix and restrain White's structure."
+        },
+        {
+          "text": "It creates a decisive kingside mating attack.",
+          "explanation": "There is no attack; with queens off, Black's fractured kingside \"hardly matters\" and the game peters out to a draw."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What White plan does this move shut down for good?"
+    }
+  ]
+}

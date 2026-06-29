@@ -1,21 +1,31 @@
 // lib/commentary/engine-node.ts
 // SERVER-ONLY Stockfish wrapper (Node, nodejs runtime). Runs the `stockfish`
-// npm package's WASM engine IN-PROCESS — no child process, no system binary.
+// npm package's WASM engine in a dedicated CHILD PROCESS and talks UCI over
+// stdin/stdout.
 //
-// How it loads: the `stockfish` package exports initEngine(flavor?) → a Promise
-// of an Emscripten Module where `engine.sendCommand(cmd)` sends UCI and
-// `engine.listener = (line) => ...` receives UCI output. We load the
-// "lite-single" flavor by default (~7MB, single-threaded → no SharedArrayBuffer
-// / worker_threads needed, loads reliably under a Node server). We require() it
-// via eval to keep Next's bundler from tracing the WASM; `serverExternalPackages:
-// ["stockfish"]` in next.config.ts also marks it external.
+// Why a child process instead of loading the WASM in-process: the `stockfish`
+// package ships an Emscripten build that, when instantiated inside Next's
+// server runtime, fails with a WASM LinkError ("memory import must be a
+// WebAssembly.Memory object"). The exact same engine loads and runs perfectly
+// in a plain Node process. Each engine flavor's bin file (e.g.
+// stockfish-18-lite-single.js) is itself a runnable Node UCI program: run as
+// `node <bin>.js` it starts a readline loop that reads UCI commands from stdin
+// and writes engine output to stdout. We spawn that, which sidesteps the
+// runtime's WASM quirks entirely while keeping the engine isolated and easy to
+// terminate.
+//
+// We default to the "lite-single" flavor (~7MB wasm, single-threaded → no
+// SharedArrayBuffer / worker_threads needed). `serverExternalPackages:
+// ["stockfish"]` in next.config.ts keeps the package external; we resolve the
+// engine bin path via the runtime require so the bundler never traces the WASM.
 //
 // DEPLOYMENT HONESTY: this is designed for local dev and a long-running Node
 // server. On serverless (e.g. Vercel functions) deep analysis can exceed the
-// function's execution-time/memory limits, and the single shared engine instance
-// won't persist across cold-started invocations. Keep depth/movetime modest there
-// (or run this on a dedicated worker/server). See the route for env knobs.
+// function's execution-time/memory limits, and the single shared engine process
+// won't persist across cold-started invocations. Keep depth/movetime modest
+// there (or run this on a dedicated worker/server). See the route for env knobs.
 
+import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process"
 import { Chess } from "chess.js"
 import type { EngineLine } from "@/lib/engine/stockfish"
 import {
@@ -25,38 +35,114 @@ import {
   type AssembledAnalysis,
 } from "./analysis-shared"
 
-interface SfEngine {
-  listener?: (line: string) => void
-  sendCommand: (cmd: string) => void
-}
-type InitEngine = (flavor?: string) => Promise<SfEngine>
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const __non_webpack_require__: any
 
-function loadInitEngine(): InitEngine {
-  // eval("require") resolves to the runtime CommonJS require, avoiding bundler
-  // tracing of the WASM engine. `stockfish` has no types, so cast.
-  const req =
-    typeof __non_webpack_require__ !== "undefined"
-      ? __non_webpack_require__
-      : // eslint-disable-next-line no-eval
-        (eval("require") as NodeRequire)
-  return req("stockfish") as InitEngine
+/** Runtime CommonJS require, avoiding bundler tracing of the WASM engine. */
+function runtimeRequire(): NodeRequire {
+  return typeof __non_webpack_require__ !== "undefined"
+    ? __non_webpack_require__
+    : // eslint-disable-next-line no-eval
+      (eval("require") as NodeRequire)
+}
+
+/** Map a flavor keyword to the engine bin filename suffix. */
+const FLAVOR_SUFFIX: Record<string, string> = {
+  "lite-single": "-lite-single",
+  "single-lite": "-lite-single",
+  lite: "-lite",
+  single: "-single",
+  full: "",
+  asm: "-asm",
+}
+
+/** Resolve the absolute path to the engine bin JS file for a flavor. */
+function resolveEnginePath(flavor: string): string {
+  const req = runtimeRequire()
+  const pkg = req("stockfish/package.json") as { buildVersion?: string; version?: string }
+  const version = pkg.buildVersion || (pkg.version ? pkg.version.split(".")[0] : "18")
+  const suffix = FLAVOR_SUFFIX[flavor.toLowerCase()] ?? "-lite-single"
+  return req.resolve(`stockfish/bin/stockfish-${version}${suffix}.js`)
+}
+
+/** A spawned engine: send UCI commands, receive lines, terminate. */
+interface SfEngine {
+  send: (cmd: string) => void
+  setListener: (fn: ((line: string) => void) | null) => void
+  kill: () => void
+  child: ChildProcessWithoutNullStreams
 }
 
 let enginePromise: Promise<SfEngine> | null = null
 
+function spawnEngine(): SfEngine {
+  const flavor = process.env.COMMENTARY_SERVER_ENGINE || "lite-single"
+  const enginePath = resolveEnginePath(flavor)
+  const child = spawn(process.execPath, [enginePath], {
+    stdio: ["pipe", "pipe", "pipe"],
+  }) as ChildProcessWithoutNullStreams
+
+  let listener: ((line: string) => void) | null = null
+  let buf = ""
+
+  child.stdout.setEncoding("utf8")
+  child.stdout.on("data", (chunk: string) => {
+    buf += chunk
+    let idx: number
+    while ((idx = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, idx).replace(/\r$/, "")
+      buf = buf.slice(idx + 1)
+      if (line.length > 0) listener?.(line)
+    }
+  })
+  // Engine diagnostics go to stderr; swallow to avoid noisy server logs but
+  // keep them reachable if something goes wrong during init.
+  child.stderr.setEncoding("utf8")
+
+  const engine: SfEngine = {
+    child,
+    send: (cmd) => {
+      if (child.stdin.writable) child.stdin.write(cmd + "\n")
+    },
+    setListener: (fn) => {
+      listener = fn
+    },
+    kill: () => {
+      try {
+        child.stdin.end()
+      } catch {
+        /* noop */
+      }
+      try {
+        child.kill()
+      } catch {
+        /* noop */
+      }
+    },
+  }
+
+  // If the engine process dies, drop the cached instance so the next request
+  // respawns a fresh one.
+  const onDeath = () => {
+    if (enginePromise && currentEngine === engine) enginePromise = null
+  }
+  child.on("exit", onDeath)
+  child.on("error", onDeath)
+
+  return engine
+}
+
+let currentEngine: SfEngine | null = null
+
 function getEngine(): Promise<SfEngine> {
   if (!enginePromise) {
     enginePromise = (async () => {
-      const initEngine = loadInitEngine()
-      const flavor = process.env.COMMENTARY_SERVER_ENGINE || "lite-single"
-      const engine = await initEngine(flavor)
+      const engine = spawnEngine()
+      currentEngine = engine
       await handshake(engine)
       return engine
     })().catch((err) => {
-      enginePromise = null // allow retry on next request
+      enginePromise = null
       throw err
     })
   }
@@ -64,24 +150,40 @@ function getEngine(): Promise<SfEngine> {
 }
 
 function handshake(engine: SfEngine): Promise<void> {
-  return new Promise<void>((resolve) => {
+  return new Promise<void>((resolve, reject) => {
     let stage = 0
-    const done = () => {
-      engine.listener = undefined
-      resolve()
+    let settled = false
+    const finish = (err?: Error) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      engine.child.removeListener("exit", onExit)
+      engine.setListener(null)
+      if (err) {
+        engine.kill()
+        reject(err)
+      } else {
+        resolve()
+      }
     }
-    engine.listener = (line) => {
+    const onExit = () =>
+      finish(new Error("engine process exited during handshake"))
+    engine.child.once("exit", onExit)
+
+    engine.setListener((line) => {
       const t = line.trim()
       if (stage === 0 && t === "uciok") {
         stage = 1
-        engine.sendCommand("isready")
+        engine.send("isready")
       } else if (stage === 1 && t === "readyok") {
-        done()
+        finish()
       }
-    }
-    engine.sendCommand("uci")
-    // Safety net: don't hang forever if the engine is quiet.
-    setTimeout(() => { if (stage < 2) done() }, 5000)
+    })
+    engine.send("uci")
+    const timer = setTimeout(
+      () => finish(new Error("engine handshake timed out")),
+      10000,
+    )
   })
 }
 
@@ -123,29 +225,32 @@ export async function analyzePositionNode(
           if (settled) return
           settled = true
           clearTimeout(timer)
-          engine.listener = undefined
+          engine.child.removeListener("exit", onExit)
+          engine.setListener(null)
           resolve([...byIdx.entries()].sort((a, b) => a[0] - b[0]).map(([, l]) => l))
         }
+        const onExit = () => finish()
+        engine.child.once("exit", onExit)
+
         const timer = setTimeout(() => {
           // Ask the engine to stop; give it a brief grace to emit bestmove.
-          engine.sendCommand("stop")
+          engine.send("stop")
           setTimeout(finish, 300)
         }, timeoutMs)
 
-        engine.listener = (line) => {
-          if (typeof line !== "string") return
+        engine.setListener((line) => {
           const info = parseUciInfoLine(line)
           if (info) {
             byIdx.set(info.multipv ?? 1, info)
             return
           }
           if (line.startsWith("bestmove")) finish()
-        }
+        })
 
-        engine.sendCommand("stop")
-        engine.sendCommand(`setoption name MultiPV value ${multiPv}`)
-        engine.sendCommand(`position fen ${fen}`)
-        engine.sendCommand(movetime ? `go movetime ${movetime}` : `go depth ${depth}`)
+        engine.send("stop")
+        engine.send(`setoption name MultiPV value ${multiPv}`)
+        engine.send(`position fen ${fen}`)
+        engine.send(movetime ? `go movetime ${movetime}` : `go depth ${depth}`)
       }),
   )
 }

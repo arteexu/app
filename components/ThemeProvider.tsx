@@ -1,7 +1,10 @@
 "use client"
 import { createContext, useContext, useEffect, useState } from "react"
 
-export type Theme = "light" | "dark"
+// "light" / "dark" are the original brand. "bitcoin" is the opt-in Bitcoin DeFi
+// theme: it turns on .dark (so not-yet-themed pages stay legible on the void) and
+// sets data-theme="bitcoin" to activate the gated `bitcoin:` utilities.
+export type Theme = "light" | "dark" | "bitcoin"
 
 const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void }>({
   theme: "light",
@@ -9,10 +12,12 @@ const ThemeContext = createContext<{ theme: Theme; setTheme: (t: Theme) => void 
 })
 
 function applyTheme(theme: Theme) {
-  if (theme === "dark") {
-    document.documentElement.classList.add("dark")
+  const el = document.documentElement
+  el.classList.toggle("dark", theme === "dark" || theme === "bitcoin")
+  if (theme === "bitcoin") {
+    el.setAttribute("data-theme", "bitcoin")
   } else {
-    document.documentElement.classList.remove("dark")
+    el.removeAttribute("data-theme")
   }
 }
 

@@ -10,7 +10,7 @@ export default function AppearancePage() {
         <h2 className="text-base font-semibold text-gray-900 dark:text-slate-100 mb-1">Theme</h2>
         <p className="text-sm text-gray-500 dark:text-slate-400 mb-5">Choose your preferred color theme.</p>
 
-        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Light */}
           <ThemeCard
             id="light"
@@ -61,6 +61,33 @@ export default function AppearancePage() {
                     <div className="h-1.5 bg-slate-700 rounded w-1/2" />
                   </div>
                   <div className="h-6 bg-indigo-500 rounded-md w-1/3" />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Bitcoin DeFi */}
+          <ThemeCard
+            id="bitcoin"
+            label="Bitcoin DeFi"
+            description="Void & orange glow"
+            active={theme === "bitcoin"}
+            onClick={() => setTheme("bitcoin")}
+            preview={
+              <div className="w-full h-full rounded-lg overflow-hidden border border-[#1e293b]" style={{ background: "#030304" }}>
+                <div className="h-5 border-b border-white/10 flex items-center px-2 gap-1.5" style={{ background: "rgba(0,0,0,0.4)" }}>
+                  <div className="w-10 h-1.5 rounded-full" style={{ background: "linear-gradient(to right, #ea580c, #f7931a)" }} />
+                  <div className="ml-auto flex gap-1">
+                    <div className="w-5 h-1.5 bg-white/10 rounded-full" />
+                    <div className="w-5 h-1.5 bg-white/10 rounded-full" />
+                  </div>
+                </div>
+                <div className="p-2 flex flex-col gap-1.5">
+                  <div className="h-10 rounded-lg border border-white/10 p-1.5 flex flex-col gap-1" style={{ background: "#0f1115" }}>
+                    <div className="h-1.5 rounded w-2/3" style={{ background: "rgba(247,147,26,0.6)" }} />
+                    <div className="h-1.5 bg-white/10 rounded w-1/2" />
+                  </div>
+                  <div className="h-6 rounded-full w-1/3" style={{ background: "linear-gradient(to right, #ea580c, #f7931a)" }} />
                 </div>
               </div>
             }

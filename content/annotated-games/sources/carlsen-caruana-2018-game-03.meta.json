@@ -1,0 +1,143 @@
+{
+  "id": "carlsen-caruana-2018-game-03",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 3",
+  "description": "A quiet Rossolimo Sicilian where Carlsen's rare 6...Qc7 and patient maneuvering earn only vague chances before Caruana defends accurately to a draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "3",
+    "eco": "B31",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g3-qc7",
+      "ply": 12,
+      "prompt": "Carlsen plays the rare 6...Qc7 (\"!?\") instead of the usual 6...Nf6. What is the annotator's view of it?",
+      "options": [
+        {
+          "text": "A very rare move aimed at getting Caruana out of his book and comfort zone, not necessarily objectively better than 6...Nf6.",
+          "explanation": "Correct. The note: \"Magnus chose a very rare move. I am not at all convinced that it is superior to Nf6... but it keeps in line with his willingness to mix things up a bit early on to try to get Caruana out of his book and comfort zone.\""
+        },
+        {
+          "text": "The objectively best and most common move in the position.",
+          "explanation": "The opposite — the annotator says 6...Nf6 is \"far and away the most common choice\" and is unconvinced 6...Qc7 is superior."
+        },
+        {
+          "text": "A move that wins a pawn in the opening.",
+          "explanation": "No such claim; the point is to surprise Caruana, not to grab material."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Why would Magnus pick a rare move so early?"
+    },
+    {
+      "id": "g3-bg4",
+      "ply": 20,
+      "prompt": "What does the annotator say about 10...Bg4 (\"!?\")?",
+      "options": [
+        {
+          "text": "It is a direct move that simplifies a lot into a position Magnus was sure he would not lose, even if not objectively best.",
+          "explanation": "Correct. The note: \"This is a very direct move. It's probably not best in a higher chess sense, but it simplifies the position a lot, to one that Magnus was probably quite sure he would not lose.\""
+        },
+        {
+          "text": "It is the engine's top choice and clearly best.",
+          "explanation": "The annotator says the machine preferred 10...cxb4 and that Bg4 is \"probably not best in a higher chess sense.\""
+        },
+        {
+          "text": "It wins material with a tactic on f3.",
+          "explanation": "No tactic is claimed; the idea is simplification toward a safe draw."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Is the annotator praising accuracy or practicality?"
+    },
+    {
+      "id": "g3-cxb4",
+      "ply": 24,
+      "prompt": "Why does 12...cxb4 (\"!\") work here, even though the annotator says \"normally this move is wrong\"?",
+      "options": [
+        {
+          "text": "Because Black can immediately follow with ...a5, trading pawns and neutralizing the otherwise problematic open c-file.",
+          "explanation": "Correct. The note: \"Normally this move is wrong, but the position is different because Black can immediately get the a7-a5 advance in. This trades off some pawns and neutralizes the potentially problematic open c-file.\""
+        },
+        {
+          "text": "Because it simply wins the b4-pawn for nothing.",
+          "explanation": "It is a structural trade enabled by ...a5, not a free pawn win."
+        },
+        {
+          "text": "Because capturing on b4 is always correct in the Rossolimo.",
+          "explanation": "The opposite — the annotator says it is \"normally\" wrong and works only due to this position's specifics."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What move does Black get to play right after capturing?"
+    },
+    {
+      "id": "g3-ng5",
+      "ply": 58,
+      "prompt": "What is the strategic idea behind 29...Ng5 (\"!\")?",
+      "options": [
+        {
+          "text": "To provoke White's pawn to h4, fixing it on a dark square where it may become a long-term weakness.",
+          "explanation": "Correct. The annotator explains that \"pawns do not move backward\" and that 29...Ng5 forces \"the pawn to h4, where it will be worse placed\" and \"fixed on a dark square.\""
+        },
+        {
+          "text": "To win the h-pawn immediately.",
+          "explanation": "The pawn is not won; it is merely provoked forward to a worse square."
+        },
+        {
+          "text": "To set up a direct mating attack on White's king.",
+          "explanation": "No attack is mentioned; this is a slow positional provocation."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The annotator even plugs his book on this exact theme."
+    },
+    {
+      "id": "g3-fxe4",
+      "ply": 74,
+      "prompt": "The annotator gives 37...fxe4 a \"?!\". What was the problem with it?",
+      "options": [
+        {
+          "text": "It releases the tension and makes the position \"absolutely drawn\"; 37...f4 was a better winning try.",
+          "explanation": "Correct. The note: \"After this it's absolutely drawn,\" with the sideline 37...f4 given as \"a better try.\""
+        },
+        {
+          "text": "It loses on the spot.",
+          "explanation": "The annotator calls it drawn, not losing."
+        },
+        {
+          "text": "It was the only move available.",
+          "explanation": "No — 37...f4 was an alternative the annotator preferred."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What happened to Black's winning chances after this capture?"
+    },
+    {
+      "id": "g3-ke2",
+      "ply": 81,
+      "prompt": "Why does the annotator call 41.Ke2 (\"!\") \"the last important move\"?",
+      "options": [
+        {
+          "text": "It sidesteps the losing 41.f3?, which would walk into zugzwang; Ke2 holds easily.",
+          "explanation": "Correct. The note praises Ke2 and shows that \"41.f3? Would weaken White's position too much, and indeed he loses\" after 41...Bb6! due to zugzwang."
+        },
+        {
+          "text": "It wins the game for White.",
+          "explanation": "It only secures the draw; the position is equal."
+        },
+        {
+          "text": "It launches a mating attack against Black's king.",
+          "explanation": "There is no attack; it is a quiet, accurate holding move."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What move would have lost, and why?"
+    }
+  ]
+}

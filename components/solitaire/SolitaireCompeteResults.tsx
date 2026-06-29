@@ -146,7 +146,7 @@ export function SolitaireCompeteResults({ setup, shared, results, onPlayAgain, o
             <h2 className="font-display font-extrabold text-gray-900 dark:text-slate-100">
               Leaderboard · this game
             </h2>
-            <Link href="/leaderboard" className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline">
+            <Link href="/play/leaderboard" className="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline">
               Global ranks →
             </Link>
           </div>
@@ -235,7 +235,7 @@ export function SolitaireCompeteResults({ setup, shared, results, onPlayAgain, o
             ⚔️ Pick another
           </button>
           <Link
-            href="/leaderboard"
+            href="/play/leaderboard"
             className="flex-1 grid place-items-center bg-white dark:bg-slate-800 text-gray-500 dark:text-slate-400 border-2 border-gray-200 dark:border-slate-700 font-display font-extrabold text-lg py-3.5 rounded-2xl hover:border-rose-300 transition-all"
           >
             🏆 Leaderboard

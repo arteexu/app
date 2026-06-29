@@ -1,0 +1,122 @@
+{
+  "id": "carlsen-caruana-2018-game-11",
+  "title": "Carlsen vs Caruana — 2018 WCC, Game 11",
+  "description": "Carlsen surprises with 1.e4 in a Berlin-style line, but Caruana forces the queens off and liquidates to a comfortable, textbook opposite-colored-bishop draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "11",
+    "eco": "B31",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g11-qa5",
+      "ply": 24,
+      "prompt": "Caruana plays 12...Qa5 (\"!\"). What does this move accomplish?",
+      "options": [
+        {
+          "text": "It forces the queens off the board, steering toward a safe, simplified position.",
+          "explanation": "Correct. The note reads: \"This forces the queens off. Black has to be a little careful I guess.\" Indeed 13.c4 Qxd2 14.Bxd2 follows."
+        },
+        {
+          "text": "It traps White's queen in the center.",
+          "explanation": "No — the annotator makes no such claim; the queen is simply traded, not trapped."
+        },
+        {
+          "text": "It launches a kingside mating attack.",
+          "explanation": "The opposite — Black is heading for mass simplification, and the annotator even warns Black 'has to be a little careful.'"
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Look at what happens on the very next move."
+    },
+    {
+      "id": "g11-nh4",
+      "ply": 29,
+      "prompt": "The annotator gives 15.Nh4 a \"?!\". What is his assessment of this try?",
+      "options": [
+        {
+          "text": "It's too forcing and essentially just leads to a draw; the patient 15.h3 was a better winning attempt.",
+          "explanation": "Correct. The note: \"This is very forcing, extremely direct, and basically just a draw.\" Of 15.h3 he writes, \"A patient move like this one was certainly a better try.\""
+        },
+        {
+          "text": "It wins material by force against the e6-bishop.",
+          "explanation": "No such claim — the annotator says the line is drawish, not materially winning."
+        },
+        {
+          "text": "It is the only way for White to keep his advantage.",
+          "explanation": "The reverse: the annotator notes the patient 15.h3 even gave White 'a slight edge,' while Nh4 hands the advantage away."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Was this the patient choice or the forcing one?"
+    },
+    {
+      "id": "g11-ne5",
+      "ply": 36,
+      "prompt": "Why does the annotator mark 18...Ne5 with a \"!\"?",
+      "options": [
+        {
+          "text": "It halves White's bishop pair and liquidates everything into a simple, equal position.",
+          "explanation": "Correct. The note: \"The bishop pair is halved, and everything liquidates in short order.\""
+        },
+        {
+          "text": "It traps and wins the d3-bishop.",
+          "explanation": "No — the annotator describes simplification and liquidation, not winning a piece."
+        },
+        {
+          "text": "It sets up a direct attack on White's king.",
+          "explanation": "No; Black is simplifying toward a draw, not attacking."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Think about which advantage of White's gets neutralized."
+    },
+    {
+      "id": "g11-rd7",
+      "ply": 40,
+      "prompt": "The annotator calls 20...Rd7 (\"!\") \"the last accurate move\" that \"ends the game.\" Why?",
+      "options": [
+        {
+          "text": "White's only target — the d6-pawn — now gets exchanged off, snuffing out any winning chances.",
+          "explanation": "Correct. The note: \"The last accurate move ends the game. The d6 pawn could have been a target, and now it will be exchanged.\""
+        },
+        {
+          "text": "It wins the exchange by trapping a white rook.",
+          "explanation": "No — the point is defusing the d6 weakness, not winning material."
+        },
+        {
+          "text": "It prepares a decisive kingside attack.",
+          "explanation": "The annotator frames it as the move that secures the draw, not an attacking idea."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What was White's one potential target?"
+    },
+    {
+      "id": "g11-bb1",
+      "ply": 108,
+      "prompt": "Deep in the drawn endgame Caruana plays 54...Bb1 (\"!\"). What is the point?",
+      "options": [
+        {
+          "text": "It keeps the fortress intact — ...Bxf5 is now available, so White's Kxf7 idea no longer works.",
+          "explanation": "Correct. The note: \"Now Kxf7 is no longer an issue since it can be met with Bxf5,\" sidestepping the fxg6 trick that would otherwise win."
+        },
+        {
+          "text": "It wins White's passed h-pawn by force.",
+          "explanation": "No — the note is purely about holding the draw, not winning a pawn."
+        },
+        {
+          "text": "It begins a winning plan for Black.",
+          "explanation": "The position is a dead draw; Black is only maintaining the fortress."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What new defensive resource does putting the bishop on the b1-h7 diagonal grant?"
+    }
+  ]
+}

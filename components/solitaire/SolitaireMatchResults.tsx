@@ -236,7 +236,7 @@ export function SolitaireMatchResults({
             ♟ Back
           </button>
           <Link
-            href="/leaderboard"
+            href="/play/leaderboard"
             className="flex-1 grid place-items-center bg-white dark:bg-slate-800 text-gray-500 dark:text-slate-400 border-2 border-gray-200 dark:border-slate-700 font-display font-extrabold text-lg py-3.5 rounded-2xl hover:border-rose-300 transition-all"
           >
             🏆 Leaderboard

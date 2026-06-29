@@ -1,0 +1,143 @@
+{
+  "id": "carlsen-caruana-2018-game-06",
+  "title": "Carlsen vs Caruana — 2018 WCC, Game 6",
+  "description": "In a Petroff endgame Carlsen drifts into real danger and Caruana grinds toward a win — only for the famous, engine-confirmed but \"humanly impossible\" 68...Bh4! to slip by, leaving a 160-move draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "6",
+    "eco": "C42",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g6-bc2",
+      "ply": 43,
+      "prompt": "The annotator marks 22.Bc2 (\"?!\") as \"the start of Carlsen's troubles.\" Why?",
+      "options": [
+        {
+          "text": "The bishop heads to b3 to pressure d5, but it becomes a target and accomplishes little; 22.Ng2 was the better plan.",
+          "explanation": "Correct. The note: bringing the bishop to b3 \"might seem natural, but it was a decision he later likely regretted as the bishop became a target and didn't accomplish very much,\" recommending 22.Ng2 instead."
+        },
+        {
+          "text": "It hangs a pawn outright.",
+          "explanation": "No — it is a positional inaccuracy, not an outright blunder of material."
+        },
+        {
+          "text": "It is the only move that keeps White's edge.",
+          "explanation": "The opposite — the annotator prefers 22.Ng2, which Magnus \"should have done here as well.\""
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What happens to the bishop once it lands on b3?"
+    },
+    {
+      "id": "g6-nc6",
+      "ply": 52,
+      "prompt": "Why does Caruana play 26...Nc6 (\"!\")?",
+      "options": [
+        {
+          "text": "He reroutes the knight to a5, where it shows that White's b3-bishop is doing more harm than good.",
+          "explanation": "Correct. The note: \"The knight is coming to a5, when is becomes clear the bishop on b3 is doing more harm than good for White's position.\""
+        },
+        {
+          "text": "He prepares to win the d4-pawn by force.",
+          "explanation": "No — the stated point is the Na5 maneuver exposing the b3-bishop, not winning d4."
+        },
+        {
+          "text": "He offers a knight trade to steer toward a draw.",
+          "explanation": "The opposite — Caruana is pressing, using the knight to highlight White's awkward bishop."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Where is the knight heading, and which White piece does it embarrass?"
+    },
+    {
+      "id": "g6-ba3",
+      "ply": 70,
+      "prompt": "What is the point of 35...Ba3 (\"!\")?",
+      "options": [
+        {
+          "text": "It prevents a2-a4; the annotator says it will be very hard for White to hold onto the a2-pawn.",
+          "explanation": "Correct. The note reads: \"Preventing a2-a4. It will be very hard to hold onto this pawn.\""
+        },
+        {
+          "text": "It wins the a2-pawn immediately by force.",
+          "explanation": "Not immediately — the move restrains a2-a4 and makes a2 a long-term weakness, rather than winning it on the spot."
+        },
+        {
+          "text": "It activates the bishop for a direct kingside attack.",
+          "explanation": "No — the bishop's job here is to restrain a4 and target the a2-pawn, not to attack the king."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which White pawn break is the bishop stopping?"
+    },
+    {
+      "id": "g6-bxd5",
+      "ply": 87,
+      "prompt": "The annotator flags 44.Bxd5 (\"!?\") as making Carlsen's life tougher. How does he assess it?",
+      "options": [
+        {
+          "text": "It was the first step toward losing; 44.Nd1 was likely better, though Bxd5 should still hold — with a very slim margin for error.",
+          "explanation": "Correct. The note calls it \"the first step towards losing the game,\" and the 44.Nd1 line adds: \"this may have been a better choice. I do think the game move should hold, but White's margin for error was very slim.\""
+        },
+        {
+          "text": "It was a clean, winning continuation.",
+          "explanation": "No — the annotator says it made Carlsen's life tougher and was the first step toward losing."
+        },
+        {
+          "text": "It loses by force on the spot.",
+          "explanation": "Not by force — the annotator believes the move \"should hold,\" just with very little room for error."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare it with the suggested 44.Nd1."
+    },
+    {
+      "id": "g6-be1",
+      "ply": 112,
+      "prompt": "Why is 56...Be1 (\"!\") strong, rather than the natural 56...Bd2?",
+      "options": [
+        {
+          "text": "It attacks the h4-pawn, freezing White's king and stopping the drawing plan of Kg6.",
+          "explanation": "Correct. The note: \"Black freezes White's king by attacking the h4-pawn, preventing it from going to its desired destination.\" After 56...Bd2? \"White gets the king to g6 and draws easily.\""
+        },
+        {
+          "text": "It threatens to promote a passed pawn.",
+          "explanation": "No — Black has no passer here; the bishop's job is to pin White's king to the kingside by hitting h4."
+        },
+        {
+          "text": "Both 56...Be1 and 56...Bd2 are equally good.",
+          "explanation": "No — the annotator labels 56...Bd2? a mistake that lets White reach g6 and draw easily."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does attacking h4 do to White's king's route to g6?"
+    },
+    {
+      "id": "g6-bh4-missed",
+      "ply": 136,
+      "prompt": "At move 68 Caruana played 68...Nf3. The engine showed one \"impossible\" winning move here — what was it, and why does the annotator refuse to fault Caruana?",
+      "options": [
+        {
+          "text": "68...Bh4! was the only win, putting White in a deadly zugzwang — but the annotator says proving it was \"completely outside of human capability,\" so he won't give the human move a question mark.",
+          "explanation": "Correct. The note: \"68...Bh4! According to the monster, this was the only winning move. The point is that White is in a deadly zugzwang,\" while 68...Nf3 escapes a \"?\" because the win was \"clearly impossible for a being with flesh and bones.\""
+        },
+        {
+          "text": "68...Nf3 was a clear blunder that threw away an easy, forced win.",
+          "explanation": "No — the win was \"computer nonsense\" requiring something like mate in 64, not an easy human win."
+        },
+        {
+          "text": "There was no win at all; the position was a dead draw.",
+          "explanation": "Not so — the engine found a forced win starting with 68...Bh4!, but it was beyond human reach."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The only winning move was a quiet bishop move creating zugzwang."
+    }
+  ]
+}

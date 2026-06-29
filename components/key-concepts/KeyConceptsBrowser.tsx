@@ -9,9 +9,22 @@ import { clsx } from "clsx"
 
 export function KeyConceptsBrowser() {
   const [unlockedIds, setUnlockedIds] = useState<string[]>([])
+  // Deep-link target from `?concept=<id>` — auto-scrolled to and briefly ringed.
+  const [highlightId, setHighlightId] = useState<string | null>(null)
 
   useEffect(() => {
     setUnlockedIds(getUnlockedKeyConceptIds())
+
+    const target = new URLSearchParams(window.location.search).get("concept")
+    if (!target || !KEY_CONCEPTS.some((c) => c.id === target)) return
+    setHighlightId(target)
+    requestAnimationFrame(() => {
+      document
+        .getElementById(`concept-${target}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" })
+    })
+    const timer = setTimeout(() => setHighlightId(null), 2800)
+    return () => clearTimeout(timer)
   }, [])
 
   const unlockedSet = new Set(unlockedIds)
@@ -43,11 +56,14 @@ export function KeyConceptsBrowser() {
           return (
             <li
               key={concept.id}
+              id={`concept-${concept.id}`}
               className={clsx(
-                "rounded-2xl border-2 p-5 transition-all",
+                "scroll-mt-24 rounded-2xl border-2 p-5 transition-all",
                 unlocked
                   ? "border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20"
                   : "border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-900/30 opacity-75",
+                highlightId === concept.id &&
+                  "ring-4 ring-amber-400/70 dark:ring-amber-500/60 border-amber-400 dark:border-amber-500",
               )}
             >
               <div className="flex items-start gap-3">

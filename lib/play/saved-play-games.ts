@@ -101,10 +101,14 @@ export function deleteSavedPlayGame(id: string): SavedPlayGame[] {
   return next.sort((a, b) => b.savedAt.localeCompare(a.savedAt))
 }
 
-/** FEN before ply `ply` (0 = starting position). */
-export function fenBeforePly(moves: PlayedMove[], ply: number): string {
-  if (ply <= 0) return START_FEN
-  return moves[ply - 1]?.fenAfter ?? START_FEN
+/**
+ * FEN before ply `ply` (0 = starting position). `startFen` lets uploaded games
+ * that begin from a custom position resolve ply 0 correctly (defaults to the
+ * standard initial position).
+ */
+export function fenBeforePly(moves: PlayedMove[], ply: number, startFen: string = START_FEN): string {
+  if (ply <= 0) return startFen
+  return moves[ply - 1]?.fenAfter ?? startFen
 }
 
 export function defaultPlayGameName(input: {

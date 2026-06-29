@@ -19,6 +19,8 @@ interface Props {
   chapterTitle: string
   initialCompletedStepIds: string[]
   initialCompletedLessonIds: string[]
+  /** Optional deep-link target (`?step=<id>`) — opens directly on this step. */
+  initialStepId?: string
   userId: string
 }
 
@@ -41,13 +43,17 @@ interface SessionProps extends Props { onReplay: () => void }
 
 function LessonSession({
   lesson, course, courseId, chapterId, chapterTitle,
-  initialCompletedStepIds, initialCompletedLessonIds, userId, onReplay,
+  initialCompletedStepIds, initialCompletedLessonIds, initialStepId, userId, onReplay,
 }: SessionProps) {
   const supabase = createClient()
 
   const alreadyComplete = initialCompletedStepIds.length >= lesson.steps.length
   const firstIncomplete = lesson.steps.findIndex(s => !initialCompletedStepIds.includes(s.id))
-  const startIndex      = alreadyComplete ? 0 : firstIncomplete === -1 ? 0 : firstIncomplete
+  const resumeIndex     = alreadyComplete ? 0 : firstIncomplete === -1 ? 0 : firstIncomplete
+  // A `?step=` deep-link (e.g. from post-game puzzle recommendations) opens the
+  // lesson directly on that step. Falls back to the normal resume position.
+  const deepLinkIndex   = initialStepId ? lesson.steps.findIndex(s => s.id === initialStepId) : -1
+  const startIndex      = deepLinkIndex >= 0 ? deepLinkIndex : resumeIndex
 
   const [viewIndex,          setViewIndex]          = useState(startIndex)
   const [currentIndex,       setCurrentIndex]       = useState(startIndex)

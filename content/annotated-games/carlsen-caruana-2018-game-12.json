@@ -1,0 +1,1106 @@
+{
+  "id": "carlsen-caruana-2018-game-12",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 12",
+  "description": "In the final classical game Carlsen outplays Caruana in a Sveshnikov and reaches a clearly better position, yet famously offers a draw to head straight for the tiebreaks. Annotated by GM Sam Shankland.",
+  "headers": {
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "date": "2018.11.26",
+    "round": "12",
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "result": "1/2-1/2",
+    "eco": "B33",
+    "annotator": "chess.com",
+    "year": 2018
+  },
+  "plies": [
+    {
+      "ply": 1,
+      "moveNumber": 1,
+      "side": "white",
+      "san": "e4",
+      "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
+    },
+    {
+      "ply": 2,
+      "moveNumber": 1,
+      "side": "black",
+      "san": "c5",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"
+    },
+    {
+      "ply": 3,
+      "moveNumber": 2,
+      "side": "white",
+      "san": "Nf3",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
+    },
+    {
+      "ply": 4,
+      "moveNumber": 2,
+      "side": "black",
+      "san": "Nc6",
+      "fen": "r1bqkbnr/pp1ppppp/2n5/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+      "comment": "Magnus sticks to his same Sicilian repertoire in the all decisive final game. One can only admire his willingness to enter sharp positions with it all on the line."
+    },
+    {
+      "ply": 5,
+      "moveNumber": 3,
+      "side": "white",
+      "san": "d4",
+      "fen": "r1bqkbnr/pp1ppppp/2n5/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 3"
+    },
+    {
+      "ply": 6,
+      "moveNumber": 3,
+      "side": "black",
+      "san": "cxd4",
+      "fen": "r1bqkbnr/pp1ppppp/2n5/8/3pP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 4"
+    },
+    {
+      "ply": 7,
+      "moveNumber": 4,
+      "side": "white",
+      "san": "Nxd4",
+      "fen": "r1bqkbnr/pp1ppppp/2n5/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4"
+    },
+    {
+      "ply": 8,
+      "moveNumber": 4,
+      "side": "black",
+      "san": "Nf6",
+      "fen": "r1bqkb1r/pp1ppppp/2n2n2/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 1 5"
+    },
+    {
+      "ply": 9,
+      "moveNumber": 5,
+      "side": "white",
+      "san": "Nc3",
+      "fen": "r1bqkb1r/pp1ppppp/2n2n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 2 5"
+    },
+    {
+      "ply": 10,
+      "moveNumber": 5,
+      "side": "black",
+      "san": "e5",
+      "fen": "r1bqkb1r/pp1p1ppp/2n2n2/4p3/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6"
+    },
+    {
+      "ply": 11,
+      "moveNumber": 6,
+      "side": "white",
+      "san": "Ndb5",
+      "fen": "r1bqkb1r/pp1p1ppp/2n2n2/1N2p3/4P3/2N5/PPP2PPP/R1BQKB1R b KQkq - 1 6"
+    },
+    {
+      "ply": 12,
+      "moveNumber": 6,
+      "side": "black",
+      "san": "d6",
+      "fen": "r1bqkb1r/pp3ppp/2np1n2/1N2p3/4P3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 7"
+    },
+    {
+      "ply": 13,
+      "moveNumber": 7,
+      "side": "white",
+      "san": "Nd5",
+      "fen": "r1bqkb1r/pp3ppp/2np1n2/1N1Np3/4P3/8/PPP2PPP/R1BQKB1R b KQkq - 1 7"
+    },
+    {
+      "ply": 14,
+      "moveNumber": 7,
+      "side": "black",
+      "san": "Nxd5",
+      "fen": "r1bqkb1r/pp3ppp/2np4/1N1np3/4P3/8/PPP2PPP/R1BQKB1R w KQkq - 0 8"
+    },
+    {
+      "ply": 15,
+      "moveNumber": 8,
+      "side": "white",
+      "san": "exd5",
+      "fen": "r1bqkb1r/pp3ppp/2np4/1N1Pp3/8/8/PPP2PPP/R1BQKB1R b KQkq - 0 8"
+    },
+    {
+      "ply": 16,
+      "moveNumber": 8,
+      "side": "black",
+      "san": "Ne7",
+      "fen": "r1bqkb1r/pp2nppp/3p4/1N1Pp3/8/8/PPP2PPP/R1BQKB1R w KQkq - 1 9",
+      "nags": [
+        "!?"
+      ],
+      "comment": "The first surprise. Games 8 and 10 saw 8...Nb8",
+      "variations": [
+        {
+          "startsAfterPly": 15,
+          "moves": [
+            {
+              "san": "Nb8",
+              "fen": "rnbqkb1r/pp3ppp/3p4/1N1Pp3/8/8/PPP2PPP/R1BQKB1R w KQkq - 1 9",
+              "comment": "And here Caruana was playing"
+            },
+            {
+              "san": "a4",
+              "fen": "rnbqkb1r/pp3ppp/3p4/1N1Pp3/P7/8/1PP2PPP/R1BQKB1R b KQkq - 0 9",
+              "comment": "a very different plan from what we saw in the present game."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 17,
+      "moveNumber": 9,
+      "side": "white",
+      "san": "c4",
+      "fen": "r1bqkb1r/pp2nppp/3p4/1N1Pp3/2P5/8/PP3PPP/R1BQKB1R b KQkq - 0 9"
+    },
+    {
+      "ply": 18,
+      "moveNumber": 9,
+      "side": "black",
+      "san": "Ng6",
+      "fen": "r1bqkb1r/pp3ppp/3p2n1/1N1Pp3/2P5/8/PP3PPP/R1BQKB1R w KQkq - 1 10"
+    },
+    {
+      "ply": 19,
+      "moveNumber": 10,
+      "side": "white",
+      "san": "Qa4",
+      "fen": "r1bqkb1r/pp3ppp/3p2n1/1N1Pp3/Q1P5/8/PP3PPP/R1B1KB1R b KQkq - 2 10"
+    },
+    {
+      "ply": 20,
+      "moveNumber": 10,
+      "side": "black",
+      "san": "Bd7",
+      "fen": "r2qkb1r/pp1b1ppp/3p2n1/1N1Pp3/Q1P5/8/PP3PPP/R1B1KB1R w KQkq - 3 11"
+    },
+    {
+      "ply": 21,
+      "moveNumber": 11,
+      "side": "white",
+      "san": "Qb4",
+      "fen": "r2qkb1r/pp1b1ppp/3p2n1/1N1Pp3/1QP5/8/PP3PPP/R1B1KB1R b KQkq - 4 11"
+    },
+    {
+      "ply": 22,
+      "moveNumber": 11,
+      "side": "black",
+      "san": "Bf5",
+      "fen": "r2qkb1r/pp3ppp/3p2n1/1N1Ppb2/1QP5/8/PP3PPP/R1B1KB1R w KQkq - 5 12",
+      "comment": "Up to this point both sides were blitzing. Caruana now thought for a bit before ultimately going for the most testing move."
+    },
+    {
+      "ply": 23,
+      "moveNumber": 12,
+      "side": "white",
+      "san": "h4",
+      "fen": "r2qkb1r/pp3ppp/3p2n1/1N1Ppb2/1QP4P/8/PP3PP1/R1B1KB1R b KQkq - 0 12",
+      "nags": [
+        "!?"
+      ],
+      "comment": "White aims to play against the g6 knight. The threat of h4-h5 is not particularly subtle, but a bit annoying for Black to meet since playing h7-h5 himself will leave him with a weak h5-pawn and potentially a problem on the g5 square."
+    },
+    {
+      "ply": 24,
+      "moveNumber": 12,
+      "side": "black",
+      "san": "h5",
+      "fen": "r2qkb1r/pp3pp1/3p2n1/1N1Ppb1p/1QP4P/8/PP3PP1/R1B1KB1R w KQkq - 0 13",
+      "comment": "There had only been one human game up to this point, and h5 is formally a novelty. But, it was contested between top engines in the TCEC competition, so Magnus surely was familiar with the ideas. He was still blitzing out his prep at this point.",
+      "variations": [
+        {
+          "startsAfterPly": 23,
+          "moves": [
+            {
+              "san": "a6",
+              "fen": "r2qkb1r/1p3ppp/p2p2n1/1N1Ppb2/1QP4P/8/PP3PP1/R1B1KB1R w KQkq - 0 13",
+              "comment": "would be well met by",
+              "nags": [
+                "?"
+              ]
+            },
+            {
+              "san": "h5",
+              "fen": "r2qkb1r/1p3ppp/p2p2n1/1N1Ppb1P/1QP5/8/PP3PP1/R1B1KB1R b KQkq - 0 13",
+              "comment": "when White has an excellent position.",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        },
+        {
+          "startsAfterPly": 23,
+          "moves": [
+            {
+              "san": "a6",
+              "fen": "r2qkb1r/1p3ppp/p2p2n1/1N1Ppb2/1QP4P/8/PP3PP1/R1B1KB1R w KQkq - 0 13",
+              "comment": "[That was in fact played in the recent game Kramnik-Roganovic, Batumi Olympiad 2018 which continued"
+            },
+            {
+              "san": "h5",
+              "fen": "r2qkb1r/1p3ppp/p2p2n1/1N1Ppb1P/1QP5/8/PP3PP1/R1B1KB1R b KQkq - 0 13"
+            },
+            {
+              "san": "Nf4",
+              "fen": "r2qkb1r/1p3ppp/p2p4/1N1Ppb1P/1QP2n2/8/PP3PP1/R1B1KB1R w KQkq - 1 14"
+            },
+            {
+              "san": "Nc3",
+              "fen": "r2qkb1r/1p3ppp/p2p4/3Ppb1P/1QP2n2/2N5/PP3PP1/R1B1KB1R b KQkq - 2 14"
+            },
+            {
+              "san": "Be7",
+              "fen": "r2qk2r/1p2bppp/p2p4/3Ppb1P/1QP2n2/2N5/PP3PP1/R1B1KB1R w KQkq - 3 15"
+            },
+            {
+              "san": "Be3",
+              "fen": "r2qk2r/1p2bppp/p2p4/3Ppb1P/1QP2n2/2N1B3/PP3PP1/R3KB1R b KQkq - 4 15"
+            },
+            {
+              "san": "Nd3+",
+              "fen": "r2qk2r/1p2bppp/p2p4/3Ppb1P/1QP5/2NnB3/PP3PP1/R3KB1R w KQkq - 5 16"
+            },
+            {
+              "san": "Bxd3",
+              "fen": "r2qk2r/1p2bppp/p2p4/3Ppb1P/1QP5/2NBB3/PP3PP1/R3K2R b KQkq - 0 16"
+            },
+            {
+              "san": "Bxd3",
+              "fen": "r2qk2r/1p2bppp/p2p4/3Pp2P/1QP5/2NbB3/PP3PP1/R3K2R w KQkq - 0 17"
+            },
+            {
+              "san": "h6",
+              "fen": "r2qk2r/1p2bppp/p2p3P/3Pp3/1QP5/2NbB3/PP3PP1/R3K2R b KQkq - 0 17",
+              "comment": "and White won in 42 moves. - ed.]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 25,
+      "moveNumber": 13,
+      "side": "white",
+      "san": "Qa4",
+      "fen": "r2qkb1r/pp3pp1/3p2n1/1N1Ppb1p/Q1P4P/8/PP3PP1/R1B1KB1R b KQkq - 1 13"
+    },
+    {
+      "ply": 26,
+      "moveNumber": 13,
+      "side": "black",
+      "san": "Bd7",
+      "fen": "r2qkb1r/pp1b1pp1/3p2n1/1N1Pp2p/Q1P4P/8/PP3PP1/R1B1KB1R w KQkq - 2 14"
+    },
+    {
+      "ply": 27,
+      "moveNumber": 14,
+      "side": "white",
+      "san": "Qb4",
+      "fen": "r2qkb1r/pp1b1pp1/3p2n1/1N1Pp2p/1QP4P/8/PP3PP1/R1B1KB1R b KQkq - 3 14"
+    },
+    {
+      "ply": 28,
+      "moveNumber": 14,
+      "side": "black",
+      "san": "Bf5",
+      "fen": "r2qkb1r/pp3pp1/3p2n1/1N1Ppb1p/1QP4P/8/PP3PP1/R1B1KB1R w KQkq - 4 15"
+    },
+    {
+      "ply": 29,
+      "moveNumber": 15,
+      "side": "white",
+      "san": "Be3",
+      "fen": "r2qkb1r/pp3pp1/3p2n1/1N1Ppb1p/1QP4P/4B3/PP3PP1/R3KB1R b KQkq - 5 15",
+      "comment": "No early draws this time!",
+      "variations": [
+        {
+          "startsAfterPly": 28,
+          "moves": [
+            {
+              "san": "Bg5",
+              "fen": "r2qkb1r/pp3pp1/3p2n1/1N1PpbBp/1QP4P/8/PP3PP1/R3KB1R b KQkq - 5 15",
+              "comment": "may have been a more critical move. Still, I am sure Magnus would have been ready for it.",
+              "nags": [
+                "!?"
+              ]
+            },
+            {
+              "san": "Qb8",
+              "fen": "rq2kb1r/pp3pp1/3p2n1/1N1PpbBp/1QP4P/8/PP3PP1/R3KB1R w KQkq - 6 16"
+            },
+            {
+              "san": "Be2",
+              "fen": "rq2kb1r/pp3pp1/3p2n1/1N1PpbBp/1QP4P/8/PP2BPP1/R3K2R b KQkq - 7 16"
+            },
+            {
+              "san": "a6",
+              "fen": "rq2kb1r/1p3pp1/p2p2n1/1N1PpbBp/1QP4P/8/PP2BPP1/R3K2R w KQkq - 0 17"
+            },
+            {
+              "san": "Nc3",
+              "fen": "rq2kb1r/1p3pp1/p2p2n1/3PpbBp/1QP4P/2N5/PP2BPP1/R3K2R b KQkq - 1 17"
+            },
+            {
+              "san": "Nf4",
+              "fen": "rq2kb1r/1p3pp1/p2p4/3PpbBp/1QP2n1P/2N5/PP2BPP1/R3K2R w KQkq - 2 18"
+            },
+            {
+              "san": "Bf1",
+              "fen": "rq2kb1r/1p3pp1/p2p4/3PpbBp/1QP2n1P/2N5/PP3PP1/R3KB1R b KQkq - 3 18"
+            },
+            {
+              "san": "Be7",
+              "fen": "rq2k2r/1p2bpp1/p2p4/3PpbBp/1QP2n1P/2N5/PP3PP1/R3KB1R w KQkq - 4 19"
+            },
+            {
+              "san": "Bxe7",
+              "fen": "rq2k2r/1p2Bpp1/p2p4/3Ppb1p/1QP2n1P/2N5/PP3PP1/R3KB1R b KQkq - 0 19"
+            },
+            {
+              "san": "Kxe7",
+              "fen": "rq5r/1p2kpp1/p2p4/3Ppb1p/1QP2n1P/2N5/PP3PP1/R3KB1R w KQ - 0 20"
+            },
+            {
+              "san": "g3",
+              "fen": "rq5r/1p2kpp1/p2p4/3Ppb1p/1QP2n1P/2N3P1/PP3P2/R3KB1R b KQ - 0 20"
+            },
+            {
+              "san": "Ng6",
+              "fen": "rq5r/1p2kpp1/p2p2n1/3Ppb1p/1QP4P/2N3P1/PP3P2/R3KB1R w KQ - 1 21",
+              "comment": "and a draw after 59 moves in Houdini 6.03-Stockfish earlier this year."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 30,
+      "moveNumber": 15,
+      "side": "black",
+      "san": "a6",
+      "fen": "r2qkb1r/1p3pp1/p2p2n1/1N1Ppb1p/1QP4P/4B3/PP3PP1/R3KB1R w KQkq - 0 16",
+      "comment": "The first move Magnus thought about.",
+      "variations": [
+        {
+          "startsAfterPly": 29,
+          "moves": [
+            {
+              "san": "Be7",
+              "fen": "r2qk2r/pp2bpp1/3p2n1/1N1Ppb1p/1QP4P/4B3/PP3PP1/R3KB1R w KQkq - 6 16",
+              "comment": "The machine thinks giving the a7-pawn is interesting. It might be right but it looks risky to me.",
+              "nags": [
+                "!?"
+              ]
+            },
+            {
+              "san": "Bxa7",
+              "fen": "r2qk2r/Bp2bpp1/3p2n1/1N1Ppb1p/1QP4P/8/PP3PP1/R3KB1R b KQkq - 0 16"
+            },
+            {
+              "san": "O-O",
+              "fen": "r2q1rk1/Bp2bpp1/3p2n1/1N1Ppb1p/1QP4P/8/PP3PP1/R3KB1R w KQ - 1 17"
+            },
+            {
+              "san": "g3",
+              "fen": "r2q1rk1/Bp2bpp1/3p2n1/1N1Ppb1p/1QP4P/6P1/PP3P2/R3KB1R b KQ - 0 17"
+            },
+            {
+              "san": "Be4",
+              "fen": "r2q1rk1/Bp2bpp1/3p2n1/1N1Pp2p/1QP1b2P/6P1/PP3P2/R3KB1R w KQ - 1 18",
+              "comment": "Otherwise White just goes Bg2 with an extra pawn"
+            },
+            {
+              "san": "Rg1",
+              "fen": "r2q1rk1/Bp2bpp1/3p2n1/1N1Pp2p/1QP1b2P/6P1/PP3P2/R3KBR1 b Q - 2 18"
+            },
+            {
+              "san": "Bf3",
+              "fen": "r2q1rk1/Bp2bpp1/3p2n1/1N1Pp2p/1QP4P/5bP1/PP3P2/R3KBR1 w Q - 3 19",
+              "comment": "Black has obvious compensation, but I'm not fully convinced it is enough."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 31,
+      "moveNumber": 16,
+      "side": "white",
+      "san": "Nc3",
+      "fen": "r2qkb1r/1p3pp1/p2p2n1/3Ppb1p/1QP4P/2N1B3/PP3PP1/R3KB1R b KQkq - 1 16"
+    },
+    {
+      "ply": 32,
+      "moveNumber": 16,
+      "side": "black",
+      "san": "Qc7",
+      "fen": "r3kb1r/1pq2pp1/p2p2n1/3Ppb1p/1QP4P/2N1B3/PP3PP1/R3KB1R w KQkq - 2 17",
+      "variations": [
+        {
+          "startsAfterPly": 31,
+          "moves": [
+            {
+              "san": "Be7",
+              "fen": "r2qk2r/1p2bpp1/p2p2n1/3Ppb1p/1QP4P/2N1B3/PP3PP1/R3KB1R w KQkq - 2 17",
+              "comment": "Again, Black could have pitched the pawn to speed up his development. But I don't really mind Magnus' choice. He clearly understood the resulting middlegame better than Caruana."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 33,
+      "moveNumber": 17,
+      "side": "white",
+      "san": "g3",
+      "fen": "r3kb1r/1pq2pp1/p2p2n1/3Ppb1p/1QP4P/2N1B1P1/PP3P2/R3KB1R b KQkq - 0 17"
+    },
+    {
+      "ply": 34,
+      "moveNumber": 17,
+      "side": "black",
+      "san": "Be7",
+      "fen": "r3k2r/1pq1bpp1/p2p2n1/3Ppb1p/1QP4P/2N1B1P1/PP3P2/R3KB1R w KQkq - 1 18"
+    },
+    {
+      "ply": 35,
+      "moveNumber": 18,
+      "side": "white",
+      "san": "f3",
+      "fen": "r3k2r/1pq1bpp1/p2p2n1/3Ppb1p/1QP4P/2N1BPP1/PP6/R3KB1R b KQkq - 0 18",
+      "nags": [
+        "?!"
+      ],
+      "comment": "The first dubious move of the game. Perhaps White was worried about e5-e4 then Ng6-e5 can come to solve the problem of the poorly placed g6-knight, but this strikes me as too defensive and too slow.",
+      "variations": [
+        {
+          "startsAfterPly": 34,
+          "moves": [
+            {
+              "san": "Be2",
+              "fen": "r3k2r/1pq1bpp1/p2p2n1/3Ppb1p/1QP4P/2N1B1P1/PP2BP2/R3K2R b KQkq - 2 18",
+              "comment": "The computer flirts with weird checks on a4. This move looks by far the most natural to me."
+            },
+            {
+              "san": "e4",
+              "fen": "r3k2r/1pq1bpp1/p2p2n1/3P1b1p/1QP1p2P/2N1B1P1/PP2BP2/R3K2R w KQkq - 0 19"
+            },
+            {
+              "san": "Bb6",
+              "fen": "r3k2r/1pq1bpp1/pB1p2n1/3P1b1p/1QP1p2P/2N3P1/PP2BP2/R3K2R b KQkq - 1 19"
+            },
+            {
+              "san": "Qd7",
+              "fen": "r3k2r/1p1qbpp1/pB1p2n1/3P1b1p/1QP1p2P/2N3P1/PP2BP2/R3K2R w KQkq - 2 20"
+            },
+            {
+              "san": "Bd4",
+              "fen": "r3k2r/1p1qbpp1/p2p2n1/3P1b1p/1QPBp2P/2N3P1/PP2BP2/R3K2R b KQkq - 3 20",
+              "comment": "White looks better to me, but of course it is still complicated."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 36,
+      "moveNumber": 18,
+      "side": "black",
+      "san": "Nf8",
+      "fen": "r3kn1r/1pq1bpp1/p2p4/3Ppb1p/1QP4P/2N1BPP1/PP6/R3KB1R w KQkq - 1 19",
+      "nags": [
+        "!"
+      ],
+      "comment": "One bad piece makes a bad position, and White's play has been slow enough that Black has time for Nf8-d7 before castling."
+    },
+    {
+      "ply": 37,
+      "moveNumber": 19,
+      "side": "white",
+      "san": "Ne4",
+      "fen": "r3kn1r/1pq1bpp1/p2p4/3Ppb1p/1QP1N2P/4BPP1/PP6/R3KB1R b KQkq - 2 19"
+    },
+    {
+      "ply": 38,
+      "moveNumber": 19,
+      "side": "black",
+      "san": "Nd7",
+      "fen": "r3k2r/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/4BPP1/PP6/R3KB1R w KQkq - 3 20"
+    },
+    {
+      "ply": 39,
+      "moveNumber": 20,
+      "side": "white",
+      "san": "Bd3",
+      "fen": "r3k2r/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/3BBPP1/PP6/R3K2R b KQkq - 4 20"
+    },
+    {
+      "ply": 40,
+      "moveNumber": 20,
+      "side": "black",
+      "san": "O-O",
+      "fen": "r4rk1/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/3BBPP1/PP6/R3K2R w KQ - 5 21"
+    },
+    {
+      "ply": 41,
+      "moveNumber": 21,
+      "side": "white",
+      "san": "Rh2",
+      "fen": "r4rk1/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/3BBPP1/PP5R/R3K3 b Q - 6 21",
+      "nags": [
+        "?!"
+      ],
+      "comment": "White's second dubious decision. It's not such a silly way to develop the rook as it clearly belongs on the c-file. but it appears to articifial to me.",
+      "variations": [
+        {
+          "startsAfterPly": 40,
+          "moves": [
+            {
+              "san": "O-O",
+              "fen": "r4rk1/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/3BBPP1/PP6/R4RK1 b - - 6 21",
+              "comment": "Sometimes boring is prudent. I don't think White is better, but he is definitely not worse and has a fair plan to expand with c4-c5 eventually."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 42,
+      "moveNumber": 21,
+      "side": "black",
+      "san": "Rac8",
+      "fen": "2r2rk1/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/3BBPP1/PP5R/R3K3 w Q - 7 22",
+      "variations": [
+        {
+          "startsAfterPly": 41,
+          "moves": [
+            {
+              "san": "Bg6",
+              "fen": "r4rk1/1pqnbpp1/p2p2b1/3Pp2p/1QP1N2P/3BBPP1/PP5R/R3K3 w Q - 7 22",
+              "comment": "Preparing f7-f5 immediately was fine as well. I suspect Carlsen did not want to allow White to respond with"
+            },
+            {
+              "san": "g4",
+              "fen": "r4rk1/1pqnbpp1/p2p2b1/3Pp2p/1QP1N1PP/3BBP2/PP5R/R3K3 b Q - 0 22",
+              "comment": "Though here Black is also better after the accurate response"
+            },
+            {
+              "san": "Nf6",
+              "fen": "r4rk1/1pq1bpp1/p2p1nb1/3Pp2p/1QP1N1PP/3BBP2/PP5R/R3K3 w Q - 1 23",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 43,
+      "moveNumber": 22,
+      "side": "white",
+      "san": "O-O-O",
+      "fen": "2r2rk1/1pqnbpp1/p2p4/3Ppb1p/1QP1N2P/3BBPP1/PP5R/2KR4 b - - 8 22"
+    },
+    {
+      "ply": 44,
+      "moveNumber": 22,
+      "side": "black",
+      "san": "Bg6",
+      "fen": "2r2rk1/1pqnbpp1/p2p2b1/3Pp2p/1QP1N2P/3BBPP1/PP5R/2KR4 w - - 9 23",
+      "nags": [
+        "!"
+      ],
+      "comment": "f7-f5 is coming. Black is setting his central pawn majority in motion while White's queenside is badly stalled- c4-c5 looks impossible to ever pull off. I think Black is already seriously better. Note that Carlsen chose this moment to go for Bf5-g6 since White cannot comfortably play g3-g4 in response due to the hanging c-pawn."
+    },
+    {
+      "ply": 45,
+      "moveNumber": 23,
+      "side": "white",
+      "san": "Rc2",
+      "fen": "2r2rk1/1pqnbpp1/p2p2b1/3Pp2p/1QP1N2P/3BBPP1/PPR5/2KR4 b - - 10 23",
+      "variations": [
+        {
+          "startsAfterPly": 44,
+          "moves": [
+            {
+              "san": "g4",
+              "fen": "2r2rk1/1pqnbpp1/p2p2b1/3Pp2p/1QP1N1PP/3BBP2/PP5R/2KR4 b - - 0 23",
+              "nags": [
+                "?"
+              ]
+            },
+            {
+              "san": "hxg4",
+              "fen": "2r2rk1/1pqnbpp1/p2p2b1/3Pp3/1QP1N1pP/3BBP2/PP5R/2KR4 w - - 0 24",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "fxg4",
+              "fen": "2r2rk1/1pqnbpp1/p2p2b1/3Pp3/1QP1N1PP/3BB3/PP5R/2KR4 b - - 0 24"
+            },
+            {
+              "san": "Bxe4",
+              "fen": "2r2rk1/1pqnbpp1/p2p4/3Pp3/1QP1b1PP/3BB3/PP5R/2KR4 w - - 0 25",
+              "comment": "The point. White loses the c4-pawn, and the game.",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 46,
+      "moveNumber": 23,
+      "side": "black",
+      "san": "f5",
+      "fen": "2r2rk1/1pqnb1p1/p2p2b1/3Ppp1p/1QP1N2P/3BBPP1/PPR5/2KR4 w - - 0 24"
+    },
+    {
+      "ply": 47,
+      "moveNumber": 24,
+      "side": "white",
+      "san": "Nf2",
+      "fen": "2r2rk1/1pqnb1p1/p2p2b1/3Ppp1p/1QP4P/3BBPP1/PPR2N2/2KR4 b - - 1 24",
+      "variations": [
+        {
+          "startsAfterPly": 46,
+          "moves": [
+            {
+              "san": "Ng5",
+              "fen": "2r2rk1/1pqnb1p1/p2p2b1/3PppNp/1QP4P/3BBPP1/PPR5/2KR4 b - - 1 24",
+              "comment": "The computers prefer this move by a wide margin, but I still would not want to be White after something like"
+            },
+            {
+              "san": "Bxg5",
+              "fen": "2r2rk1/1pqn2p1/p2p2b1/3Pppbp/1QP4P/3BBPP1/PPR5/2KR4 w - - 0 25"
+            },
+            {
+              "san": "hxg5",
+              "fen": "2r2rk1/1pqn2p1/p2p2b1/3PppPp/1QP5/3BBPP1/PPR5/2KR4 b - - 0 25"
+            },
+            {
+              "san": "e4",
+              "fen": "2r2rk1/1pqn2p1/p2p2b1/3P1pPp/1QP1p3/3BBPP1/PPR5/2KR4 w - - 0 26",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Bf1",
+              "fen": "2r2rk1/1pqn2p1/p2p2b1/3P1pPp/1QP1p3/4BPP1/PPR5/2KR1B2 b - - 1 26"
+            },
+            {
+              "san": "f4",
+              "fen": "2r2rk1/1pqn2p1/p2p2b1/3P2Pp/1QP1pp2/4BPP1/PPR5/2KR1B2 w - - 0 27",
+              "comment": "When the bishop on g6 becomes a monster.",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "Bxf4",
+              "fen": "2r2rk1/1pqn2p1/p2p2b1/3P2Pp/1QP1pB2/5PP1/PPR5/2KR1B2 b - - 0 27"
+            },
+            {
+              "san": "Nc5",
+              "fen": "2r2rk1/1pq3p1/p2p2b1/2nP2Pp/1QP1pB2/5PP1/PPR5/2KR1B2 w - - 1 28",
+              "comment": "Black's attack is extremely dangerous."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 48,
+      "moveNumber": 24,
+      "side": "black",
+      "san": "Nc5",
+      "fen": "2r2rk1/1pq1b1p1/p2p2b1/2nPpp1p/1QP4P/3BBPP1/PPR2N2/2KR4 w - - 2 25",
+      "comment": "Around here, I thought Magnus would win the game, and in fine style to close out the match after eleven draws. White's position looks miserable."
+    },
+    {
+      "ply": 49,
+      "moveNumber": 25,
+      "side": "white",
+      "san": "f4",
+      "fen": "2r2rk1/1pq1b1p1/p2p2b1/2nPpp1p/1QP2P1P/3BB1P1/PPR2N2/2KR4 b - - 0 25"
+    },
+    {
+      "ply": 50,
+      "moveNumber": 25,
+      "side": "black",
+      "san": "a5",
+      "fen": "2r2rk1/1pq1b1p1/3p2b1/p1nPpp1p/1QP2P1P/3BB1P1/PPR2N2/2KR4 w - - 0 26",
+      "nags": [
+        "!?"
+      ],
+      "comment": "This move is not best. But it doesn't really bother me- I think Black should still win.",
+      "variations": [
+        {
+          "startsAfterPly": 49,
+          "moves": [
+            {
+              "san": "exf4",
+              "fen": "2r2rk1/1pq1b1p1/p2p2b1/2nP1p1p/1QP2p1P/3BB1P1/PPR2N2/2KR4 w - - 0 26",
+              "comment": "Sesse claims opening the position was the best way. White will either lose the h4-pawn after"
+            },
+            {
+              "san": "gxf4",
+              "fen": "2r2rk1/1pq1b1p1/p2p2b1/2nP1p1p/1QP2P1P/3BB3/PPR2N2/2KR4 b - - 0 26"
+            },
+            {
+              "san": "Bxh4",
+              "fen": "2r2rk1/1pq3p1/p2p2b1/2nP1p1p/1QP2P1b/3BB3/PPR2N2/2KR4 w - - 0 27",
+              "comment": "and White has no meaningful compensation"
+            }
+          ]
+        },
+        {
+          "startsAfterPly": 49,
+          "moves": [
+            {
+              "san": "b5",
+              "fen": "2r2rk1/2q1b1p1/p2p2b1/1pnPpp1p/1QP2P1P/3BB1P1/PPR2N2/2KR4 w - - 0 26",
+              "comment": "This also looks very strong, and may be the most human way to bring in the full point. Black forces open the queenside. The machine's recommendation of"
+            },
+            {
+              "san": "Bxc5",
+              "fen": "2r2rk1/2q1b1p1/p2p2b1/1pBPpp1p/1QP2P1P/3B2P1/PPR2N2/2KR4 b - - 0 26"
+            },
+            {
+              "san": "dxc5",
+              "fen": "2r2rk1/2q1b1p1/p5b1/1ppPpp1p/1QP2P1P/3B2P1/PPR2N2/2KR4 w - - 0 27"
+            },
+            {
+              "san": "Qd2",
+              "fen": "2r2rk1/2q1b1p1/p5b1/1ppPpp1p/2P2P1P/3B2P1/PPRQ1N2/2KR4 b - - 1 27"
+            },
+            {
+              "san": "Bd6",
+              "fen": "2r2rk1/2q3p1/p2b2b1/1ppPpp1p/2P2P1P/3B2P1/PPRQ1N2/2KR4 w - - 2 28",
+              "comment": "Looks rather hopeless for White to me. Eventually he will lose on the dark squares."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 51,
+      "moveNumber": 26,
+      "side": "white",
+      "san": "Qd2",
+      "fen": "2r2rk1/1pq1b1p1/3p2b1/p1nPpp1p/2P2P1P/3BB1P1/PPRQ1N2/2KR4 b - - 1 26"
+    },
+    {
+      "ply": 52,
+      "moveNumber": 26,
+      "side": "black",
+      "san": "e4",
+      "fen": "2r2rk1/1pq1b1p1/3p2b1/p1nP1p1p/2P1pP1P/3BB1P1/PPRQ1N2/2KR4 w - - 0 27",
+      "comment": "White is completely stuck, has no counterplay, no plan. But the position is locked. All Black has to do is get the b7-b5 advance through. If he manages, he should win. And he should manage."
+    },
+    {
+      "ply": 53,
+      "moveNumber": 27,
+      "side": "white",
+      "san": "Be2",
+      "fen": "2r2rk1/1pq1b1p1/3p2b1/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/2KR4 b - - 1 27"
+    },
+    {
+      "ply": 54,
+      "moveNumber": 27,
+      "side": "black",
+      "san": "Be8",
+      "fen": "2r1brk1/1pq1b1p1/3p4/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/2KR4 w - - 2 28"
+    },
+    {
+      "ply": 55,
+      "moveNumber": 28,
+      "side": "white",
+      "san": "Kb1",
+      "fen": "2r1brk1/1pq1b1p1/3p4/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/1K1R4 b - - 3 28"
+    },
+    {
+      "ply": 56,
+      "moveNumber": 28,
+      "side": "black",
+      "san": "Bf6",
+      "fen": "2r1brk1/1pq3p1/3p1b2/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/1K1R4 w - - 4 29"
+    },
+    {
+      "ply": 57,
+      "moveNumber": 29,
+      "side": "white",
+      "san": "Re1",
+      "fen": "2r1brk1/1pq3p1/3p1b2/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/1K2R3 b - - 5 29"
+    },
+    {
+      "ply": 58,
+      "moveNumber": 29,
+      "side": "black",
+      "san": "a4",
+      "fen": "2r1brk1/1pq3p1/3p1b2/2nP1p1p/p1P1pP1P/4B1P1/PPRQBN2/1K2R3 w - - 0 30",
+      "nags": [
+        "??"
+      ],
+      "comment": "Much like I did to Caruana for playing h2-h3 in game 8, I am giving an exceptionally harsh evaluation to Magnus for this move, which is totally not in the spirit of the position. His only plan to win the game is b7-b5. It should be enough if he manages under decent circumstances. But now, he has cleared the b4-square for White's queen! This makes his task significantly harder, if not impossible. In addition, the pawn on a4 deprives Black's knight and bishop access to this square, which both pieces would want to use. Magnus said this was prophylaxis against Bd4 due to Nb3, but it still doesn't come close to justifying allowing the queen to b4.",
+      "variations": [
+        {
+          "startsAfterPly": 57,
+          "moves": [
+            {
+              "san": "Ba4",
+              "fen": "2r2rk1/1pq3p1/3p1b2/p1nP1p1p/b1P1pP1P/4B1P1/PPRQBN2/1K2R3 w - - 6 30",
+              "comment": "This was the most convincing route to victory according to the machine, and Caruana mentioned it was what he was most concerned about. Black wins in all lines, for instance",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "b3",
+              "fen": "2r2rk1/1pq3p1/3p1b2/p1nP1p1p/b1P1pP1P/1P2B1P1/P1RQBN2/1K2R3 b - - 0 30"
+            },
+            {
+              "san": "Bxb3",
+              "fen": "2r2rk1/1pq3p1/3p1b2/p1nP1p1p/2P1pP1P/1b2B1P1/P1RQBN2/1K2R3 w - - 0 31",
+              "nags": [
+                "!"
+              ]
+            },
+            {
+              "san": "axb3",
+              "fen": "2r2rk1/1pq3p1/3p1b2/p1nP1p1p/2P1pP1P/1P2B1P1/2RQBN2/1K2R3 b - - 0 31"
+            },
+            {
+              "san": "Nxb3",
+              "fen": "2r2rk1/1pq3p1/3p1b2/p2P1p1p/2P1pP1P/1n2B1P1/2RQBN2/1K2R3 w - - 0 32"
+            },
+            {
+              "san": "Qd1",
+              "fen": "2r2rk1/1pq3p1/3p1b2/p2P1p1p/2P1pP1P/1n2B1P1/2R1BN2/1K1QR3 b - - 1 32"
+            },
+            {
+              "san": "a4",
+              "fen": "2r2rk1/1pq3p1/3p1b2/3P1p1p/p1P1pP1P/1n2B1P1/2R1BN2/1K1QR3 w - - 0 33",
+              "comment": "And Black can just ignore White's extra piece, which is meaningless. b7-b5 comes next. Still, this is hard to do in an OTB game. I don't really mind Magnus not playing Ba4. Playing a4 was what I took issue with.",
+              "nags": [
+                "!"
+              ]
+            }
+          ]
+        },
+        {
+          "startsAfterPly": 57,
+          "moves": [
+            {
+              "san": "Rb8",
+              "fen": "1r2brk1/1pq3p1/3p1b2/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/1K2R3 w - - 6 30",
+              "comment": "A move like this one is what I would expect a human to do. b5 is coming and White can't do anything about it.",
+              "nags": [
+                "!?"
+              ]
+            },
+            {
+              "san": "Bd4",
+              "fen": "1r2brk1/1pq3p1/3p1b2/p1nP1p1p/2PBpP1P/6P1/PPRQBN2/1K2R3 b - - 7 30",
+              "comment": "A bad move, but what else? In addition to Nd3 winning material, this position is also just wretched after the simple"
+            },
+            {
+              "san": "Bxd4",
+              "fen": "1r2brk1/1pq3p1/3p4/p1nP1p1p/2PbpP1P/6P1/PPRQBN2/1K2R3 w - - 0 31"
+            },
+            {
+              "san": "Qxd4",
+              "fen": "1r2brk1/1pq3p1/3p4/p1nP1p1p/2PQpP1P/6P1/PPR1BN2/1K2R3 b - - 0 31"
+            },
+            {
+              "san": "b5",
+              "fen": "1r2brk1/2q3p1/3p4/ppnP1p1p/2PQpP1P/6P1/PPR1BN2/1K2R3 w - - 0 32",
+              "comment": "Black should win, easily."
+            }
+          ]
+        },
+        {
+          "startsAfterPly": 57,
+          "moves": [
+            {
+              "san": "g6",
+              "fen": "2r1brk1/1pq5/3p1bp1/p1nP1p1p/2P1pP1P/4B1P1/PPRQBN2/1K2R3 w - - 0 30",
+              "comment": "Even a patient waiting move like this might be enough."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ply": 59,
+      "moveNumber": 30,
+      "side": "white",
+      "san": "Qb4",
+      "fen": "2r1brk1/1pq3p1/3p1b2/2nP1p1p/pQP1pP1P/4B1P1/PPR1BN2/1K2R3 b - - 1 30",
+      "nags": [
+        "!"
+      ],
+      "comment": "Now how will b5 come? Black has no other way to open the position."
+    },
+    {
+      "ply": 60,
+      "moveNumber": 30,
+      "side": "black",
+      "san": "g6",
+      "fen": "2r1brk1/1pq5/3p1bp1/2nP1p1p/pQP1pP1P/4B1P1/PPR1BN2/1K2R3 w - - 0 31"
+    },
+    {
+      "ply": 61,
+      "moveNumber": 31,
+      "side": "white",
+      "san": "Rd1",
+      "fen": "2r1brk1/1pq5/3p1bp1/2nP1p1p/pQP1pP1P/4B1P1/PPR1BN2/1K1R4 b - - 1 31"
+    },
+    {
+      "ply": 62,
+      "moveNumber": 31,
+      "side": "black",
+      "san": "Ra8",
+      "fen": "r3brk1/1pq5/3p1bp1/2nP1p1p/pQP1pP1P/4B1P1/PPR1BN2/1K1R4 w - - 2 32",
+      "comment": "Magnus has gotten a lot of grief for offering a draw here, from both club level online kibitzers to past World Champions. I'll spare him my full thoughts on the matter, but I will say I don't really understand his decision. He faces absolutely no risk ever and still has some plans at his disposal to try to get b5 through, with as Bd7, Rrb8, etc. Maybe White is holding, maybe he isn't. I'd need to look a lot longer to draw any conclusions. But I really think Black should have played, at least until time control. All that said, I still think he is a favorite in the playoff. His rapid and blitz skills have long been atop the world, and I do think he played better overall chess in the classical portion (if this can ever be said for a 6-6 tie with no decisive games). Still, while he is a favorite in the playoff, his victory is by no means gauranteed. Upsets can happen, and Magnus would do well to try not to be tilted by both starting and ending the match by drawing a winning position with Black."
+    }
+  ],
+  "conceptChecks": [
+    {
+      "id": "g12-ne7",
+      "ply": 16,
+      "prompt": "Carlsen plays 8...Ne7 (\"!?\"). How does the annotator characterize it?",
+      "options": [
+        {
+          "text": "It's the first surprise of the game — a deviation from the 8...Nb8 seen in Games 8 and 10.",
+          "explanation": "Correct. The note: \"The first surprise. Games 8 and 10 saw 8...Nb8.\""
+        },
+        {
+          "text": "It's Carlsen's habitual main line that Caruana was surely booked against.",
+          "explanation": "No — the annotator calls it 'the first surprise,' a change from his earlier 8...Nb8."
+        },
+        {
+          "text": "It immediately wins the d5-pawn.",
+          "explanation": "The annotator makes no such claim; it's a repositioning surprise, not a tactic."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare it to what Black played in the earlier games of the match."
+    },
+    {
+      "id": "g12-h4",
+      "ply": 23,
+      "prompt": "What is the idea behind Caruana's 12.h4 (\"!?\")?",
+      "options": [
+        {
+          "text": "White plays against the g6-knight; the threat of h4-h5 is annoying for Black to meet.",
+          "explanation": "Correct. The note: \"White aims to play against the g6 knight. The threat of h4-h5 is not particularly subtle, but a bit annoying for Black to meet.\""
+        },
+        {
+          "text": "It simply prepares quick kingside castling.",
+          "explanation": "No — White's idea is the h5 thrust against the knight, not castling."
+        },
+        {
+          "text": "It defends against a Black mating attack on h2.",
+          "explanation": "The annotator describes h4 as an aggressive plan targeting g6, not a defensive move."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which black piece does the h-pawn want to harass?"
+    },
+    {
+      "id": "g12-f3",
+      "ply": 35,
+      "prompt": "The annotator marks 18.f3 with a \"?!\". Why does he criticize it?",
+      "options": [
+        {
+          "text": "It's too defensive and too slow; the natural 18.Be2 was called for instead.",
+          "explanation": "Correct. The note: \"The first dubious move of the game... this strikes me as too defensive and too slow,\" and he gives 18.Be2 as the move that \"looks by far the most natural.\""
+        },
+        {
+          "text": "It is forced in order to avoid losing a piece.",
+          "explanation": "No — the annotator offers 18.Be2 as a better, natural alternative, so f3 was not forced."
+        },
+        {
+          "text": "It wins the e5-pawn.",
+          "explanation": "No such claim; he calls f3 dubious and passive, not a material grab."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Was this a fighting move or a timid one?"
+    },
+    {
+      "id": "g12-bg6",
+      "ply": 44,
+      "prompt": "Carlsen plays 22...Bg6 (\"!\"). What does the annotator say about this moment?",
+      "options": [
+        {
+          "text": "It prepares ...f5 to roll the central majority; the timing exploits that White can't reply g3-g4 because of the hanging c-pawn.",
+          "explanation": "Correct. The note: \"f7-f5 is coming... I think Black is already seriously better. Note that Carlsen chose this moment... since White cannot comfortably play g3-g4 in response due to the hanging c-pawn.\""
+        },
+        {
+          "text": "It is a defensive move to hold a worse position.",
+          "explanation": "The opposite — the annotator says Black is 'already seriously better' and pressing."
+        },
+        {
+          "text": "It forces an immediate draw by repetition.",
+          "explanation": "No; Black is playing for the win with his central pawns."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Why is this the right moment, and what does it prepare?"
+    },
+    {
+      "id": "g12-a5",
+      "ply": 50,
+      "prompt": "The annotator gives 25...a5 a \"!?\". What is his verdict?",
+      "options": [
+        {
+          "text": "It isn't the most precise — 25...exf4 or 25...b5 were stronger — but Black should still be winning.",
+          "explanation": "Correct. The note: \"This move is not best. But it doesn't really bother me- I think Black should still win,\" while offering 25...exf4 and 25...b5 as alternatives."
+        },
+        {
+          "text": "It's an outright blunder that throws away the win.",
+          "explanation": "No — the annotator says it 'doesn't really bother me' and that Black should still win."
+        },
+        {
+          "text": "It's clearly the best move in the position.",
+          "explanation": "The annotator explicitly says it 'is not best,' preferring exf4 or b5."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Inaccurate, but does it actually spoil anything?"
+    },
+    {
+      "id": "g12-a4",
+      "ply": 58,
+      "prompt": "The annotator slaps 29...a4 with \"??\". Why is it such a serious error?",
+      "options": [
+        {
+          "text": "It opens the b4-square for White's queen and denies Black's own pieces the a4-square, sabotaging the only winning plan of ...b7-b5; 29...Ba4! was the convincing route.",
+          "explanation": "Correct. The note: \"His only plan to win the game is b7-b5... now he has cleared the b4-square for White's queen!... the pawn on a4 deprives Black's knight and bishop access to this square.\" He gives 29...Ba4! as \"the most convincing route to victory.\""
+        },
+        {
+          "text": "It simply hangs the a-pawn for nothing.",
+          "explanation": "That's not the point — the flaw is strategic: it frees Qb4 and kills the ...b5 break."
+        },
+        {
+          "text": "It walks into a forced checkmate.",
+          "explanation": "No mate is mentioned; the criticism is that it ruins Black's winning plan."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What square does the pawn surrender, and which plan does it wreck?"
+    }
+  ]
+}

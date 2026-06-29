@@ -2,20 +2,27 @@
 // components/play/PlayGameInsights.tsx
 // Post-game insights for saved Play games — pivotal plies + deterministic tags.
 
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
+import Link from "next/link"
 import { clsx } from "clsx"
 import type { GameResult, PieceColor, PlayedMove } from "@/lib/play/types"
 import { getKeyConcept } from "@/lib/key-concepts"
 import { getTacticalPattern } from "@/lib/tactical-patterns"
+import { keyConceptHref, tacticalPatternHref } from "@/lib/insights/learn-links"
+import { MotifPracticeSection } from "@/components/insights/MotifPracticeSection"
+import { RecommendedPuzzles } from "@/components/insights/RecommendedPuzzles"
+import { AnalysisModeToggle } from "@/components/insights/AnalysisModeToggle"
+import { buildMotifPractice, type MotifPlySource } from "@/lib/insights/practice"
 import { COMMENTARY_FEATURE_ENABLED } from "@/lib/commentary/config"
-import { generateCoachComment } from "@/lib/commentary/client"
-import { buildConceptRecord } from "@/lib/commentary/concept-record"
-import { computeMoveEvals } from "@/lib/commentary/engine-eval"
-import { COMMENTARY_ANALYSIS_DEPTH } from "@/lib/commentary/config"
 import {
-  rankPlayPivotalCandidates,
-  pickBiggestEvalDropPly,
-  aggregateFromPlyInsights,
+  scanGame,
+  aggregateScanned,
+  motifSourcesFromScanned,
+  buildNotableComments,
+  type AnalysisDepthMode,
+  type GamePlyInput,
+} from "@/lib/insights/analyze-game"
+import {
   verifiedTagsFromRecord,
   fenBeforeAt,
   type GameInsights,
@@ -27,16 +34,35 @@ import { MarkdownText } from "@/components/ui/MarkdownText"
 
 interface Props {
   moves: PlayedMove[]
-  result: GameResult
+  result?: GameResult
   userColor: PieceColor
+  /** Start position when the game does not begin from the standard setup (uploads). */
+  startFen?: string
   className?: string
 }
 
-export function PlayGameInsights({ moves, result, userColor, className }: Props) {
+export function PlayGameInsights({ moves, userColor, startFen, className }: Props) {
   const [insights, setInsights] = useState<GameInsights | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [progress, setProgress] = useState<string | null>(null)
+  const [mode, setMode] = useState<AnalysisDepthMode>("standard")
+
+  const practice = useMemo(() => {
+    if (!insights) return null
+    const sources: MotifPlySource[] =
+      insights.motifSources ??
+      insights.plyInsights.map((pi) => ({
+        ply: pi.ply,
+        fenBefore: pi.fenBefore,
+        moveSan: pi.moveSan,
+        bestMoveSan: pi.bestMoveSan,
+        classification: pi.classification,
+        detectedMotifs: pi.detectedMotifs,
+        moveLabel: `Move ${Math.ceil((pi.ply + 1) / 2)}`,
+      }))
+    return buildMotifPractice(sources)
+  }, [insights])
 
   const generate = useCallback(async () => {
     if (moves.length === 0) {
@@ -46,70 +72,63 @@ export function PlayGameInsights({ moves, result, userColor, className }: Props)
 
     setLoading(true)
     setError(null)
-    setProgress("Picking key moments…")
+    setProgress("Scanning every move…")
 
     try {
-      const candidates = rankPlayPivotalCandidates(moves, result).slice(0, 8)
-      if (candidates.length === 0) {
-        setError("No moves to analyze in this game.")
+      const plies: GamePlyInput[] = moves.map((m, i) => ({
+        ply: i,
+        fenBefore: fenBeforeAt(moves, i, startFen),
+        moveSan: m.san,
+      }))
+
+      const scanned = await scanGame(plies, mode, {
+        onProgress: (done, total) => setProgress(`Analyzing position ${done} of ${total}…`),
+      })
+      if (scanned.length === 0) {
+        setError("Couldn't analyze this game. Try again.")
         return
       }
 
-      setProgress("Scanning positions…")
-      const evaluated = await Promise.all(
-        candidates.map(async (c) => {
-          const fenBefore = fenBeforeAt(moves, c.ply)
-          const moveSan = moves[c.ply].san
-          const { before, after } = await computeMoveEvals(
-            fenBefore,
-            moveSan,
-            COMMENTARY_ANALYSIS_DEPTH,
-          )
-          const record = buildConceptRecord({ fenBefore, moveSan, before, after })
-          return { ply: c.ply, cpLoss: record.cpLoss, reason: c.reason }
-        }),
-      )
+      const notable = scanned.filter((s) => s.notable)
+      setProgress("Writing coach notes…")
+      const comments = await buildNotableComments(notable, mode, {
+        onProgress: (done, total) => setProgress(`Writing coach note ${done} of ${total}…`),
+      })
 
-      const dropPly = pickBiggestEvalDropPly(evaluated)
-      const selectedPlies = new Set<number>()
-      for (const c of candidates.slice(0, 4)) selectedPlies.add(c.ply)
-      if (dropPly != null) selectedPlies.add(dropPly)
-      const pliesToAnalyze = [...selectedPlies].slice(0, 5)
-
-      const reasonByPly = new Map(candidates.map((c) => [c.ply, c.reason]))
-      if (dropPly != null) reasonByPly.set(dropPly, "biggest swing")
-
-      const plyInsights: PlyInsight[] = []
-      for (let i = 0; i < pliesToAnalyze.length; i++) {
-        const ply = pliesToAnalyze[i]
-        setProgress(`Analyzing move ${i + 1} of ${pliesToAnalyze.length}…`)
-        const fenBefore = fenBeforeAt(moves, ply)
-        const moveSan = moves[ply].san
-        const { response, record } = await generateCoachComment({ fenBefore, moveSan })
-        if (!record) continue
-        const verified = verifiedTagsFromRecord(record)
-        plyInsights.push({
-          ply,
-          moveSan: record.moveSan,
-          fenBefore,
-          reason: reasonByPly.get(ply) ?? "notable",
-          comment: response.comment,
-          source: response.source,
-          classification: record.classification,
-          detectedKeyConceptIds: verified.keyConceptIds,
-          detectedTacticalPatternIds: verified.tacticalPatternIds,
+      const plyInsights: PlyInsight[] = notable
+        .slice()
+        .sort((a, b) => a.ply - b.ply)
+        .map((s) => {
+          const verified = verifiedTagsFromRecord(s.record)
+          const c = comments.get(s.ply)
+          return {
+            ply: s.ply,
+            moveSan: s.moveSan,
+            fenBefore: s.fenBefore,
+            reason: s.reason,
+            comment: c?.comment ?? "",
+            source: c?.source ?? "template",
+            classification: s.classification,
+            detectedKeyConceptIds: verified.keyConceptIds,
+            detectedTacticalPatternIds: verified.tacticalPatternIds,
+            detectedMotifs: s.detectedMotifs,
+            bestMoveSan: s.bestMoveSan,
+          }
         })
-      }
 
-      const aggregated = aggregateFromPlyInsights(plyInsights)
-      setInsights({ plyInsights, ...aggregated })
+      const aggregated = aggregateScanned(scanned, verifiedTagsFromRecord)
+      const motifSources = motifSourcesFromScanned(
+        scanned,
+        (ply) => `Move ${Math.ceil((ply + 1) / 2)}`,
+      )
+      setInsights({ plyInsights, ...aggregated, motifSources, analyzedCount: scanned.length })
     } catch {
       setError("Couldn't generate insights. Try again.")
     } finally {
       setLoading(false)
       setProgress(null)
     }
-  }, [moves, result])
+  }, [moves, mode, startFen])
 
   return (
     <div
@@ -130,12 +149,15 @@ export function PlayGameInsights({ moves, result, userColor, className }: Props)
           </p>
         </div>
         {COMMENTARY_FEATURE_ENABLED && !insights && !loading && (
-          <button
-            onClick={generate}
-            className="shrink-0 inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border-2 border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition"
-          >
-            🧠 Generate insights
-          </button>
+          <div className="flex flex-col items-stretch sm:items-end gap-2 shrink-0">
+            <AnalysisModeToggle mode={mode} onChange={setMode} />
+            <button
+              onClick={generate}
+              className="inline-flex items-center justify-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border-2 border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition"
+            >
+              🧠 Generate insights
+            </button>
+          </div>
         )}
       </div>
 
@@ -164,20 +186,24 @@ export function PlayGameInsights({ moves, result, userColor, className }: Props)
                   const concept = getKeyConcept(id)
                   if (!concept) return null
                   return (
-                    <div
+                    <Link
                       key={id}
-                      className="rounded-xl border border-amber-200/80 dark:border-amber-800/60 bg-amber-50/60 dark:bg-amber-950/30 px-4 py-3 flex gap-3"
+                      href={keyConceptHref(id)}
+                      className="group rounded-xl border border-amber-200/80 dark:border-amber-800/60 bg-amber-50/60 dark:bg-amber-950/30 px-4 py-3 flex gap-3 hover:border-amber-400 dark:hover:border-amber-600 hover:bg-amber-100/70 dark:hover:bg-amber-900/40 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                     >
                       <span className="text-lg shrink-0" aria-hidden>{concept.icon}</span>
-                      <div className="min-w-0">
-                        <p className="font-display font-bold text-amber-950 dark:text-amber-100 text-sm">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-display font-bold text-amber-950 dark:text-amber-100 text-sm flex items-center gap-1.5">
                           {concept.title}
+                          <span className="text-[10px] font-bold text-amber-600/70 dark:text-amber-300/70 opacity-0 group-hover:opacity-100 transition">
+                            Learn ↗
+                          </span>
                         </p>
                         <p className="text-xs text-amber-900/80 dark:text-amber-200/80 leading-relaxed mt-0.5">
                           {concept.description}
                         </p>
                       </div>
-                    </div>
+                    </Link>
                   )
                 })}
               </div>
@@ -194,23 +220,39 @@ export function PlayGameInsights({ moves, result, userColor, className }: Props)
                   const pattern = getTacticalPattern(id)
                   if (!pattern) return null
                   return (
-                    <span
+                    <Link
                       key={id}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-200 border border-violet-200 dark:border-violet-800"
+                      href={tacticalPatternHref(id)}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-200 border border-violet-200 dark:border-violet-800 hover:bg-violet-200 dark:hover:bg-violet-900/70 hover:border-violet-400 dark:hover:border-violet-600 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                     >
                       <span aria-hidden>{pattern.icon}</span>
                       Detected: {pattern.title}
-                    </span>
+                      <span aria-hidden className="text-violet-500/80 dark:text-violet-300/80">↗</span>
+                    </Link>
                   )
                 })}
               </div>
             </div>
           )}
 
+          {insights.aggregatedMotifs.length > 0 && practice && (
+            <MotifPracticeSection motifs={insights.aggregatedMotifs} practice={practice} />
+          )}
+
+          <RecommendedPuzzles
+            keyConceptIds={insights.aggregatedKeyConcepts}
+            tacticalPatternIds={insights.aggregatedTacticalPatterns}
+            motifIds={insights.aggregatedMotifs}
+          />
+
           {insights.plyInsights.length > 0 && (
             <div className="flex flex-col gap-3">
               <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500 dark:text-slate-400">
                 Notable moves
+                <span className="ml-1.5 font-semibold normal-case text-gray-400 dark:text-slate-500">
+                  {insights.plyInsights.length} found
+                  {insights.analyzedCount ? ` · ${insights.analyzedCount} moves analyzed` : ""}
+                </span>
               </p>
               {insights.plyInsights.map((pi) => (
                 <MoveInsightCard key={pi.ply} insight={pi} moves={moves} userColor={userColor} />
@@ -220,6 +262,7 @@ export function PlayGameInsights({ moves, result, userColor, className }: Props)
 
           {insights.aggregatedKeyConcepts.length === 0 &&
             insights.aggregatedTacticalPatterns.length === 0 &&
+            insights.aggregatedMotifs.length === 0 &&
             insights.plyInsights.length > 0 && (
               <p className="text-sm text-gray-500 dark:text-slate-400">
                 No rule-based patterns matched — coach commentary still describes what happened.
@@ -227,13 +270,16 @@ export function PlayGameInsights({ moves, result, userColor, className }: Props)
             )}
 
           {COMMENTARY_FEATURE_ENABLED && (
-            <button
-              onClick={generate}
-              disabled={loading}
-              className="self-start text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline disabled:opacity-50"
-            >
-              Regenerate insights
-            </button>
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <AnalysisModeToggle mode={mode} onChange={setMode} disabled={loading} />
+              <button
+                onClick={generate}
+                disabled={loading}
+                className="self-start text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline disabled:opacity-50"
+              >
+                Regenerate insights
+              </button>
+            </div>
           )}
         </>
       )}
@@ -277,24 +323,26 @@ function MoveInsightCard({
             const p = getTacticalPattern(id)
             if (!p) return null
             return (
-              <span
+              <Link
                 key={id}
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-200"
+                href={tacticalPatternHref(id)}
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-800 dark:text-violet-200 hover:bg-violet-200 dark:hover:bg-violet-900/70 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
               >
-                {p.icon} Detected: {p.title}
-              </span>
+                {p.icon} Detected: {p.title} ↗
+              </Link>
             )
           })}
           {insight.detectedKeyConceptIds.map((id) => {
             const c = getKeyConcept(id)
             if (!c) return null
             return (
-              <span
+              <Link
                 key={id}
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200"
+                href={keyConceptHref(id)}
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-900/70 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
               >
-                {c.icon} {c.title}
-              </span>
+                {c.icon} {c.title} ↗
+              </Link>
             )
           })}
         </div>

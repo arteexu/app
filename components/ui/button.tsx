@@ -15,6 +15,10 @@ export function Button({ variant = "primary", size = "md", className, children, 
         "transition-all duration-100 focus:outline-none focus:ring-2 focus:ring-offset-2",
         // Disabled: flatten — no 3D, no movement
         "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0",
+        // Bitcoin DeFi: pill shape, snappier transitions, accent focus ring
+        "bitcoin:rounded-full bitcoin:gap-2 bitcoin:duration-300",
+        "bitcoin:focus:ring-[#F7931A] bitcoin:focus:ring-offset-[#030304]",
+        "bitcoin:disabled:hover:scale-100",
 
         // ── Primary — indigo, 3D bottom edge in indigo-900 ───────────────────
         variant === "primary" && [
@@ -29,6 +33,11 @@ export function Button({ variant = "primary", size = "md", className, children, 
           "active:bg-indigo-800",
           "active:shadow-[0_1px_0_#312e81,0_2px_4px_rgba(79,70,229,0.15)]",
           "active:translate-y-[4px]",
+          // Bitcoin DeFi: gradient pill that emits orange light
+          "bitcoin:bg-gradient-to-r bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:focus:ring-[#F7931A]",
+          "bitcoin:shadow-[0_0_20px_-5px_rgba(234,88,12,0.5)]",
+          "bitcoin:hover:translate-y-0 bitcoin:hover:scale-105 bitcoin:hover:shadow-[0_0_30px_-5px_rgba(247,147,26,0.6)]",
+          "bitcoin:active:translate-y-0 bitcoin:active:scale-100 bitcoin:active:shadow-[0_0_20px_-5px_rgba(234,88,12,0.5)]",
         ],
 
         // ── Secondary — white/slate, neutral bottom edge ──────────────────────
@@ -46,6 +55,10 @@ export function Button({ variant = "primary", size = "md", className, children, 
           // Active: fully flat
           "active:bg-gray-200 dark:active:bg-slate-600",
           "active:shadow-none active:translate-y-[4px]",
+          // Bitcoin DeFi: outline that fills on hover
+          "bitcoin:bg-transparent bitcoin:text-white bitcoin:border-2 bitcoin:border-white/20 bitcoin:shadow-none bitcoin:focus:ring-[#F7931A]",
+          "bitcoin:hover:bg-white/10 bitcoin:hover:border-white bitcoin:hover:shadow-none bitcoin:hover:translate-y-0",
+          "bitcoin:active:bg-white/10 bitcoin:active:shadow-none bitcoin:active:translate-y-0",
         ],
 
         // ── Ghost — no background, subtle lift on hover ───────────────────────
@@ -53,12 +66,16 @@ export function Button({ variant = "primary", size = "md", className, children, 
           "text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500",
           "hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:shadow-sm hover:-translate-y-px",
           "active:translate-y-px active:shadow-none",
+          // Bitcoin DeFi: transparent, warms to orange on hover
+          "bitcoin:text-white bitcoin:focus:ring-[#F7931A]",
+          "bitcoin:hover:bg-white/10 bitcoin:hover:text-[#F7931A] bitcoin:hover:shadow-none bitcoin:hover:translate-y-0",
+          "bitcoin:active:translate-y-0 bitcoin:active:shadow-none",
         ],
 
         // ── Sizes ─────────────────────────────────────────────────────────────
         size === "sm" && "px-3 py-1.5 text-sm",
-        size === "md" && "px-5 py-2.5 text-base",
-        size === "lg" && "px-7 py-3.5 text-lg",
+        size === "md" && "px-5 py-2.5 text-base bitcoin:min-h-[44px]",
+        size === "lg" && "px-7 py-3.5 text-lg bitcoin:min-h-[48px]",
 
         className
       )}

@@ -29,7 +29,7 @@ export function MoveList({ moves }: { moves: PlayedMove[] }) {
   }
 
   return (
-    <div className="max-h-48 lg:max-h-none lg:flex-1 overflow-y-auto rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40">
+    <div className="max-h-48 lg:max-h-none lg:flex-1 lg:min-h-0 overflow-y-auto rounded-xl border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40">
       <table className="w-full text-sm tabular-nums">
         <tbody>
           {rows.map((row, idx) => (

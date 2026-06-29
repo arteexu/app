@@ -8,6 +8,8 @@ import { sideToMove, uciPvToSan, uciToSan } from "@/lib/engine/format"
 import { classifyMove } from "./classify"
 import { enumerateAttacks, findHanging } from "./attacks"
 import { materialDelta, matchTags } from "./match"
+import { diffConcepts, prioritizeConcepts } from "./concepts"
+import { COMMENTARY_TOP_K_CONCEPTS } from "./config"
 import type { CandidateLine, ConceptRecord, GamePhase, RefutationLine } from "./types"
 
 function phaseOf(fen: string): GamePhase {
@@ -76,6 +78,10 @@ export function buildConceptRecord(args: BuildConceptRecordArgs): ConceptRecord 
     isCapture,
   })
 
+  // CCC concept taxonomy: before/after scores (mover POV) + top-k by delta.
+  const conceptScores = diffConcepts(fenBefore, fenAfter, side)
+  const prioritizedConcepts = prioritizeConcepts(conceptScores, COMMENTARY_TOP_K_CONCEPTS)
+
   return {
     fenBefore,
     fenAfter,
@@ -101,6 +107,8 @@ export function buildConceptRecord(args: BuildConceptRecordArgs): ConceptRecord 
     hangingPieces,
     matchedTacticalPatternIds: tacticalPatternIds,
     matchedKeyConceptIds: keyConceptIds,
+    conceptScores,
+    prioritizedConcepts,
     userRating,
   }
 }

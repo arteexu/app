@@ -1,10 +1,12 @@
 import attackAndCheckmate from "@/content/courses/chess-attack-and-checkmate.json"
 import attackingChess from "@/content/courses/attacking-chess.json"
+import tacticsTrainer from "@/content/courses/tactics-trainer.json"
 import type { Course, Chapter, Lesson } from "./types"
 
 const COURSES: Course[] = [
   attackAndCheckmate as Course,
   attackingChess as Course,
+  tacticsTrainer as Course,
 ]
 
 export function getChapterLessons(chapter: Chapter): Lesson[] {

@@ -1,0 +1,122 @@
+{
+  "id": "carlsen-caruana-2018-game-05",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 5",
+  "description": "Caruana sacrifices a pawn with the bold 6.b4 in a Rossolimo Sicilian and pressures Carlsen the most he has all match, but the World Champion defends precisely through a forced sequence to hold the draw. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "5",
+    "eco": "B31",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g5-b4",
+      "ply": 11,
+      "prompt": "Caruana plays 6.b4 (\"!?\"). What is the idea behind this move?",
+      "options": [
+        {
+          "text": "An enterprising pawn offer to break open the center before Black, who lags in development, can finish castling.",
+          "explanation": "Correct. The annotator calls it \"an enterprising, aggressive, and very principled move,\" noting Black \"is behind on development, and White tries to break down the center and open the position before that happens.\""
+        },
+        {
+          "text": "A quiet developing move that keeps the position closed.",
+          "explanation": "The opposite — the annotator says playing quietly with 6.c3 \"will not do\" and that he would \"already prefer Black\" in that case."
+        },
+        {
+          "text": "It wins a central pawn by force.",
+          "explanation": "No — 6.b4 gives up a pawn; it is a gambit for development and central pressure, not a way to win material."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Who is ahead in development right now?"
+    },
+    {
+      "id": "g5-nxb4",
+      "ply": 12,
+      "prompt": "Carlsen recaptures with 6...Nxb4 (\"!\") rather than 6...cxb4. Why is taking with the knight preferred?",
+      "options": [
+        {
+          "text": "After 6...cxb4 7.a3! White gets excellent compensation in a Sicilian–Benko hybrid, and clinging to the pawn can land Black in \"massive trouble.\"",
+          "explanation": "Correct. The note says 6...cxb4 is \"also possible, but after 7.a3! White has excellent compensation... If Black is too insistent about keeping his extra pawn, he can get into massive trouble.\""
+        },
+        {
+          "text": "6...cxb4 simply loses on the spot.",
+          "explanation": "Not quite — the annotator calls 6...cxb4 \"also possible,\" just giving White dangerous compensation, not an immediate loss."
+        },
+        {
+          "text": "Declining the pawn altogether was the most accurate choice.",
+          "explanation": "No — the annotator endorses capturing on b4; the only question is which way to take, and the knight is cleanest."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare what 7.a3! gives White after each capture."
+    },
+    {
+      "id": "g5-b4-push",
+      "ply": 24,
+      "prompt": "Under pressure Carlsen finds 12...b4 (\"!\"). Why does the annotator call it the best move?",
+      "options": [
+        {
+          "text": "Material is equal and Black cannot afford to lose a pawn — pushing b4 holds his material in a tense moment.",
+          "explanation": "Correct. The note: \"Material is equal, and Black cannot afford to lose a pawn. This must have been an unsettling moment for Magnus, but he found the best move.\""
+        },
+        {
+          "text": "It launches an immediate kingside pawn storm.",
+          "explanation": "No — the point of 12...b4 is to safeguard material in an equal-material position, not to start an attack."
+        },
+        {
+          "text": "It forces an immediate draw by repetition.",
+          "explanation": "The annotator frames it as defending under pressure, not as repeating the position."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What can't Black afford to do when material is level?"
+    },
+    {
+      "id": "g5-qa5",
+      "ply": 26,
+      "prompt": "What does 13...Qa5 (\"!\") accomplish, according to the annotation?",
+      "options": [
+        {
+          "text": "It is a multipurpose move — hitting the a1-bishop, defending the b4-pawn (to prepare Bc8-e6), and pressuring the c5-pawn.",
+          "explanation": "Correct. The note: \"Simple and strong... Black hits the a1 bishop, defends the b4 pawn to prepare for Bc8-e6, and pressures the c5-pawn.\""
+        },
+        {
+          "text": "It offers a queen trade to bail into an immediate draw.",
+          "explanation": "No — the annotator describes an active, multipurpose move, after which \"play now takes on a very forced nature,\" not a peace offer."
+        },
+        {
+          "text": "It pins and wins a White knight.",
+          "explanation": "The annotator mentions no won piece; the move's value is in attacking a1, defending b4, and pressuring c5."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Count how many things the queen does on a5."
+    },
+    {
+      "id": "g5-nc6",
+      "ply": 32,
+      "prompt": "After 16...Nc6 (\"!\") the annotator says Black has a very healthy position. What is his plan?",
+      "options": [
+        {
+          "text": "Play Kd7, capture the c7-pawn, swing a rook to the a-file, and enjoy the bishop pair while White tries to use his development lead.",
+          "explanation": "Correct. The note: \"He can play Kd7, take the c-pawn, bring a rook to the a-file, and enjoy the bishop pair. White's only chance is to try to make something of his lead in development before Black consolidates.\""
+        },
+        {
+          "text": "Launch an immediate mating attack on White's king.",
+          "explanation": "No — the annotator describes calm consolidation (Kd7, win the c-pawn, bishop pair), not a mating attack."
+        },
+        {
+          "text": "Force a quick perpetual check.",
+          "explanation": "The annotator sees Black consolidating into a healthy long-term position, not seeking perpetual check."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The c7-pawn and the bishop pair are the keys."
+    }
+  ]
+}

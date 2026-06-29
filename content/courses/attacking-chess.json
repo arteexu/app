@@ -75,8 +75,15 @@
                     "label": "Ne5 — hits f7",
                     "detail": "The knight attacks the **f7** pawn and forces Black to block with …Nbd7.",
                     "kind": "good",
-                    "arrows": [{ "from": "e5", "to": "f7" }],
-                    "highlightSquares": ["f7"]
+                    "arrows": [
+                      {
+                        "from": "e5",
+                        "to": "f7"
+                      }
+                    ],
+                    "highlightSquares": [
+                      "f7"
+                    ]
                   }
                 ]
               }
@@ -99,7 +106,11 @@
               "moveBoardAnnotations": {
                 "0": {
                   "arrows": [
-                    { "from": "e2", "to": "a6", "color": "#f6a623" }
+                    {
+                      "from": "e2",
+                      "to": "a6",
+                      "color": "#f6a623"
+                    }
                   ],
                   "highlightSquares": {
                     "d3": "rgba(246, 166, 35, 0.15)",
@@ -149,8 +160,15 @@
                   "label": "Bishop already aimed",
                   "detail": "The d3 bishop sits on the **b1–h7 diagonal**. The moment the kingside opens, it points right at h7.",
                   "kind": "info",
-                  "arrows": [{ "from": "d3", "to": "h7" }],
-                  "highlightSquares": ["h7"]
+                  "arrows": [
+                    {
+                      "from": "d3",
+                      "to": "h7"
+                    }
+                  ],
+                  "highlightSquares": [
+                    "h7"
+                  ]
                 }
               ],
               "explanation": "h4! A great move. White pushes the h-pawn to hook the g-pawn and rip open the b1–h7 diagonal for the light-squared bishop.",
@@ -225,7 +243,10 @@
               },
               "keyConceptId": "kc-open-kingside-pawns",
               "explanation": "h5! Excellent. White rips open the black kingside with his pawns.",
-              "successMessage": "h5 — rip open the kingside!"
+              "successMessage": "h5 — rip open the kingside!",
+              "keyConcepts": [
+                "kc-open-kingside-pawns"
+              ]
             },
             {
               "type": "puzzle",
@@ -249,7 +270,10 @@
               },
               "keyConceptId": "kc-consider-opponent-plans",
               "explanation": "Bc2! Indeed, this is the computer recommended move. White retreats the bishop to preserve it and keep the attack going. Remember: we cannot just consider our own ideas — we must also consider what our opponent intends to do.",
-              "successMessage": "Bc2 — save the bishop and keep attacking!"
+              "successMessage": "Bc2 — save the bishop and keep attacking!",
+              "keyConcepts": [
+                "kc-consider-opponent-plans"
+              ]
             },
             {
               "type": "puzzle",
@@ -303,7 +327,10 @@
               },
               "keyConceptId": "kc-no-backwards-moves",
               "explanation": "f3! White drives the knight back and keeps the attack rolling. Bf4 was playable but too slow — as an attacker, avoid backwards moves when a forward thrust is available.",
-              "successMessage": "f3 — forward, not backwards!"
+              "successMessage": "f3 — forward, not backwards!",
+              "keyConcepts": [
+                "kc-no-backwards-moves"
+              ]
             },
             {
               "type": "puzzle",
@@ -327,7 +354,10 @@
               },
               "keyConceptId": "kc-bring-pieces-attack",
               "explanation": "Kg2! An excellent choice, and indeed the computer's top move. White prepares Rh1 to open up the h-file and crash in on the kingside. Bring more pieces into the attack.",
-              "successMessage": "Kg2 — prepare Rh1 and bring in the heavy pieces!"
+              "successMessage": "Kg2 — prepare Rh1 and bring in the heavy pieces!",
+              "keyConcepts": [
+                "kc-bring-pieces-attack"
+              ]
             },
             {
               "type": "puzzle",
@@ -415,7 +445,11 @@
                 }
               },
               "explanation": "Rh6! White brings the rook in and crashes in. Black has no way to stop Rxg6 and now loses. The attack finishes in style.",
-              "successMessage": "Rh6 — crash through on the kingside!"
+              "successMessage": "Rh6 — crash through on the kingside!",
+              "tacticalPatterns": [
+                "tp-taking-with-check",
+                "tp-danger-levels"
+              ]
             },
             {
               "type": "continuation",
@@ -457,7 +491,9 @@
                 "kc-calculate-deeper",
                 "kc-calculate-all-relevant-lines"
               ],
-              "tacticalPatternIds": ["tp-intermezzo-move"],
+              "tacticalPatternIds": [
+                "tp-intermezzo-move"
+              ],
               "steps": [
                 {
                   "type": "concept",
@@ -527,9 +563,19 @@
                       "detail": "The knight jumps to g5, attacking **f7** — defended only by the king. If Black loses f7, **Nxf7** wins the rook.",
                       "kind": "good",
                       "keyConceptId": "kc-see-the-whole-board",
-                      "arrows": [{ "from": "g5", "to": "f7" }],
-                      "highlightSquares": ["f7"]
+                      "arrows": [
+                        {
+                          "from": "g5",
+                          "to": "f7"
+                        }
+                      ],
+                      "highlightSquares": [
+                        "f7"
+                      ]
                     }
+                  ],
+                  "keyConcepts": [
+                    "kc-see-the-whole-board"
                   ]
                 },
                 {
@@ -571,8 +617,15 @@
                         "label": "Ng5 — attacks f7",
                         "detail": "The knight attacks **f7** and the pawn on e5. Aggressive, but now Black has a say.",
                         "kind": "good",
-                        "arrows": [{ "from": "g5", "to": "f7" }],
-                        "highlightSquares": ["f7"]
+                        "arrows": [
+                          {
+                            "from": "g5",
+                            "to": "f7"
+                          }
+                        ],
+                        "highlightSquares": [
+                          "f7"
+                        ]
                       }
                     ]
                   },
@@ -611,13 +664,23 @@
                       "detail": "White sacrifices on **f7**, tearing open the king's cover. After …Kxf7 **Qf3+** drives the king out.",
                       "kind": "good",
                       "keyConceptId": "kc-calculate-deeper",
-                      "arrows": [{ "from": "g5", "to": "f7" }],
-                      "highlightSquares": ["f7"]
+                      "arrows": [
+                        {
+                          "from": "g5",
+                          "to": "f7"
+                        }
+                      ],
+                      "highlightSquares": [
+                        "f7"
+                      ]
                     }
                   ],
                   "moveQualities": {
                     "0": "brilliant"
-                  }
+                  },
+                  "keyConcepts": [
+                    "kc-calculate-deeper"
+                  ]
                 },
                 {
                   "type": "concept",
@@ -678,7 +741,13 @@
                     }
                   },
                   "explanation": "…Na5 attacks the bishop on c4 — White's whole Ng5 idea depended on that piece. After Bb5+ c6 dxc6 bxc6, Black is down a pawn, but every piece is pointed at the center and ready to develop. White's bishop on b5 is awkward, the knight on g5 is offside, and the rest of White's army is still on the first rank.",
-                  "successMessage": "…Na5 refutes the attack — White's pieces are tangled while yours spring into action!"
+                  "successMessage": "…Na5 refutes the attack — White's pieces are tangled while yours spring into action!",
+                  "keyConcepts": [
+                    "kc-calculate-all-relevant-lines"
+                  ],
+                  "tacticalPatterns": [
+                    "tp-intermezzo-move"
+                  ]
                 },
                 {
                   "type": "continuation",
@@ -718,7 +787,10 @@
                 "kc-calculate-all-relevant-lines",
                 "kc-bring-pieces-attack"
               ],
-              "tacticalPatternIds": ["tp-fork", "tp-clearance"],
+              "tacticalPatternIds": [
+                "tp-fork",
+                "tp-clearance"
+              ],
               "steps": [
                 {
                   "type": "concept",
@@ -789,7 +861,9 @@
                   "subType": "best-move",
                   "tacticalPatternId": "tp-fork",
                   "tacticalPatternUnlockMoveIndex": 0,
-                  "responseDelayMs": { "0": 2800 },
+                  "responseDelayMs": {
+                    "0": 2800
+                  },
                   "question": "Black played …Bxc3. Find White's best move.",
                   "fen": "r1bqk2r/pppp1ppp/2n5/8/2BP4/2b2N2/P4PPP/R1BQ1RK1 w kq - 0 10",
                   "orientation": "white",
@@ -822,11 +896,26 @@
                       "tacticalPatternId": "tp-fork",
                       "keyConceptId": "kc-the-initiative",
                       "arrows": [
-                        { "from": "b3", "to": "c3" },
-                        { "from": "b3", "to": "f7" }
+                        {
+                          "from": "b3",
+                          "to": "c3"
+                        },
+                        {
+                          "from": "b3",
+                          "to": "f7"
+                        }
                       ],
-                      "highlightSquares": ["c3", "f7"]
+                      "highlightSquares": [
+                        "c3",
+                        "f7"
+                      ]
                     }
+                  ],
+                  "keyConcepts": [
+                    "kc-the-initiative"
+                  ],
+                  "tacticalPatterns": [
+                    "tp-fork"
                   ]
                 },
                 {
@@ -856,8 +945,15 @@
                       "label": "Bxf7+ — king exposed",
                       "detail": "The bishop captures on **f7**, ripping open the king's cover.",
                       "kind": "good",
-                      "arrows": [{ "from": "c4", "to": "f7" }],
-                      "highlightSquares": ["f7"]
+                      "arrows": [
+                        {
+                          "from": "c4",
+                          "to": "f7"
+                        }
+                      ],
+                      "highlightSquares": [
+                        "f7"
+                      ]
                     }
                   ]
                 },
@@ -882,7 +978,10 @@
                   },
                   "keyConceptId": "kc-calculate-all-relevant-lines",
                   "explanation": "Bg5! White brings the bishop into the game with tempo, attacking the queen. Black's king on f8 has no safe haven and with every move we put more pressure on.",
-                  "successMessage": "Bg5 — continue with force!"
+                  "successMessage": "Bg5 — continue with force!",
+                  "keyConcepts": [
+                    "kc-calculate-all-relevant-lines"
+                  ]
                 },
                 {
                   "type": "continuation",
@@ -909,10 +1008,19 @@
                         "detail": "The knight eyes **c6** and **f7**. Black's position is crumbling.",
                         "kind": "good",
                         "arrows": [
-                          { "from": "e5", "to": "c6" },
-                          { "from": "e5", "to": "f7" }
+                          {
+                            "from": "e5",
+                            "to": "c6"
+                          },
+                          {
+                            "from": "e5",
+                            "to": "f7"
+                          }
                         ],
-                        "highlightSquares": ["c6", "f7"]
+                        "highlightSquares": [
+                          "c6",
+                          "f7"
+                        ]
                       }
                     ]
                   }
@@ -943,7 +1051,13 @@
                   "successMessage": "Brilliant! Bg6 — mate is unstoppable.",
                   "moveQualities": {
                     "0": "brilliant"
-                  }
+                  },
+                  "keyConcepts": [
+                    "kc-bring-pieces-attack"
+                  ],
+                  "tacticalPatterns": [
+                    "tp-clearance"
+                  ]
                 },
                 {
                   "type": "concept",

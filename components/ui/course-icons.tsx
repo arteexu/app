@@ -5,7 +5,7 @@
 // from lib/course-previews.ts via the `icon` key. Unknown keys fall back to a
 // neutral chess pawn so a new course is never left without an emblem.
 
-export type CourseIconName = "fallen-king" | "charging-knight" | "pawn"
+export type CourseIconName = "fallen-king" | "charging-knight" | "crossed-swords" | "pawn"
 
 interface IconProps {
   className?: string
@@ -70,6 +70,34 @@ function ChargingKnightIcon({ className, style }: IconProps) {
   )
 }
 
+/**
+ * Tactics Trainer — two crossed blades. Tactics are the cut-and-thrust of
+ * chess: forks, pins, skewers, and sacrifices that win material by force. The
+ * crossed swords read instantly as "combat / sharp play".
+ */
+function CrossedSwordsIcon({ className, style }: IconProps) {
+  return (
+    <svg viewBox="0 0 48 48" fill="none" className={className} style={style} aria-hidden focusable="false">
+      <g stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+        {/* blade ↘ from top-left to bottom-right */}
+        <path d="M10 9 L31 30" />
+        {/* blade ↙ from top-right to bottom-left */}
+        <path d="M38 9 L17 30" />
+      </g>
+      <g fill="currentColor">
+        {/* tips */}
+        <path d="M8.4 7.4 12 8.2 11.2 11.6 7.8 10.8Z" />
+        <path d="M39.6 7.4 36 8.2 36.8 11.6 40.2 10.8Z" />
+        {/* hilts / crossguards + pommels at the bottom */}
+        <rect x="12.6" y="30" width="9.4" height="2.8" rx="1.4" transform="rotate(45 17.3 31.4)" />
+        <rect x="26" y="30" width="9.4" height="2.8" rx="1.4" transform="rotate(-45 30.7 31.4)" />
+        <circle cx="14.6" cy="36.4" r="2.4" />
+        <circle cx="33.4" cy="36.4" r="2.4" />
+      </g>
+    </svg>
+  )
+}
+
 /** Neutral fallback — a simple pawn, so every course shows an emblem. */
 function PawnIcon({ className, style }: IconProps) {
   return (
@@ -87,6 +115,7 @@ function PawnIcon({ className, style }: IconProps) {
 const COURSE_ICONS: Record<CourseIconName, (props: IconProps) => React.ReactElement> = {
   "fallen-king": FallenKingIcon,
   "charging-knight": ChargingKnightIcon,
+  "crossed-swords": CrossedSwordsIcon,
   pawn: PawnIcon,
 }
 

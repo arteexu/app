@@ -47,6 +47,22 @@ async function postCommentary(
   return (await res.json()) as CommentaryResponse
 }
 
+/** POST a record + generated comment to the GCC-Eval rubric judge. */
+export async function requestGccEval(
+  record: ConceptRecord,
+  comment: string,
+  signal?: AbortSignal,
+): Promise<import("./gcc-eval").GccEvalResult> {
+  const res = await fetch("/api/commentary-eval", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ record, comment }),
+    signal,
+  })
+  if (!res.ok) throw new Error(`GCC-Eval request failed (${res.status})`)
+  return (await res.json()) as import("./gcc-eval").GccEvalResult
+}
+
 /** POST a prebuilt ConceptRecord (client/browser analysis) and return commentary. */
 export async function requestCommentary(
   record: ConceptRecord,

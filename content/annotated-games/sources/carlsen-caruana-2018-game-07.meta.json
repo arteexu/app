@@ -1,0 +1,101 @@
+{
+  "id": "carlsen-caruana-2018-game-07",
+  "title": "Carlsen vs Caruana — 2018 WCC, Game 7",
+  "description": "Caruana meets Carlsen's Queen's Gambit with deep preparation in a rare c5 line, neutralizing the ambitious 13.Bg5 so smoothly that, as the annotator quips, the players should have shaken hands by move 14. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "7",
+    "eco": "D37",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g7-qd8",
+      "ply": 20,
+      "prompt": "What does the annotator say about 10...Qd8 (\"!?\")?",
+      "options": [
+        {
+          "text": "It's an extremely rare move that shows Caruana's deep preparation in this c5 line; the mainlines are 10...Be7 and 10...Bb4.",
+          "explanation": "Correct. The note: \"Another extremely rare move. Caruana definitely was well prepared with this c5 line,\" while 10...Be7 and 10...Bb4 \"are the mainlines.\""
+        },
+        {
+          "text": "It's a well-known main line played in thousands of games.",
+          "explanation": "The opposite — the annotator calls it \"extremely rare\" and lists 10...Be7 and 10...Bb4 as the mainlines."
+        },
+        {
+          "text": "It loses time and a pawn.",
+          "explanation": "The annotator makes no such claim; he praises it as well-prepared preparation, not a material concession."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "How common does the annotator say this queen retreat is?"
+    },
+    {
+      "id": "g7-bg5",
+      "ply": 25,
+      "prompt": "Why does the annotator give 13.Bg5 a \"!\"?",
+      "options": [
+        {
+          "text": "It's the most challenging, ambitious try, forcing Black to play accurately — whereas 13.cxd5 would promptly lead to a draw.",
+          "explanation": "Correct. The note: \"The most challenging move. Black now has to be pretty accurate to maintain a tenable position,\" and 13.cxd5 \"would promptly lead to a draw. Magnus' choice is more ambitious.\""
+        },
+        {
+          "text": "It wins a pawn by force.",
+          "explanation": "No — the annotator praises it as the most challenging, ambitious move, not as winning material."
+        },
+        {
+          "text": "It is the only move that avoids losing.",
+          "explanation": "No — alternatives like 13.cxd5 are fine and simply draw; 13.Bg5 is singled out for being more ambitious."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Compare it with the quick draw after 13.cxd5."
+    },
+    {
+      "id": "g7-dxc4",
+      "ply": 26,
+      "prompt": "Why is 13...dxc4 (\"!\") correct even though it lets Black's kingside pawns be compromised?",
+      "options": [
+        {
+          "text": "The compromised pawns turn out not to matter because Black gets a lot of counterplay; the passive 13...h6? would instead let 14.cxd5 favor White.",
+          "explanation": "Correct. The note: \"This will allow Black's kingside pawns to be compromised, but it turns out not to be an issue as he will get a lot of counterplay,\" whereas \"13...h6? 14.cxd5! Favors White.\""
+        },
+        {
+          "text": "It wins and keeps the c4-pawn permanently.",
+          "explanation": "No — White will regain the c4-pawn; the point is the counterplay Black gets, not holding the extra pawn."
+        },
+        {
+          "text": "It avoids any structural damage to Black's position.",
+          "explanation": "The opposite — the move deliberately accepts compromised kingside pawns, judging them harmless thanks to counterplay."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does Black get in return for the damaged pawns?"
+    },
+    {
+      "id": "g7-ne5",
+      "ply": 28,
+      "prompt": "The annotator calls 14...Ne5 (\"!\") \"basically the last important move of the game.\" What does it achieve?",
+      "options": [
+        {
+          "text": "It protects the c4-pawn, so White must make concessions to regain it if he wants to disturb Black's kingside; the careless 14...Bd7? would let White do so freely.",
+          "explanation": "Correct. The note: \"Black protects the c4 pawn so that White will have to make some concessions to get it back if he wishes to compromise the black kingside,\" while after 14...Bd7? \"Black cannot prevent his kingside pawn cover from being disturbed.\""
+        },
+        {
+          "text": "It wins a piece by force.",
+          "explanation": "No — the move is a prophylactic defense of c4, not a tactic that wins material."
+        },
+        {
+          "text": "It launches a direct attack on White's king.",
+          "explanation": "No — its purpose is to guard c4 and Black's structure, not to start an attack."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which pawn does the knight defend, and what does that force White to do?"
+    }
+  ]
+}

@@ -7,6 +7,8 @@ import type { TacticalPatternId } from "@/lib/tactical-patterns"
 import type { ConceptRecord, MoveClassification } from "./types"
 import type { GameResult, PlayedMove } from "@/lib/play/types"
 import { fenBeforePly } from "@/lib/play/saved-play-games"
+import type { InsightMotifId } from "@/lib/insights/motifs"
+import { aggregateMotifs } from "@/lib/insights/practice"
 
 export interface PlyCandidate {
   ply: number
@@ -97,17 +99,28 @@ export interface PlyInsight {
   /** Deterministic tags from matchTags — safe to label "Detected". */
   detectedKeyConceptIds: KeyConceptId[]
   detectedTacticalPatternIds: TacticalPatternId[]
+  /** Expanded motif detection (tactics + concepts) for click-to-practice. */
+  detectedMotifs: InsightMotifId[]
+  /** Engine best move at fenBefore — an accepted answer in practice drills. */
+  bestMoveSan: string | null
 }
 
 export interface GameInsights {
   plyInsights: PlyInsight[]
   aggregatedKeyConcepts: KeyConceptId[]
   aggregatedTacticalPatterns: TacticalPatternId[]
+  /** Motifs detected across all analyzed plies, ranked by frequency. */
+  aggregatedMotifs: InsightMotifId[]
+  /** Click-to-practice sources from every analyzed ply (not just notable ones). */
+  motifSources?: import("@/lib/insights/practice").MotifPlySource[]
+  /** How many plies were analyzed (for the "scanned N moves" summary). */
+  analyzedCount?: number
 }
 
 export function aggregateFromPlyInsights(insights: PlyInsight[]): {
   aggregatedKeyConcepts: KeyConceptId[]
   aggregatedTacticalPatterns: TacticalPatternId[]
+  aggregatedMotifs: InsightMotifId[]
 } {
   const kcCount = new Map<KeyConceptId, number>()
   const tpCount = new Map<TacticalPatternId, number>()
@@ -120,8 +133,10 @@ export function aggregateFromPlyInsights(insights: PlyInsight[]): {
     [...map.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id)
 
   return {
-    aggregatedKeyConcepts: sortByCount(kcCount).slice(0, 5),
-    aggregatedTacticalPatterns: sortByCount(tpCount).slice(0, 5),
+    // No fixed cap — surface every detected concept/pattern, frequency-ranked.
+    aggregatedKeyConcepts: sortByCount(kcCount),
+    aggregatedTacticalPatterns: sortByCount(tpCount),
+    aggregatedMotifs: aggregateMotifs(insights.map((pi) => pi.detectedMotifs)),
   }
 }
 
@@ -141,6 +156,6 @@ export function moveSanAt(moves: PlayedMove[], ply: number): string {
   return moves[ply]?.san ?? "?"
 }
 
-export function fenBeforeAt(moves: PlayedMove[], ply: number): string {
-  return fenBeforePly(moves, ply)
+export function fenBeforeAt(moves: PlayedMove[], ply: number, startFen?: string): string {
+  return fenBeforePly(moves, ply, startFen)
 }

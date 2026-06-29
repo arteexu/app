@@ -29,7 +29,7 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
       "A rook or queen delivers mate on the first or eighth rank while the enemy king is trapped behind its own pawns.",
     icon: "🏰",
     category: "checkmates",
-    lessonIds: ["l-goal-of-chess", "l-back-rank-mate"],
+    lessonIds: ["l-goal-of-chess", "l-back-rank-mate", "l-tactics-back-rank-mate"],
   },
   {
     id: "tp-smoothered-mate",
@@ -82,7 +82,61 @@ export const TACTICAL_PATTERNS: TacticalPattern[] = [
       "One piece attacks two enemy pieces at once, forcing your opponent to lose material.",
     icon: "🍴",
     category: "forks",
-    lessonIds: ["l-attacking-italian-trap"],
+    lessonIds: ["l-attacking-italian-trap", "l-tactics-fork"],
+  },
+  {
+    id: "tp-pin",
+    title: "Pin",
+    description:
+      "A piece is held in place because moving it would expose a more valuable piece — or the king — behind it. Pile pressure on the pinned piece to win it.",
+    icon: "📌",
+    category: "tactics",
+    lessonIds: ["l-tactics-pin"],
+  },
+  {
+    id: "tp-skewer",
+    title: "Skewer",
+    description:
+      "Attack a valuable piece along a line so that when it steps aside, you capture the less valuable piece behind it — the reverse of a pin.",
+    icon: "🍢",
+    category: "tactics",
+    lessonIds: ["l-tactics-skewer"],
+  },
+  {
+    id: "tp-discovered-attack",
+    title: "Discovered Attack",
+    description:
+      "Move one piece out of the way to unveil an attack from the piece behind it — often hitting two targets at once.",
+    icon: "🎯",
+    category: "tactics",
+    lessonIds: ["l-tactics-discovered-attack"],
+  },
+  {
+    id: "tp-deflection",
+    title: "Deflection",
+    description:
+      "Force an enemy piece away from the square or piece it is guarding, then exploit the square it was forced to abandon.",
+    icon: "🪝",
+    category: "tactics",
+    lessonIds: ["l-tactics-deflection"],
+  },
+  {
+    id: "tp-hanging-piece",
+    title: "Hanging Piece",
+    description:
+      "Spot an undefended enemy piece and win it for free — the simplest way to gain material.",
+    icon: "🎁",
+    category: "tactics",
+    lessonIds: ["l-tactics-hanging-piece"],
+  },
+  {
+    id: "tp-sacrifice",
+    title: "Sacrifice",
+    description:
+      "Give up material now to win it back with interest — or to force checkmate — through a concrete forcing sequence.",
+    icon: "💎",
+    category: "tactics",
+    lessonIds: ["l-tactics-sacrifice"],
   },
   {
     id: "tp-intermezzo-move",
@@ -161,6 +215,12 @@ export const TACTICAL_PATTERN_IDS = [
   "tp-morphy-mate",
   "tp-swiss-cheese-mate",
   "tp-fork",
+  "tp-pin",
+  "tp-skewer",
+  "tp-discovered-attack",
+  "tp-deflection",
+  "tp-hanging-piece",
+  "tp-sacrifice",
   "tp-intermezzo-move",
   "tp-clearance",
   "tp-taking-with-check",

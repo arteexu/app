@@ -52,6 +52,37 @@ function evalToWords(cp: number): string {
   return "losing"
 }
 
+/** Relation of a candidate's eval (mover POV) to the played move's eval. */
+function relationToActual(candidateCp: number, playedCp: number): string {
+  const d = candidateCp - playedCp
+  if (Math.abs(d) <= 30) return "similar to actual move"
+  return d > 0 ? "better than actual move" : "worse than actual move"
+}
+
+/**
+ * The CCC engine-evaluation hint, in the paper's exact shape (Appendix A), e.g.
+ * "actual move - Bd2+ 232cp, expected reply - f4g3, best move - Bd2+ similar to
+ * actual move, second best move - Nc5 similar to actual move". Reused by GCC-Eval.
+ */
+export function buildEngineEvalHint(r: ConceptRecord): string {
+  const playedCp = r.evalAfterCp
+  const parts = [`actual move - ${r.moveSan} ${playedCp}cp`]
+
+  const playedRefutation = (r.refutations ?? []).find((f) => f.ofMoveSan === r.moveSan)
+  const reply = playedRefutation?.pvSan?.[1] ?? r.topPvSan?.[1]
+  if (reply) parts.push(`expected reply - ${reply}`)
+
+  if (r.bestMoveSan) {
+    const bestCp = r.candidates?.[0]?.endEvalCp ?? r.evalBeforeCp
+    parts.push(`best move - ${r.bestMoveSan} ${relationToActual(bestCp, playedCp)}`)
+  }
+  const second = r.candidates?.[1]
+  if (second) {
+    parts.push(`second best move - ${second.san} ${relationToActual(second.endEvalCp, playedCp)}`)
+  }
+  return parts.join(", ")
+}
+
 export function buildCommentaryPrompt(r: ConceptRecord, opts: PromptOptions = {}) {
   const band = ratingBand(r.userRating)
   const signals = prioritizeSignals(r)
@@ -95,6 +126,21 @@ export function buildCommentaryPrompt(r: ConceptRecord, opts: PromptOptions = {}
       })
       .filter(Boolean)
       .join("\n") || "- (none auto-detected)"
+
+  // CCC concept guidance: the engine-derived concept families this move changed the
+  // most (ranked by before→after delta). This is the "concept-guided" focus.
+  const prioritizedConcepts =
+    (r.prioritizedConcepts ?? []).length > 0
+      ? r.prioritizedConcepts!
+          .map(
+            (pc) =>
+              `- ${pc.label}: ${pc.direction} for ${r.side === "w" ? "White" : "Black"}` +
+              ` (Δ ${pc.delta >= 0 ? "+" : ""}${pc.delta})`,
+          )
+          .join("\n")
+      : "- (no dominant concept shift)"
+
+  const engineHint = buildEngineEvalHint(r)
 
   const candidates =
     (r.candidates ?? []).length > 0
@@ -165,6 +211,8 @@ export function buildCommentaryPrompt(r: ConceptRecord, opts: PromptOptions = {}
     band.guidance,
     `RULES:`,
     `1. Explain WHY the move is "${r.classification}" using ONLY the facts provided below.`,
+    `   Anchor the explanation on the PRIORITIZED CONCEPTS (these are the engine-derived` +
+      ` themes the move most affects); do not chase concepts that are not listed there.`,
     `2. Do NOT mention any piece, square, attack, capture, or move that is not in the facts.`,
     `   The "Legal attacks after move" list is exhaustive — do not invent threats beyond it.`,
     `3. If a fact is not given, do not guess it. It is better to say less than to be wrong.`,
@@ -187,6 +235,10 @@ export function buildCommentaryPrompt(r: ConceptRecord, opts: PromptOptions = {}
     `- engine best move: ${r.bestMoveSan ?? "?"}; played-is-best: ${r.playedIsBest}`,
     `- best line: ${r.topPvSan.slice(0, 6).join(" ") || "—"}`,
     `- material change for mover: ${r.materialDelta >= 0 ? "+" : ""}${r.materialDelta}`,
+    `- engine hint (CCC): ${engineHint}`,
+    ``,
+    `PRIORITIZED CONCEPTS (engine-derived; the families this move changed most — focus on these):`,
+    prioritizedConcepts,
     ``,
     `CANDIDATE MOVES (engine MultiPV; eval = mover POV at end of line):`,
     candidates,

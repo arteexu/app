@@ -6,7 +6,7 @@
 // caller can apply it with chess.js. Reuses the existing StockfishEngine wrapper
 // and public/engine assets (no new engine).
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { StockfishEngine, type EngineLine } from "@/lib/engine/stockfish"
 import type { BotLevel } from "@/lib/play/types"
 
@@ -68,7 +68,12 @@ export function usePlayBot(level: BotLevel): UsePlayBotResult {
     }
   }, [ready, level])
 
-  async function requestMove(fen: string): Promise<BotMove | null> {
+  // Stable identities (they only read from refs) so consumers can safely list
+  // these in effect deps without the effect re-running on every render. This
+  // matters for the Play-vs-Bot move loop: an unstable requestMove would make
+  // its effect re-run on each clock tick and cancel the in-flight engine
+  // request via cleanup, so the bot's move would never be applied.
+  const requestMove = useCallback(async (fen: string): Promise<BotMove | null> => {
     const engine = engineRef.current
     if (!engine) return null
     const uci = await engine.getBestMove(fen, { movetime: levelRef.current.moveTimeMs })
@@ -78,9 +83,9 @@ export function usePlayBot(level: BotLevel): UsePlayBotResult {
       to: uci.slice(2, 4),
       promotion: uci.length > 4 ? uci[4] : undefined,
     }
-  }
+  }, [])
 
-  async function evaluate(fen: string): Promise<number | null> {
+  const evaluate = useCallback(async (fen: string): Promise<number | null> => {
     const engine = engineRef.current
     if (!engine) return null
     let cp: number | null = null
@@ -95,7 +100,7 @@ export function usePlayBot(level: BotLevel): UsePlayBotResult {
       },
     )
     return cp
-  }
+  }, [])
 
   return { ready, error, requestMove, evaluate }
 }

@@ -4,8 +4,10 @@
 
 import type { KeyConceptId } from "@/lib/key-concepts"
 import type { TacticalPatternId } from "@/lib/tactical-patterns"
+import type { ConceptScore, PrioritizedConcept } from "./concepts"
 
 export type { KeyConceptId, TacticalPatternId }
+export type { ConceptScore, PrioritizedConcept } from "./concepts"
 
 export type Side = "w" | "b"
 export type GamePhase = "opening" | "middlegame" | "endgame"
@@ -92,6 +94,11 @@ export interface ConceptRecord {
   // Taxonomy tags (real ids)
   matchedTacticalPatternIds: TacticalPatternId[]
   matchedKeyConceptIds: KeyConceptId[]
+
+  // CCC concept taxonomy (Stockfish-style families) + concept-delta prioritization.
+  // Optional for back-compat with prebuilt client records that predate this field.
+  conceptScores?: ConceptScore[]
+  prioritizedConcepts?: PrioritizedConcept[]
 
   // Personalization
   userRating?: number

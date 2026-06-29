@@ -1,0 +1,122 @@
+{
+  "id": "carlsen-caruana-2018-tiebreak-2",
+  "title": "Caruana vs Carlsen — 2018 Tiebreak Game 2",
+  "description": "Needing to win on demand, Caruana pushes too hard in a Sveshnikov and Carlsen punishes the overextended c-pawn with crushing central counterplay to take a 2-0 stranglehold. Annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship (tiebreak)",
+    "site": "London",
+    "round": "14",
+    "eco": "A22",
+    "result": "0-1"
+  },
+  "conceptChecks": [
+    {
+      "id": "tb2-be7",
+      "ply": 32,
+      "prompt": "The annotator marks 16...Be7 with a \"?\". Why is this innocent-looking move a serious error?",
+      "options": [
+        {
+          "text": "It leaves the g6-knight badly placed; 16...Ne7!, rerouting the knight toward f5, was correct.",
+          "explanation": "Correct. The note: \"This move looks so innocent, but in fact its a serious error. The g6 knight now is really bad,\" and he gives 16...Ne7! to head to f5."
+        },
+        {
+          "text": "It blunders the e5-pawn.",
+          "explanation": "No — the complaint is the misplaced g6-knight, not a pawn loss."
+        },
+        {
+          "text": "It's a forced move with no alternative.",
+          "explanation": "No; the annotator offers 16...Ne7! as the better option."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which black piece is left stranded?"
+    },
+    {
+      "id": "tb2-qc8",
+      "ply": 34,
+      "prompt": "Why does the annotator praise 17...Qc8 (\"!\")?",
+      "options": [
+        {
+          "text": "It's a resilient resource that he credits Carlsen for finding in a worse position.",
+          "explanation": "Correct. The note: \"I like Magnus' move a lot. He really has to be credited for his resilience.\""
+        },
+        {
+          "text": "It wins a pawn by force.",
+          "explanation": "No material claim — it's praised as resourceful defense."
+        },
+        {
+          "text": "It forces an immediate draw.",
+          "explanation": "No; Black is still worse and fighting, not forcing a draw."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "The praise is about a quality of play, not about winning material."
+    },
+    {
+      "id": "tb2-c5",
+      "ply": 41,
+      "prompt": "Caruana plays 21.c5 (\"?\"). What is the annotator's verdict?",
+      "options": [
+        {
+          "text": "It's far too rushed — after it Carlsen is fine again; the patient 21.O-O kept a pleasant edge.",
+          "explanation": "Correct. The note: \"This is far too rushed, and Magnus is fine again,\" while 21.O-O \"Still looks very pleasant for White.\""
+        },
+        {
+          "text": "It's the most precise, winning continuation.",
+          "explanation": "The opposite — the annotator calls it rushed and says it lets Black equalize."
+        },
+        {
+          "text": "It wins material by force.",
+          "explanation": "No such claim; it squanders White's advantage."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Was White ready to push, or should he have completed development first?"
+    },
+    {
+      "id": "tb2-bd8",
+      "ply": 48,
+      "prompt": "What is the point of 24...Bd8 (\"!\")?",
+      "options": [
+        {
+          "text": "It brings the advanced c6-pawn under control and prepares ...Ne7.",
+          "explanation": "Correct. The note: \"The c6-pawn is under control and Ne7 is coming,\" with the annotator marveling at how easily Carlsen finds such moves in rapid."
+        },
+        {
+          "text": "It wins White's queen with a discovered attack.",
+          "explanation": "No — the point is restraining the c6-pawn, not winning the queen."
+        },
+        {
+          "text": "It is a draw offer by repetition.",
+          "explanation": "No; Black is taking over and playing for the win."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What is White's most dangerous asset, and what does Black do about it?"
+    },
+    {
+      "id": "tb2-c7",
+      "ply": 51,
+      "prompt": "The annotator gives 26.c7 a \"?\". What should White have played?",
+      "options": [
+        {
+          "text": "26.Bd4 was absolutely forced; after 26.c7 Black's central counterplay breaks through.",
+          "explanation": "Correct. The note flatly states \"26.Bd4 Was absolutely forced,\" whereas after the game move Black's pieces (e.g. ...Ne5) crash in."
+        },
+        {
+          "text": "26.c7 is winning — the pawn is simply too strong to stop.",
+          "explanation": "The opposite — the annotator marks it a mistake and says 26.Bd4 was forced."
+        },
+        {
+          "text": "26.Qe2 was the only move.",
+          "explanation": "The annotator names 26.Bd4 as the forced defense, not Qe2."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Pushing the pawn ignored a defensive necessity — which piece had to drop back?"
+    }
+  ]
+}

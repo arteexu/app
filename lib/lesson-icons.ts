@@ -12,6 +12,16 @@ export const LESSON_ICON: Record<string, string> = {
   "l-how-to-attack": "♞",
   "l-attacking-italian-trap": "♗",
   "l-attacking-caro-kann": "♘",
+  "l-tactics-fork": "♞",
+  "l-tactics-pin": "♝",
+  "l-tactics-skewer": "♜",
+  "l-tactics-discovered-attack": "♗",
+  "l-tactics-hanging-piece": "♟",
+  "l-tactics-deflection": "♛",
+  "l-tactics-sacrifice": "⚡",
+  "l-tactics-mate-in-1": "♔",
+  "l-tactics-mate-in-2": "♚",
+  "l-tactics-back-rank-mate": "♖",
 }
 
 export function getLessonIcon(lessonId: string): string {

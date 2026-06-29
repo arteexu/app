@@ -114,49 +114,49 @@ export default async function Dashboard() {
 
         <section aria-labelledby="review-heading">
           <div className="mb-3">
-            <h2 id="review-heading" className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
+            <h2 id="review-heading" className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 bitcoin:text-white">
               Review
             </h2>
-            <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
               Revisit concepts and tactical patterns you&apos;ve unlocked across lessons.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <Link
               href="/key-concepts"
-              className="group rounded-2xl border-2 border-indigo-200/70 dark:border-indigo-800/60 bg-white dark:bg-slate-800 p-5 flex items-center gap-4 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md hover:shadow-indigo-500/10 transition-all"
+              className="group rounded-2xl border-2 border-indigo-200/70 dark:border-indigo-800/60 bg-white dark:bg-slate-800 p-5 flex items-center gap-4 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md hover:shadow-indigo-500/10 transition-all bitcoin:border bitcoin:border-white/10 bitcoin:bg-[#0F1115] bitcoin:hover:-translate-y-1 bitcoin:hover:border-[#F7931A]/50 bitcoin:hover:shadow-[0_0_30px_-10px_rgba(247,147,26,0.25)] bitcoin:focus-visible:outline-none bitcoin:focus-visible:ring-2 bitcoin:focus-visible:ring-[#F7931A]"
             >
-              <span className="shrink-0 w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 grid place-items-center text-2xl">
+              <span className="shrink-0 w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 grid place-items-center text-2xl bitcoin:bg-[#F7931A]/15 bitcoin:border bitcoin:border-[#F7931A]/40 bitcoin:text-[#F7931A]">
                 💡
               </span>
               <div className="min-w-0">
-                <h3 className="font-display font-extrabold text-gray-900 dark:text-slate-100">
+                <h3 className="font-display font-extrabold text-gray-900 dark:text-slate-100 bitcoin:font-semibold bitcoin:text-white">
                   Review Key Concepts
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
                   Strategic ideas from your courses
                 </p>
               </div>
-              <span className="shrink-0 text-indigo-500 dark:text-indigo-400 opacity-60 group-hover:opacity-100 transition-opacity">
+              <span className="shrink-0 text-indigo-500 dark:text-indigo-400 opacity-60 group-hover:opacity-100 transition-opacity bitcoin:text-[#F7931A]">
                 →
               </span>
             </Link>
             <Link
               href="/tactical-patterns"
-              className="group rounded-2xl border-2 border-amber-200/70 dark:border-amber-800/60 bg-white dark:bg-slate-800 p-5 flex items-center gap-4 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-md hover:shadow-amber-500/10 transition-all"
+              className="group rounded-2xl border-2 border-amber-200/70 dark:border-amber-800/60 bg-white dark:bg-slate-800 p-5 flex items-center gap-4 hover:border-amber-400 dark:hover:border-amber-600 hover:shadow-md hover:shadow-amber-500/10 transition-all bitcoin:border bitcoin:border-white/10 bitcoin:bg-[#0F1115] bitcoin:hover:-translate-y-1 bitcoin:hover:border-[#FFD600]/50 bitcoin:hover:shadow-[0_0_30px_-10px_rgba(255,214,0,0.25)] bitcoin:focus-visible:outline-none bitcoin:focus-visible:ring-2 bitcoin:focus-visible:ring-[#FFD600]"
             >
-              <span className="shrink-0 w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 grid place-items-center text-2xl">
+              <span className="shrink-0 w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 grid place-items-center text-2xl bitcoin:bg-[#FFD600]/15 bitcoin:border bitcoin:border-[#FFD600]/40 bitcoin:text-[#FFD600]">
                 ⚡
               </span>
               <div className="min-w-0">
-                <h3 className="font-display font-extrabold text-gray-900 dark:text-slate-100">
+                <h3 className="font-display font-extrabold text-gray-900 dark:text-slate-100 bitcoin:font-semibold bitcoin:text-white">
                   Review Tactical Patterns
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+                <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
                   Forks, pins, clearance, and more
                 </p>
               </div>
-              <span className="shrink-0 text-amber-500 dark:text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity">
+              <span className="shrink-0 text-amber-500 dark:text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity bitcoin:text-[#FFD600]">
                 →
               </span>
             </Link>
@@ -166,14 +166,14 @@ export default async function Dashboard() {
         <section aria-labelledby="courses-heading">
           <div className="flex items-end justify-between gap-3 mb-3">
             <div>
-              <h2 id="courses-heading" className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100">
+              <h2 id="courses-heading" className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 bitcoin:text-white">
                 Your courses
               </h2>
-              <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+              <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
                 Two paths to a sharper attack. Open one to see its chapters and lessons.
               </p>
             </div>
-            <Link href="/courses" className="shrink-0 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link href="/courses" className="shrink-0 text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline bitcoin:text-[#F7931A] bitcoin:hover:text-[#FFD600]">
               All courses →
             </Link>
           </div>
@@ -195,75 +195,75 @@ export default async function Dashboard() {
 
         <Link
           href="/solitaire"
-          className="group relative overflow-hidden rounded-3xl border border-violet-200/60 dark:border-violet-800/60 bg-gradient-to-r from-violet-50 via-indigo-50 to-fuchsia-50 dark:from-violet-950/40 dark:via-indigo-950/40 dark:to-fuchsia-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-violet-500/10 transition-shadow"
+          className="group relative overflow-hidden rounded-3xl border border-violet-200/60 dark:border-violet-800/60 bg-gradient-to-r from-violet-50 via-indigo-50 to-fuchsia-50 dark:from-violet-950/40 dark:via-indigo-950/40 dark:to-fuchsia-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-violet-500/10 transition-shadow bitcoin:border bitcoin:border-white/10 bitcoin:bg-none bitcoin:bg-[#0F1115] bitcoin:transition-all bitcoin:duration-300 bitcoin:hover:-translate-y-1 bitcoin:hover:border-[#F7931A]/50 bitcoin:hover:shadow-[0_0_40px_-12px_rgba(247,147,26,0.3)] bitcoin:focus-visible:outline-none bitcoin:focus-visible:ring-2 bitcoin:focus-visible:ring-[#F7931A]"
         >
-          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white grid place-items-center text-3xl shadow-md shadow-indigo-500/30">
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white grid place-items-center text-3xl shadow-md shadow-indigo-500/30 bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:shadow-[0_0_20px_-5px_rgba(247,147,26,0.6)]">
             ♟
           </span>
           <div className="min-w-0 flex-1">
-            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400 bitcoin:font-mono bitcoin:font-medium bitcoin:text-[#F7931A]">
               New mode
             </span>
-            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight bitcoin:font-bold bitcoin:text-white">
               Solitaire Chess
             </h3>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
               Follow a grandmaster&apos;s game and guess their moves — pick an opening, a side, and play.
             </p>
           </div>
-          <span className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/30 group-hover:scale-[1.03] transition-transform">
+          <span className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/30 group-hover:scale-[1.03] transition-transform bitcoin:bg-none bitcoin:bg-gradient-to-r bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:rounded-full bitcoin:font-bold bitcoin:shadow-[0_0_20px_-5px_rgba(247,147,26,0.6)] bitcoin:group-hover:scale-[1.05]">
             ▶ Play
           </span>
         </Link>
 
         <Link
           href="/play"
-          className="group relative overflow-hidden rounded-3xl border border-emerald-200/60 dark:border-emerald-800/60 bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 dark:from-emerald-950/40 dark:via-teal-950/40 dark:to-sky-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-emerald-500/10 transition-shadow"
+          className="group relative overflow-hidden rounded-3xl border border-emerald-200/60 dark:border-emerald-800/60 bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 dark:from-emerald-950/40 dark:via-teal-950/40 dark:to-sky-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-emerald-500/10 transition-shadow bitcoin:border bitcoin:border-white/10 bitcoin:bg-none bitcoin:bg-[#0F1115] bitcoin:transition-all bitcoin:duration-300 bitcoin:hover:-translate-y-1 bitcoin:hover:border-[#FFD600]/50 bitcoin:hover:shadow-[0_0_40px_-12px_rgba(255,214,0,0.25)] bitcoin:focus-visible:outline-none bitcoin:focus-visible:ring-2 bitcoin:focus-visible:ring-[#FFD600]"
         >
-          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white grid place-items-center text-3xl shadow-md shadow-emerald-500/30">
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white grid place-items-center text-3xl shadow-md shadow-emerald-500/30 bitcoin:from-[#F7931A] bitcoin:to-[#FFD600] bitcoin:text-[#030304] bitcoin:shadow-[0_0_20px_-5px_rgba(255,214,0,0.5)]">
             ♟
           </span>
           <div className="min-w-0 flex-1">
-            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bitcoin:font-mono bitcoin:font-medium bitcoin:text-[#FFD600]">
               New mode
             </span>
-            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight bitcoin:font-bold bitcoin:text-white">
               Play Chess
             </h3>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
               Play complete games against the engine at any strength, or a live opponent in real time — with a clock and a separate Play rating.
             </p>
           </div>
-          <span className="shrink-0 inline-flex items-center gap-2 bg-emerald-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-emerald-500/30 group-hover:scale-[1.03] transition-transform">
+          <span className="shrink-0 inline-flex items-center gap-2 bg-emerald-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-emerald-500/30 group-hover:scale-[1.03] transition-transform bitcoin:bg-none bitcoin:bg-gradient-to-r bitcoin:from-[#F7931A] bitcoin:to-[#FFD600] bitcoin:text-[#030304] bitcoin:rounded-full bitcoin:font-bold bitcoin:shadow-[0_0_20px_-5px_rgba(255,214,0,0.5)] bitcoin:group-hover:scale-[1.05]">
             ▶ Play
           </span>
         </Link>
 
-        <div className="relative overflow-hidden rounded-3xl border border-rose-200/60 dark:border-rose-800/60 bg-gradient-to-r from-rose-50 via-fuchsia-50 to-indigo-50 dark:from-rose-950/40 dark:via-fuchsia-950/40 dark:to-indigo-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-fuchsia-600 text-white grid place-items-center text-3xl shadow-md shadow-rose-500/30">
+        <div className="relative overflow-hidden rounded-3xl border border-rose-200/60 dark:border-rose-800/60 bg-gradient-to-r from-rose-50 via-fuchsia-50 to-indigo-50 dark:from-rose-950/40 dark:via-fuchsia-950/40 dark:to-indigo-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 bitcoin:border bitcoin:border-white/10 bitcoin:bg-none bitcoin:bg-[#0F1115]">
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-fuchsia-600 text-white grid place-items-center text-3xl shadow-md shadow-rose-500/30 bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:shadow-[0_0_20px_-5px_rgba(234,88,12,0.6)]">
             ⚔️
           </span>
           <div className="min-w-0 flex-1">
-            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400 bitcoin:font-mono bitcoin:font-medium bitcoin:text-[#EA580C]">
               New mode
             </span>
-            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight bitcoin:font-bold bitcoin:text-white">
               Multiplayer Solitaire
             </h3>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
               Get matched with an opponent on the same game — higher score wins, head-to-head Elo. Or practice casually.
             </p>
           </div>
           <div className="shrink-0 flex items-center gap-3">
             <Link
-              href="/leaderboard"
-              className="hidden sm:inline-flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-display font-extrabold px-4 py-2.5 rounded-2xl hover:scale-[1.03] transition-transform"
+              href="/play/leaderboard"
+              className="hidden sm:inline-flex items-center gap-1.5 bg-white/80 dark:bg-slate-800/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-display font-extrabold px-4 py-2.5 rounded-2xl hover:scale-[1.03] transition-transform bitcoin:bg-white/5 bitcoin:text-white bitcoin:border-white/20 bitcoin:rounded-full bitcoin:font-bold bitcoin:hover:bg-white/10 bitcoin:hover:border-white"
             >
               🏆 Ranks
             </Link>
             <Link
               href="/solitaire?mode=match"
-              className="inline-flex items-center gap-2 bg-rose-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-rose-500/30 hover:scale-[1.03] transition-transform"
+              className="inline-flex items-center gap-2 bg-rose-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-rose-500/30 hover:scale-[1.03] transition-transform bitcoin:bg-none bitcoin:bg-gradient-to-r bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:rounded-full bitcoin:font-bold bitcoin:shadow-[0_0_20px_-5px_rgba(234,88,12,0.6)] bitcoin:hover:scale-[1.05]"
             >
               ⚔️ Find Match
             </Link>
@@ -272,24 +272,47 @@ export default async function Dashboard() {
 
         <Link
           href="/analysis"
-          className="group relative overflow-hidden rounded-3xl border border-sky-200/60 dark:border-sky-800/60 bg-gradient-to-r from-sky-50 via-indigo-50 to-cyan-50 dark:from-sky-950/40 dark:via-indigo-950/40 dark:to-cyan-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-sky-500/10 transition-shadow"
+          className="group relative overflow-hidden rounded-3xl border border-sky-200/60 dark:border-sky-800/60 bg-gradient-to-r from-sky-50 via-indigo-50 to-cyan-50 dark:from-sky-950/40 dark:via-indigo-950/40 dark:to-cyan-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-sky-500/10 transition-shadow bitcoin:border bitcoin:border-white/10 bitcoin:bg-none bitcoin:bg-[#0F1115] bitcoin:transition-all bitcoin:duration-300 bitcoin:hover:-translate-y-1 bitcoin:hover:border-[#F7931A]/50 bitcoin:hover:shadow-[0_0_40px_-12px_rgba(247,147,26,0.3)] bitcoin:focus-visible:outline-none bitcoin:focus-visible:ring-2 bitcoin:focus-visible:ring-[#F7931A]"
         >
-          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white grid place-items-center text-3xl shadow-md shadow-sky-500/30">
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white grid place-items-center text-3xl shadow-md shadow-sky-500/30 bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:shadow-[0_0_20px_-5px_rgba(247,147,26,0.6)]">
             🔎
           </span>
           <div className="min-w-0 flex-1">
-            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400 bitcoin:font-mono bitcoin:font-medium bitcoin:text-[#F7931A]">
               New mode
             </span>
-            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight">
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight bitcoin:font-bold bitcoin:text-white">
               Free Analysis
             </h3>
-            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
               Play any position for both sides and get live Stockfish evaluation, best moves, and lines.
             </p>
           </div>
-          <span className="shrink-0 inline-flex items-center gap-2 bg-sky-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-sky-500/30 group-hover:scale-[1.03] transition-transform">
+          <span className="shrink-0 inline-flex items-center gap-2 bg-sky-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-sky-500/30 group-hover:scale-[1.03] transition-transform bitcoin:bg-none bitcoin:bg-gradient-to-r bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:rounded-full bitcoin:font-bold bitcoin:shadow-[0_0_20px_-5px_rgba(247,147,26,0.6)] bitcoin:group-hover:scale-[1.05]">
             🔎 Analyze
+          </span>
+        </Link>
+
+        <Link
+          href="/games"
+          className="group relative overflow-hidden rounded-3xl border border-amber-200/60 dark:border-amber-800/60 bg-gradient-to-r from-amber-50 via-orange-50 to-rose-50 dark:from-amber-950/40 dark:via-orange-950/40 dark:to-rose-950/30 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 hover:shadow-lg hover:shadow-amber-500/10 transition-shadow bitcoin:border bitcoin:border-white/10 bitcoin:bg-none bitcoin:bg-[#0F1115] bitcoin:transition-all bitcoin:duration-300 bitcoin:hover:-translate-y-1 bitcoin:hover:border-[#F7931A]/50 bitcoin:hover:shadow-[0_0_40px_-12px_rgba(247,147,26,0.3)] bitcoin:focus-visible:outline-none bitcoin:focus-visible:ring-2 bitcoin:focus-visible:ring-[#F7931A]"
+        >
+          <span className="shrink-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white grid place-items-center text-3xl shadow-md shadow-amber-500/30 bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:shadow-[0_0_20px_-5px_rgba(247,147,26,0.6)]">
+            ♛
+          </span>
+          <div className="min-w-0 flex-1">
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 bitcoin:font-mono bitcoin:font-medium bitcoin:text-[#F7931A]">
+              New mode
+            </span>
+            <h3 className="font-display text-xl font-extrabold text-gray-900 dark:text-slate-100 leading-tight bitcoin:font-bold bitcoin:text-white">
+              Annotated Master Games
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-0.5 bitcoin:text-[#94A3B8]">
+              Step through the 2018 Carlsen–Caruana World Championship move by move, with a grandmaster&apos;s notes and concept checks at the critical moments.
+            </p>
+          </div>
+          <span className="shrink-0 inline-flex items-center gap-2 bg-amber-600 text-white font-display font-extrabold px-5 py-2.5 rounded-2xl shadow-md shadow-amber-500/30 group-hover:scale-[1.03] transition-transform bitcoin:bg-none bitcoin:bg-gradient-to-r bitcoin:from-[#EA580C] bitcoin:to-[#F7931A] bitcoin:rounded-full bitcoin:font-bold bitcoin:shadow-[0_0_20px_-5px_rgba(247,147,26,0.6)] bitcoin:group-hover:scale-[1.05]">
+            ♟ Study
           </span>
         </Link>
       </main>

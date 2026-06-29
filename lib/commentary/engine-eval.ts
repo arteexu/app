@@ -30,6 +30,23 @@ async function analyzeFen(
 }
 
 /**
+ * Single-PV eval of a FEN on a CALLER-OWNED engine. Unlike computeMoveEvals this
+ * does not spin up / tear down a worker, so it can be looped over an entire game
+ * cheaply (one worker reused across every position). Terminal positions (mate /
+ * stalemate) are synthesized — the engine emits no score there.
+ */
+export async function analyzeFenReusing(
+  engine: StockfishEngine,
+  fen: string,
+  depth: number,
+  timeoutMs = 15000,
+): Promise<EngineLine> {
+  const terminal = terminalLineForFen(fen)
+  if (terminal) return terminal
+  return analyzeFen(engine, fen, depth, timeoutMs)
+}
+
+/**
  * MultiPV analysis: returns the deepest line per MultiPV index, sorted best-first.
  * On timeout, returns whatever depth was reached so far (still valid lines).
  */
@@ -86,6 +103,15 @@ async function analyzeAfter(
   depth: number,
 ): Promise<EngineLine> {
   return terminalAfterLine(probeAfterMove) ?? analyzeFen(engine, fenAfter, depth)
+}
+
+/** Synthesize a terminal eval line for a standalone FEN (game already over). */
+function terminalLineForFen(fen: string): EngineLine | null {
+  try {
+    return terminalAfterLine(new Chess(fen))
+  } catch {
+    return null
+  }
 }
 
 export type CommentaryAnalysis = AssembledAnalysis

@@ -1,0 +1,122 @@
+{
+  "id": "carlsen-caruana-2018-game-09",
+  "title": "Carlsen vs Caruana — 2018 WCC, Game 9",
+  "description": "Carlsen coaxes a pleasant opposite-colored-bishop edge out of an English Opening, but the hasty 25.h5? squanders his winning chances and Caruana holds the draw — annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Magnus Carlsen",
+    "black": "Fabiano Caruana",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "9",
+    "eco": "A29",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g9-bc1",
+      "ply": 21,
+      "prompt": "Why does the annotator call 11.Bc1 (\"!\") the most challenging move?",
+      "options": [
+        {
+          "text": "White has a simple plan of Bb2 followed by d4 to grab a large share of the center, posing Black hard strategic decisions over the board.",
+          "explanation": "Correct. The note: \"Absolutely the most challenging move. White has a very simple plan of playing Bb2 followed by d4 to take a large share of the center. Black is definitely fine but will have to make hard strategic decisions over the board.\""
+        },
+        {
+          "text": "It immediately traps Black's light-squared bishop.",
+          "explanation": "No trap is mentioned; the point is the strategic Bb2/d4 plan to seize the center."
+        },
+        {
+          "text": "It launches a direct mating attack on Black's king.",
+          "explanation": "The annotator describes a slow central plan, not a kingside attack."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Where does this bishop go next, and what central break follows?"
+    },
+    {
+      "id": "g9-be4",
+      "ply": 30,
+      "prompt": "The annotator gives 15...Be4 a \"?!\". What did he say Black should have preferred?",
+      "options": [
+        {
+          "text": "15...Nb4!, fighting to force through ...c5 at all costs rather than leaving pieces passive.",
+          "explanation": "Correct. The note: \"15...Nb4! I think Black's best option was to try to force through c7-c5 at all costs. I really dislike passive pieces and buried bishops.\""
+        },
+        {
+          "text": "The quiet 15...Qd6 was clearly best and fully equalizes.",
+          "explanation": "No — the annotator says a quiet move like 15...Qd6 \"would not be too great,\" leaving the b6-bishop buried."
+        },
+        {
+          "text": "15...Be4 is actually best because it wins a pawn.",
+          "explanation": "The annotator marks it \"?!\" and says it \"does put Black in a tough spot in short order\" — it wins nothing."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which break did the annotator want Black to force at all costs?"
+    },
+    {
+      "id": "g9-h5",
+      "ply": 49,
+      "prompt": "Why does the annotator condemn 25.h5 (\"?\")?",
+      "options": [
+        {
+          "text": "It is a hasty, miscalculated move: after ...gxh5 Black gets ...h4 in fast, opening White's own king — the cure proved worse than the disease, whereas the slow 25.Kg2 kept Black suffering.",
+          "explanation": "Correct. The note: \"A bad move, probably based on a miscalculation... in this case, the cure was worse than the disease,\" while 25.Kg2 \"would ensure Black would be suffering for a long time.\""
+        },
+        {
+          "text": "It hangs a piece outright.",
+          "explanation": "No piece is lost; the problem is that it opens White's own king and lets Black equalize."
+        },
+        {
+          "text": "It was the only way for White to make progress.",
+          "explanation": "The opposite — the annotator recommends the patient 25.Kg2 instead."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Whose king ends up exposed after Black recaptures and pushes ...h4?"
+    },
+    {
+      "id": "g9-h4",
+      "ply": 54,
+      "prompt": "Why is 27...h4 (\"!\") described as strong yet easy, leaving Black fine?",
+      "options": [
+        {
+          "text": "Once the g3-pawn must take on h4, White's king is opened and his winning chances vanish.",
+          "explanation": "Correct. The annotator: \"As soon as the g3 pawn comes to h4, White will no longer have any winning chances as his own king will be open,\" and 27...h4 is \"a strong and important move, but also a very easy one. Black is fine.\""
+        },
+        {
+          "text": "It wins White's bishop on f3.",
+          "explanation": "No material is won; the move's value is opening White's king and neutralizing his attack."
+        },
+        {
+          "text": "It sets up an unstoppable mating attack for Black.",
+          "explanation": "Black is only equalizing — the point is defensive, removing White's winning chances, not mating."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What happens to White's king when g3 captures on h4?"
+    },
+    {
+      "id": "g9-bc5",
+      "ply": 62,
+      "prompt": "What is the point of 31...Bc5 (\"!\")?",
+      "options": [
+        {
+          "text": "It reroutes the long-passive b6-bishop toward a better square on d6.",
+          "explanation": "Correct. The note: \"The dumb bishop will find a nicer square on d6.\""
+        },
+        {
+          "text": "It wins a central pawn by force.",
+          "explanation": "No pawn is won; the move is purely about improving the passive bishop."
+        },
+        {
+          "text": "It pins and wins White's queen.",
+          "explanation": "No such tactic is claimed; the bishop is simply being rerouted to d6."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which previously passive piece is finally being improved?"
+    }
+  ]
+}

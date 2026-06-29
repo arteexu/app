@@ -3,23 +3,51 @@
 /* Enable class-based dark mode — applies dark: variants when .dark is on any ancestor */
 @variant dark (&:where(.dark, .dark *));
 
+/* Opt-in "Bitcoin DeFi" theme variant — `bitcoin:` utilities apply ONLY when the
+   root carries data-theme="bitcoin". Registered after `dark` so that when both are
+   active (the bitcoin theme also turns on .dark for not-yet-themed pages) the
+   bitcoin override wins. The classic light/indigo look is the untouched default. */
+@variant bitcoin (&:where([data-theme="bitcoin"], [data-theme="bitcoin"] *));
+
 /* ─── Design tokens ──────────────────────────────────────────────────────────
-   Baloo 2 (rounded, friendly) powers display headings via the `font-display`
-   utility; Inter stays the body font. Both are injected as CSS variables by
-   next/font in app/layout.tsx. */
+   DEFAULT brand: Baloo 2 (rounded, friendly) display via `font-display`; Inter
+   body via `font-sans`. Both are injected as CSS variables by next/font.
+
+   The Bitcoin DeFi palette / colored-glow shadows are ALSO registered here so
+   that `bitcoin:`-prefixed utilities (e.g. bitcoin:bg-surface, bitcoin:text-bitcoin,
+   bitcoin:shadow-glow-orange) exist — but they only render under the opt-in theme,
+   so the default palette stays exactly as before. */
 @theme {
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: var(--font-baloo), var(--font-inter), system-ui, sans-serif;
+
+  /* Bitcoin DeFi palette — True Void + Bitcoin Fire (opt-in only) */
+  --color-void: #030304;
+  --color-surface: #0f1115;
+  --color-surface-2: #15171d;
+  --color-stardust: #94a3b8;
+  --color-dim: #1e293b;
+  --color-bitcoin: #f7931a;
+  --color-burnt: #ea580c;
+  --color-gold: #ffd600;
+
+  /* Colored-glow shadows (opt-in only) */
+  --shadow-glow-orange: 0 0 20px -5px rgba(234, 88, 12, 0.5);
+  --shadow-glow-orange-lg: 0 0 30px -5px rgba(247, 147, 26, 0.6);
+  --shadow-glow-gold: 0 0 20px rgba(255, 214, 0, 0.3);
+  --shadow-glow-card: 0 0 50px -10px rgba(247, 147, 26, 0.1);
+  --shadow-glow-card-hover: 0 0 30px -10px rgba(247, 147, 26, 0.25);
+
+  --animate-float: float 8s ease-in-out infinite;
 }
 
-/* Explicit rule so .font-display always picks up Baloo 2 at runtime.
-   The @theme token above tells Tailwind what to generate, but the
-   CSS variable reference only resolves correctly with this real rule. */
+/* Explicit rule so .font-display always picks up Baloo 2 at runtime. */
 .font-display {
   font-family: var(--font-baloo), var(--font-inter), system-ui, sans-serif;
 }
 
-/* ─── Light mode: soft warm → violet quest gradient ──────────────────────────── */
+/* ─── Default backgrounds ────────────────────────────────────────────────────
+   Light: soft warm → violet quest gradient. Dark: deep slate. */
 html {
   overflow-x: hidden;
 }
@@ -33,11 +61,81 @@ body {
   font-family: var(--font-sans);
 }
 
-/* ─── Dark mode: deep slate ─────────────────────────────────────────────────── */
 .dark body {
   background:
     radial-gradient(120% 80% at 50% -10%, #1e1b3a 0%, #131329 34%, #0f172a 100%) fixed;
   color: #f1f5f9;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   BITCOIN DEFI THEME LAYER (opt-in via data-theme="bitcoin")
+   Everything below ONLY takes effect under the opt-in theme. Default styling
+   above is untouched.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Scoped fonts: headings → Space Grotesk; `bitcoin:font-mono` → JetBrains Mono. */
+[data-theme="bitcoin"] {
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}
+[data-theme="bitcoin"] .font-display,
+[data-theme="bitcoin"] .font-heading {
+  font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+}
+
+/* True-void background warmed by faint orange/gold energy fields. */
+[data-theme="bitcoin"] body {
+  color: #ffffff;
+  background:
+    radial-gradient(60% 50% at 80% -5%, rgba(247, 147, 26, 0.10) 0%, transparent 60%) fixed,
+    radial-gradient(55% 45% at 0% 100%, rgba(234, 88, 12, 0.08) 0%, transparent 60%) fixed,
+    #030304;
+}
+
+/* Signature utilities — gated under the theme so they are inert in classic mode. */
+[data-theme="bitcoin"] .bg-grid-pattern {
+  background-size: 50px 50px;
+  background-image:
+    linear-gradient(to right, rgba(30, 41, 59, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+[data-theme="bitcoin"] .glass {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+[data-theme="bitcoin"] .glass-dark {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+[data-theme="bitcoin"] .text-gradient-bitcoin {
+  background-image: linear-gradient(to right, #f7931a, #ffd600);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+[data-theme="bitcoin"] .animate-float {
+  animation: var(--animate-float);
+}
+[data-theme="bitcoin"] .motion-spin-slow {
+  animation: orbitSpin 18s linear infinite;
+}
+[data-theme="bitcoin"] .motion-spin-slow-reverse {
+  animation: orbitSpin 26s linear infinite reverse;
+}
+
+/* Slow ethereal float for hero orbs / ambient graphics. */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ── Quest HUD solving redesign — keyframes ────────────────────────────────── */
@@ -276,7 +374,12 @@ body {
   .board-marker-dot,
   .board-marker-popover { animation: none !important; }
   .board-marker-ring { opacity: 0.9 !important; }
+  /* Bitcoin DeFi ambient motion — calm it for reduced-motion users. */
+  .animate-float { animation: none !important; }
+  .motion-spin-slow,
+  .motion-spin-slow-reverse { animation: none !important; }
 }
+
 .mastery-stair-step,
 .mastery-stair-landing,
 .mastery-stair-summit {

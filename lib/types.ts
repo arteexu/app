@@ -1,4 +1,6 @@
 import type { MoveQuality } from "./move-quality"
+import type { KeyConceptId } from "./key-concepts"
+import type { TacticalPatternId } from "./tactical-patterns"
 
 // ─── Board Annotations ────────────────────────────────────────────────────────
 
@@ -127,6 +129,15 @@ export interface PuzzleStep {
   keyConceptIds?: string[]         // unlocks multiple key concepts when this step is solved
   tacticalPatternId?: string       // unlocks a tactical pattern when this step is solved
   tacticalPatternIds?: string[]    // unlocks multiple tactical patterns when this step is solved
+  /**
+   * Taxonomy tags describing what this puzzle TRAINS (distinct from the
+   * `*Id`/`*Ids` "unlock" fields above, which gamify lesson progression).
+   * Populated by scripts/tag-puzzles.mjs and consumed by the post-game
+   * "Recommended puzzles" reverse-index (lib/insights/puzzle-recommendations).
+   * Optional + additive: untagged puzzles simply never get recommended.
+   */
+  keyConcepts?: KeyConceptId[]
+  tacticalPatterns?: TacticalPatternId[]
   /** When set, unlock tacticalPatternId as soon as the learner correctly plays this move index (0-based). */
   tacticalPatternUnlockMoveIndex?: number
   /** move index in solution.moves → tactical pattern unlocked when that learner move is played correctly. */

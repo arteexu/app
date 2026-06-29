@@ -109,8 +109,11 @@ export function GameBoard({
   }
 
   function handleSquareClick({ square }: SquareHandlerArgs) {
-    if (!canMove) return
+    // Always clear right-click square markers on a left-click, mirroring how
+    // react-chessboard internally clears arrows on left mousedown. Move and
+    // selection logic below still only runs when this client may move.
     setUserHighlights([])
+    if (!canMove) return
     if (selectedSquare) {
       if (square === selectedSquare) {
         clearHighlights()
@@ -158,7 +161,7 @@ export function GameBoard({
           id: boardId,
           onPieceDrop: canMove ? handleDrop : undefined,
           onPieceDrag: canMove ? handlePieceDrag : undefined,
-          onSquareClick: canMove ? handleSquareClick : undefined,
+          onSquareClick: handleSquareClick,
           ...userHighlightHandlers,
         }}
       />

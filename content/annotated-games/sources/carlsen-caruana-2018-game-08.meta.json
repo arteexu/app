@@ -1,0 +1,122 @@
+{
+  "id": "carlsen-caruana-2018-game-08",
+  "title": "Caruana vs Carlsen — 2018 WCC, Game 8",
+  "description": "Caruana builds a near-winning Sveshnikov squeeze against Carlsen, but the slow 24.h3?? lets the world champion slip out to a draw — annotated by GM Sam Shankland.",
+  "headerOverrides": {
+    "white": "Fabiano Caruana",
+    "black": "Magnus Carlsen",
+    "year": 2018,
+    "event": "2018 World Chess Championship",
+    "site": "London",
+    "round": "8",
+    "eco": "B33",
+    "result": "1/2-1/2"
+  },
+  "conceptChecks": [
+    {
+      "id": "g8-a4",
+      "ply": 17,
+      "prompt": "Why does the annotator reward 9.a4 (\"!\") with a strong-move mark?",
+      "options": [
+        {
+          "text": "Running the a-pawn is the most critical try in this kind of pawn structure, and leaving the c-pawn at home suits White.",
+          "explanation": "Correct. The note: \"I always felt running the a-pawn the most critical try in pawn structures like this one... White will definitely appreciate leaving the c-pawn at home in certain positions.\""
+        },
+        {
+          "text": "It directly threatens to win the b8-knight.",
+          "explanation": "No such threat is mentioned; 9.a4 is a long-term structural idea, not a tactic against the knight."
+        },
+        {
+          "text": "It prepares an immediate kingside attack.",
+          "explanation": "The annotator frames a4 as a queenside/structural plan, not a kingside assault."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Which pawn does the annotator say he likes to run in these structures?"
+    },
+    {
+      "id": "g8-bd2",
+      "ply": 23,
+      "prompt": "What is the idea behind the rare 12.Bd2 (\"!?\")?",
+      "options": [
+        {
+          "text": "White just develops naturally; after a later f4 the bishop will stand well on c3, pressuring Black's center.",
+          "explanation": "Correct. The note: \"White prioritizes developing his pieces... In a lot of cases, White will play f4, and the bishop will stand well on c3 to pressure Black's center.\""
+        },
+        {
+          "text": "It pins a black knight and wins it.",
+          "explanation": "No pin or material win is claimed; the point is calm development and a future Bc3."
+        },
+        {
+          "text": "It is forced to stop an immediate threat against White's king.",
+          "explanation": "The annotator calls it a logical developing choice, not a forced defensive move."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Where does the annotator want this bishop to land after f4?"
+    },
+    {
+      "id": "g8-g5",
+      "ply": 36,
+      "prompt": "Why does the annotator give Carlsen's 18...g5 a \"?\"",
+      "options": [
+        {
+          "text": "It asks too much — White is breaking through on the queenside too fast for the kingside attack to work; the solid 18...Bf6 was fine.",
+          "explanation": "Correct. The note: \"This was asking too much. White is breaking through on the queenside too fast to expect the kingside attack to work,\" and 18...Bf6 \"looks fine to me.\""
+        },
+        {
+          "text": "It immediately drops a piece to a tactic.",
+          "explanation": "The annotator does not claim a tactical loss; the problem is strategic — White's queenside play is simply faster."
+        },
+        {
+          "text": "It allows an instant perpetual check that draws.",
+          "explanation": "No perpetual is mentioned; the criticism is that Black's kingside attack is too slow."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "Whose attack arrives first?"
+    },
+    {
+      "id": "g8-h3",
+      "ply": 47,
+      "prompt": "The annotator condemns 24.h3 (\"??\"). What does he say White had to play instead?",
+      "options": [
+        {
+          "text": "24.Nc4!, the obvious direct move (which Caruana played anyway one move later) — White's play is simply faster.",
+          "explanation": "Correct. The note: \"24.Nc4! Of course this move needed to be played. The idea is totally obvious and White did play it on the next move, only he needed to do so faster... White is faster.\""
+        },
+        {
+          "text": "Nothing was wrong — there was no rush, so a slow move like h3 is fine.",
+          "explanation": "The opposite: \"Time is absolutely of the essence... he absolutely needed to look for the most direct moves,\" and after h3 \"Magnus is now instantly fine.\""
+        },
+        {
+          "text": "24.cxd6, regaining the pawn at once.",
+          "explanation": "No such line is given; the annotator's recommendation is the direct 24.Nc4."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What move did Caruana play just one move later, too slowly?"
+    },
+    {
+      "id": "g8-gxh4",
+      "ply": 54,
+      "prompt": "Why does the annotator praise Carlsen's 27...gxh4 (\"!\")?",
+      "options": [
+        {
+          "text": "It is the simplest path — it forces a queen trade after which Black has nothing to worry about.",
+          "explanation": "Correct. The note: \"The simplest. White must trade queens and then Black doesn't have a care in the world.\""
+        },
+        {
+          "text": "It launches a winning mating attack on White's king.",
+          "explanation": "Black is equalizing, not attacking — the point is simplification into safety, not a mate."
+        },
+        {
+          "text": "It wins a rook by force.",
+          "explanation": "No material is won; the move simply forces the queen trade and an easy draw."
+        }
+      ],
+      "correctIndex": 0,
+      "hint": "What does White have to do right after this capture?"
+    }
+  ]
+}

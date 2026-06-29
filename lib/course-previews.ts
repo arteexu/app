@@ -47,6 +47,17 @@ export const COURSE_PREVIEWS: CoursePreview[] = [
     // The assault — a knight charging into the attack.
     icon: "charging-knight",
   },
+  {
+    id: "tactics-trainer",
+    displayLabel: "Tactics Trainer",
+    eyebrow: "Train daily",
+    tagline:
+      "Solve 140 real Lichess puzzles — forks, pins, skewers, sacrifices, and mates — sorted by motif and ramped from beginner to expert.",
+    topics: ["Forks & pins", "Skewers", "Discovered attacks", "Sacrifices", "Mating patterns"],
+    accent: "#2f7d6e",
+    // The cut-and-thrust of tactics — crossed blades.
+    icon: "crossed-swords",
+  },
 ]
 
 export function getCoursePreview(id: string): CoursePreview | undefined {

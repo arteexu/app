@@ -13,9 +13,11 @@ import { SanNotation } from "@/components/chess/SanNotation"
 interface Props {
   moves: PlayedMove[]
   userColor: PieceColor
+  /** Start position for games that don't begin from the standard setup (uploads). */
+  startFen?: string
 }
 
-export function PlayGameReviewStepper({ moves, userColor }: Props) {
+export function PlayGameReviewStepper({ moves, userColor, startFen }: Props) {
   const cutoff = moves.length
   const [viewPly, setViewPly] = useState(cutoff)
   const [orientation, setOrientation] = useState<PieceColor>(userColor)
@@ -25,7 +27,7 @@ export function PlayGameReviewStepper({ moves, userColor }: Props) {
   }, [cutoff])
 
   const clamped = Math.min(Math.max(viewPly, 0), cutoff)
-  const fen = useMemo(() => fenBeforePly(moves, clamped), [moves, clamped])
+  const fen = useMemo(() => fenBeforePly(moves, clamped, startFen), [moves, clamped, startFen])
   const lastMove =
     clamped > 0
       ? {
